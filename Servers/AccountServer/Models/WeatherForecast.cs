@@ -1,8 +1,8 @@
 using System;
 
-namespace AccountServer
+namespace AccountServer.Models
 {
-    public class WeatherForecast
+    public sealed class WeatherForecast
     {
         public DateTime Date { get; set; }
 
