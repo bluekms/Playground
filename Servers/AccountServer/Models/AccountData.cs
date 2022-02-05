@@ -1,4 +1,5 @@
 ﻿using System;
+using AuthDb;
 using Mapster;
 
 namespace AccountServer.Models

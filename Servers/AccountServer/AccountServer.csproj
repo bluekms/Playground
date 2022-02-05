@@ -28,4 +28,13 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\AuthDb\AuthDb.csproj" />
+    <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ServiceExtensions" />
+  </ItemGroup>
+
 </Project>
