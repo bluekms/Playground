@@ -17,6 +17,13 @@ namespace AuthDb
             modelBuilder.Entity<Account>().HasKey(k => new { k.AccountId });
         }
 
-        public sealed record Account(string AccountId, string Password, string SessionId, DateTime CreatedAt, string Authority);
+        public sealed class Account
+        {
+            public string? AccountId { get; set; }
+            public string? Password { get; set; }
+            public string? SessionId { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public string? Authority { get; set; }
+        }
     }
 }

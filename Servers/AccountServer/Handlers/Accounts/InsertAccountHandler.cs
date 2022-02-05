@@ -33,12 +33,14 @@ namespace AccountServer.Handlers.Accounts
         {
             var sessionId = Guid.NewGuid().ToString();
 
-            var newRow = new AuthContext.Account(
-                command.AccountId,
-                command.Password,
-                sessionId,
-                _time.Now,
-                command.Authority);
+            var newRow = new AuthContext.Account()
+            {
+                AccountId = command.AccountId,
+                Password = command.Password,
+                SessionId = sessionId,
+                CreatedAt = _time.Now,
+                Authority = command.Authority,
+            };
 
             await _context.Accounts.AddAsync(newRow);
             await _context.SaveChangesAsync();
