@@ -6,7 +6,7 @@ namespace AccountServer.Handlers
     {
     }
 
-    public interface IQueryHandler<in TQuery, TResult>
+    public interface IQueryHandler<in TQuery, TResult> : IHandlerBase
         where TQuery : IQuery
     {
         Task<TResult> QueryAsync(TQuery query);

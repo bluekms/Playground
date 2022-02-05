@@ -6,7 +6,7 @@ namespace AccountServer.Handlers
     {
     }
 
-    public interface IRuleChecker<in TRule>
+    public interface IRuleChecker<in TRule> : IHandlerBase
         where TRule : IRule
     {
         Task CheckAsync(TRule rule);

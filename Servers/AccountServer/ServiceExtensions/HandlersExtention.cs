@@ -15,20 +15,12 @@ namespace AccountServer.ServiceExtensions
                 .Where(x => !x.IsInterface)
                 .Where(x => x.GetInterfaces()
                     .Where(y => y.IsGenericType)
-                    .Any(y => (
-                        y.GetGenericTypeDefinition() == typeof(IQueryHandler<,>) ||
-                        y.GetGenericTypeDefinition() == typeof(ICommandHandler<>) ||
-                        y.GetGenericTypeDefinition() == typeof(ICommandHandler<,>) ||
-                        y.GetGenericTypeDefinition() == typeof(IRuleChecker<>))))
+                    .Any(y => typeof(IHandlerBase).IsAssignableFrom(y)))
                 .ToList();
 
             foreach (var t in genericTypes)
             {
-                var serviceType = t.GetInterfaces().First(x => (
-                    x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>) ||
-                    x.GetGenericTypeDefinition() == typeof(ICommandHandler<>) ||
-                    x.GetGenericTypeDefinition() == typeof(ICommandHandler<,>) ||
-                    x.GetGenericTypeDefinition() == typeof(IRuleChecker<>)));
+                var serviceType = t.GetInterfaces().First(x => typeof(IHandlerBase).IsAssignableFrom(x));
 
                 serviceCollection.AddTransient(serviceType, t);
             }
