@@ -3,9 +3,9 @@ using System.Reflection;
 using AccountServer.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.ServiceExtenstions
+namespace AccountServer.ServiceExtensions
 {
-    public static class HandlersExtention
+    public static class HandlersExtension
     {
         public static IServiceCollection AddHandlers(this IServiceCollection serviceCollection)
         {
