@@ -9,16 +9,16 @@ namespace AccountServer.Handlers.Accounts
 
     public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
     {
-        private readonly IQueryHandler<SelectAccountQuery, AccountData?> _getAccount;
+        private readonly IQueryHandler<SelectAccountQuery, AccountData?> _selectAccount;
 
-        public SignUpRuleChecker(IQueryHandler<SelectAccountQuery, AccountData?> getAccount)
+        public SignUpRuleChecker(IQueryHandler<SelectAccountQuery, AccountData?> selectAccount)
         {
-            _getAccount = getAccount;
+            _selectAccount = selectAccount;
         }
 
         public async Task CheckAsync(SignUpRule rule)
         {
-            var account = await _getAccount.QueryAsync(new(rule.AccountId));
+            var account = await _selectAccount.QueryAsync(new(rule.AccountId));
             if (account != null)
             {
                 throw new DuplicateNameException(nameof(rule.AccountId));
