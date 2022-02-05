@@ -31,7 +31,7 @@ namespace AccountServer.Handlers.Accounts
                 throw new NullReferenceException(nameof(rule.AccountId));
             }
 
-            if (!row.Password.Equals(rule.Password))
+            if (!rule.Password.Equals(row.Password))
             {
                 throw new ArgumentException("", nameof(rule.Password));
             }
