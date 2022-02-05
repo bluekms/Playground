@@ -31,13 +31,11 @@ namespace AccountServer.Handlers.Accounts
 
         public async Task<AccountData> ExecuteAsync(InsertAccountCommand command)
         {
-            var sessionId = Guid.NewGuid().ToString();
-
             var newRow = new AuthContext.Account()
             {
                 AccountId = command.AccountId,
                 Password = command.Password,
-                SessionId = sessionId,
+                SessionId = string.Empty,
                 CreatedAt = _time.Now,
                 Authority = command.Authority,
             };

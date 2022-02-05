@@ -14,18 +14,15 @@ namespace AccountServer.Controllers
         private readonly ILogger<SignUpController> _logger;
         private readonly IRuleChecker<SignUpRule> _rule;
         private readonly ICommandHandler<InsertAccountCommand, AccountData> _insertAccount;
-        private readonly ICommandHandler<WriteSessionIdCommand> _writeSessionId;
 
         public SignUpController(
             ILogger<SignUpController> logger,
             IRuleChecker<SignUpRule> rule,
-            ICommandHandler<InsertAccountCommand, AccountData> insertAccount,
-            ICommandHandler<WriteSessionIdCommand> writeSessionId)
+            ICommandHandler<InsertAccountCommand, AccountData> insertAccount)
         {
             _logger = logger;
             _rule = rule;
             _insertAccount = insertAccount;
-            _writeSessionId = writeSessionId;
         }
 
         [HttpPost, Route("Account/SignUp")]
@@ -50,8 +47,6 @@ namespace AccountServer.Controllers
                 request.AccountId,
                 request.Password,
                 request.Authority));
-
-            await _writeSessionId.ExecuteAsync(new(account.SessionId, account.Authority));
 
             return account;
         }
