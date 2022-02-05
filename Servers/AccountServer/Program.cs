@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +27,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AuthContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("Auth"));
+    options.UseMySQL(builder.Configuration.GetConnectionString("AuthDb"));
 });
+
+var redisConnection = ConnectionMultiplexer.Connect(
+    builder.Configuration.GetConnectionString("RedisCache"));
+builder.Services.AddScoped(x => redisConnection.GetDatabase());
 
 // Add Transient
 
