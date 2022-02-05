@@ -5,9 +5,8 @@ using System.Reflection;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AccountServer.ServiceExtensions
+namespace CommonLibrary
 {
     public static class MapsterExtension
     {

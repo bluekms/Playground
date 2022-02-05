@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Models
+namespace AuthDb
 {
     public class AuthContext : DbContext
     {
