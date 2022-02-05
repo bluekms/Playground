@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AccountServer.Features
+namespace AccountServer.Handlers
 {
     public interface ICommand
     {

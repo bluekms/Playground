@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AccountServer.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Features.Accounts
+namespace AccountServer.Handlers.Accounts
 {
     public sealed record GetAccountQuery(string AccountId) : IQuery;
 
