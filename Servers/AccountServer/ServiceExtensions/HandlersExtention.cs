@@ -7,9 +7,9 @@ namespace AccountServer.ServiceExtensions
 {
     public static class HandlersExtension
     {
-        public static IServiceCollection AddHandlers(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddHandlers(this IServiceCollection serviceCollection, Assembly assembly)
         {
-            var genericTypes = Assembly.GetExecutingAssembly().GetTypes()
+            var genericTypes = assembly.GetTypes()
                 .Where(x => x.IsPublic)
                 .Where(x => !x.IsAbstract)
                 .Where(x => !x.IsInterface)
