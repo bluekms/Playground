@@ -1,19 +1,24 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AccountServer.Models;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Features.Accounts
+namespace AccountServer.Handlers.Accounts
 {
     public sealed record GetAccountQuery(string AccountId) : IQuery;
 
     public sealed class GetAccountHandler : IQueryHandler<GetAccountQuery, AccountData?>
     {
         private readonly AuthContext _context;
+        private readonly IMapper _mapper;
 
-        public GetAccountHandler(AuthContext context)
+        public GetAccountHandler(
+            AuthContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<AccountData?> QueryAsync(GetAccountQuery query)
@@ -27,7 +32,7 @@ namespace AccountServer.Features.Accounts
                 return null;
             }
 
-            return new(row.AccountId, row.SessionId, row.CreatedAt, row.Authority);
+            return _mapper.Map<AccountData>(row);
         }
     }
 }

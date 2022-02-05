@@ -1,5 +1,7 @@
-using AccountServer.Features;
+using System.Reflection;
 using AccountServer.Models;
+using AccountServer.ServiceExtensions;
+using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,11 +23,14 @@ builder.Services.AddDbContext<AuthContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Auth"));
 });
 
-var registrant = new HandlerRegistrant(builder.Services);
-registrant.Register(typeof(IQueryHandler<,>));
-registrant.Register(typeof(ICommandHandler<>));
-registrant.Register(typeof(ICommandHandler<,>));
-registrant.Register(typeof(IRuleChecker<>));
+builder.Services.AddHandlers(Assembly.GetExecutingAssembly());
+
+builder.Services.AddMapster(config =>
+{
+    config.RequireDestinationMemberSource = true;
+    config.Default.MapToConstructor(true);
+});
+builder.Services.AddMapsterRegisters(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
