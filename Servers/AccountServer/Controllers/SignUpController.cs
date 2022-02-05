@@ -5,7 +5,6 @@ using AccountServer.Models;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
 namespace AccountServer.Controllers
 {
@@ -15,18 +14,18 @@ namespace AccountServer.Controllers
         private readonly ILogger<SignUpController> _logger;
         private readonly IRuleChecker<SignUpRule> _rule;
         private readonly ICommandHandler<InsertAccountCommand, AccountData> _insertAccount;
-        private readonly IDatabase _redis;
+        private readonly ICommandHandler<WriteSessionIdCommand> _writeSessionId;
 
         public SignUpController(
             ILogger<SignUpController> logger,
             IRuleChecker<SignUpRule> rule,
             ICommandHandler<InsertAccountCommand, AccountData> insertAccount,
-            IDatabase redis)
+            ICommandHandler<WriteSessionIdCommand> writeSessionId)
         {
             _logger = logger;
             _rule = rule;
             _insertAccount = insertAccount;
-            _redis = redis;
+            _writeSessionId = writeSessionId;
         }
 
         [HttpPost, Route("Account/SignUp")]
@@ -52,9 +51,7 @@ namespace AccountServer.Controllers
                 request.Password,
                 request.Authority));
 
-            var key = $"Session:{account.SessionId}";
-            await _redis.StringSetAsync(key, $"PlayerId:{account.Authority}");
-            await _redis.KeyExpireAsync(key, new TimeSpan(0, 0, 5, 0));
+            await _writeSessionId.ExecuteAsync(new(account.SessionId, account.Authority));
 
             return account;
         }
