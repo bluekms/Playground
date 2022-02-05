@@ -1,4 +1,4 @@
-namespace AccountServer.Handlers
+namespace CommonLibrary.Handlers
 {
     public interface IHandlerBase
     {

@@ -1,9 +1,9 @@
 using System.Linq;
 using System.Reflection;
-using AccountServer.Handlers;
+using CommonLibrary.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.ServiceExtensions
+namespace CommonLibrary
 {
     public static class HandlersExtension
     {

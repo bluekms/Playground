@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AccountServer.Handlers;
 using AccountServer.Handlers.Accounts;
 using AccountServer.Models;
+using AuthDb;
+using CommonLibrary.Handlers;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -26,12 +28,11 @@ namespace AccountServer.Controllers
         }
 
         [HttpPost, Route("Account/SignUp")]
-        public async Task<ActionResult<AuthContext.Account>> SignUp([FromBody] AuthContext.Account accountItem)
+        public async Task<ActionResult<AccountData>> SignUp([FromBody] Argument request)
         {
             try
             {
-                // TODO mapster 도입
-                return await HandleAsync(new(accountItem.AccountId, accountItem.Password, accountItem.Authority));
+                return await HandleAsync(new(request.AccountId, request.Password, request.Authority));
             }
             catch (Exception e)
             {
@@ -40,26 +41,16 @@ namespace AccountServer.Controllers
             }
         }
 
-        private async Task<AuthContext.Account> HandleAsync(RequestWrapper request)
+        private async Task<AccountData> HandleAsync(Argument request)
         {
             await _rule.CheckAsync(new(request.AccountId));
 
-            var account = await _insertAccount.ExecuteAsync(new(
+            return await _insertAccount.ExecuteAsync(new(
                 request.AccountId,
                 request.Password,
-                "SessionId",
                 request.Authority));
-
-            // TODO mapster
-            return new(
-                account.AccountId,
-                string.Empty,
-                account.SessionId,
-                account.CreatedAt,
-                account.Authority);
         }
-    }
 
-    public sealed record RequestWrapper(string AccountId, string Password, string Authority);
-    public sealed record ResponseWrapper(AuthContext.Account NewAccount);
+        public sealed record Argument(string AccountId, string Password, string Authority);
+    }
 }

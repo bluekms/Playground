@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDb", "Libraries\AuthDb\AuthDb.csproj", "{1E41E057-9090-46A8-9C1F-469AC1916988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "Libraries\CommonLibrary\CommonLibrary.csproj", "{F9CE4105-FF02-4905-BD41-2298E253D75B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A2F2DA88-DA30-4E78-A5C8-C8F4A6FA02B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F2DA88-DA30-4E78-A5C8-C8F4A6FA02B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F2DA88-DA30-4E78-A5C8-C8F4A6FA02B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E41E057-9090-46A8-9C1F-469AC1916988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E41E057-9090-46A8-9C1F-469AC1916988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E41E057-9090-46A8-9C1F-469AC1916988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E41E057-9090-46A8-9C1F-469AC1916988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CE4105-FF02-4905-BD41-2298E253D75B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CE4105-FF02-4905-BD41-2298E253D75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CE4105-FF02-4905-BD41-2298E253D75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CE4105-FF02-4905-BD41-2298E253D75B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AccountServer.Handlers
+namespace CommonLibrary.Handlers
 {
     public interface IRule
     {
