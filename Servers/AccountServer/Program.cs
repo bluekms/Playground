@@ -1,5 +1,6 @@
-using AccountServer.Features;
+using AccountServer.Handlers;
 using AccountServer.Models;
+using AccountServer.ServiceExtenstions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,11 +22,10 @@ builder.Services.AddDbContext<AuthContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Auth"));
 });
 
-var registrant = new HandlerRegistrant(builder.Services);
-registrant.Register(typeof(IQueryHandler<,>));
-registrant.Register(typeof(ICommandHandler<>));
-registrant.Register(typeof(ICommandHandler<,>));
-registrant.Register(typeof(IRuleChecker<>));
+builder.Services.AddTransientHandler(typeof(IQueryHandler<,>));
+builder.Services.AddTransientHandler(typeof(ICommandHandler<>));
+builder.Services.AddTransientHandler(typeof(ICommandHandler<,>));
+builder.Services.AddTransientHandler(typeof(IRuleChecker<>));
 
 var app = builder.Build();
 

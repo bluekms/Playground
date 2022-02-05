@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AccountServer.Models;
 
-namespace AccountServer.Features.Accounts
+namespace AccountServer.Handlers.Accounts
 {
     public sealed record SignUpRule(string AccountId) : IRule;
 

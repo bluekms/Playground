@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AccountServer.Features;
-using AccountServer.Features.Accounts;
+using AccountServer.Handlers;
+using AccountServer.Handlers.Accounts;
 using AccountServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
