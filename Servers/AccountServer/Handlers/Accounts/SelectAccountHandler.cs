@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountServer.Handlers.Accounts
 {
-    public sealed record GetAccountQuery(string AccountId) : IQuery;
+    public sealed record SelectAccountQuery(string AccountId) : IQuery;
 
-    public sealed class GetAccountHandler : IQueryHandler<GetAccountQuery, AccountData?>
+    public sealed class SelectAccountHandler : IQueryHandler<SelectAccountQuery, AccountData?>
     {
         private readonly AuthContext _context;
         private readonly IMapper _mapper;
 
-        public GetAccountHandler(
+        public SelectAccountHandler(
             AuthContext context,
             IMapper mapper)
         {
@@ -23,7 +23,7 @@ namespace AccountServer.Handlers.Accounts
             _mapper = mapper;
         }
 
-        public async Task<AccountData?> QueryAsync(GetAccountQuery query)
+        public async Task<AccountData?> QueryAsync(SelectAccountQuery query)
         {
             var row = await _context.Accounts
                 .Where(x => x.AccountId == query.AccountId)
