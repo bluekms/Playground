@@ -26,7 +26,7 @@ namespace AccountServer.Controllers
         }
 
         [HttpPost, Route("Account/SignUp")]
-        public async Task<ActionResult<Account>> SignUp([FromBody] Account accountItem)
+        public async Task<ActionResult<AuthContext.Account>> SignUp([FromBody] AuthContext.Account accountItem)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace AccountServer.Controllers
             }
         }
 
-        private async Task<Account> HandleAsync(RequestWrapper request)
+        private async Task<AuthContext.Account> HandleAsync(RequestWrapper request)
         {
             await _rule.CheckAsync(new(request.AccountId));
 
@@ -61,5 +61,5 @@ namespace AccountServer.Controllers
     }
 
     public sealed record RequestWrapper(string AccountId, string Password, string Authority);
-    public sealed record ResponseWrapper(Account NewAccount);
+    public sealed record ResponseWrapper(AuthContext.Account NewAccount);
 }

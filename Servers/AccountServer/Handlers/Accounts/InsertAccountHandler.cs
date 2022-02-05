@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AccountServer.Models;
+using MapsterMapper;
 
 namespace AccountServer.Handlers.Accounts
 {
@@ -13,15 +14,19 @@ namespace AccountServer.Handlers.Accounts
     public sealed class InsertAccountHandler : ICommandHandler<InsertAccountCommand, AccountData>
     {
         private readonly AuthContext _context;
+        private readonly IMapper _mapper;
 
-        public InsertAccountHandler(AuthContext context)
+        public InsertAccountHandler(
+            AuthContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<AccountData> ExecuteAsync(InsertAccountCommand command)
         {
-            var newRow = new Account(
+            var newRow = new AuthContext.Account(
                 command.AccountId,
                 command.Password,
                 command.SessionId,
@@ -32,7 +37,7 @@ namespace AccountServer.Handlers.Accounts
 
             await _context.SaveChangesAsync();
 
-            return new(newRow.AccountId, newRow.SessionId, newRow.CreatedAt, newRow.Authority);
+            return _mapper.Map<AccountData>(newRow);
         }
     }
 }

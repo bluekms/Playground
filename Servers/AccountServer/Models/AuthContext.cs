@@ -16,7 +16,7 @@ namespace AccountServer.Models
         {
             modelBuilder.Entity<Account>().HasKey(k => new { k.AccountId });
         }
+
+        public sealed record Account(string AccountId, string Password, string SessionId, DateTime CreatedAt, string Authority);
     }
-    // TODO Library로 빼야 하나?
-    public sealed record Account(string AccountId, string Password, string SessionId, DateTime CreatedAt, string Authority);
 }
