@@ -9,7 +9,7 @@ namespace AccountServer.Handlers.Session
         string SessionId,
         string Authority) : ICommand;
 
-    public class WriteSessionIdHandler : ICommandHandler<WriteSessionIdCommand>
+    public sealed class WriteSessionIdHandler : ICommandHandler<WriteSessionIdCommand>
     {
         private static TimeSpan _expire = new(0, 0, 5, 0);
 

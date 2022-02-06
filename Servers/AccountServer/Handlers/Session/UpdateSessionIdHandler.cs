@@ -11,7 +11,7 @@ namespace AccountServer.Handlers.Session
 {
     public sealed record UpdateSessionIdCommand(string AccountId, string SessionId) : ICommand;
 
-    public class UpdateAccountHandler : ICommandHandler<UpdateSessionIdCommand, AccountData>
+    public sealed class UpdateAccountHandler : ICommandHandler<UpdateSessionIdCommand, AccountData>
     {
         private readonly AuthContext _context;
         private readonly IMapper _mapper;

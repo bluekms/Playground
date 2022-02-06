@@ -6,7 +6,7 @@ namespace AccountServer.Handlers.Session
 {
     public sealed record RemoveSessionIdCommand(string SessionId) : ICommand;
 
-    public class RemoveSessionIdHandler : ICommandHandler<RemoveSessionIdCommand>
+    public sealed class RemoveSessionIdHandler : ICommandHandler<RemoveSessionIdCommand>
     {
         private readonly IDatabase _redis;
 
