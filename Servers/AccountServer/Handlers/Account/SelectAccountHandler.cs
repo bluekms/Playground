@@ -15,9 +15,7 @@ namespace AccountServer.Handlers.Account
         private readonly AuthContext _context;
         private readonly IMapper _mapper;
 
-        public SelectAccountHandler(
-            AuthContext context,
-            IMapper mapper)
+        public SelectAccountHandler(AuthContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
