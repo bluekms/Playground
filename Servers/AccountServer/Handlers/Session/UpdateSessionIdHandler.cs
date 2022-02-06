@@ -7,7 +7,7 @@ using CommonLibrary.Handlers;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Session
 {
     public sealed record UpdateSessionIdCommand(string AccountId, string SessionId) : ICommand;
 

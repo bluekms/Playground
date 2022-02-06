@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CommonLibrary.Handlers;
 using StackExchange.Redis;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Session
 {
     public sealed record WriteSessionIdCommand(
         string SessionId,
