@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AccountServer.Handlers.Accounts;
+using AccountServer.Handlers.Account;
 using AccountServer.Models;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Mvc;

@@ -6,7 +6,7 @@ using CommonLibrary.Handlers;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Account
 {
     public sealed record SelectAccountQuery(string AccountId) : IQuery;
 

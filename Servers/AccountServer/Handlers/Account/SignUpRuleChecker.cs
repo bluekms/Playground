@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AccountServer.Models;
 using CommonLibrary.Handlers;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Account
 {
     public sealed record SignUpRule(string AccountId) : IRule;
 

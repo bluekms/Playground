@@ -1,13 +1,11 @@
 using System;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthDb;
 using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Account
 {
     public sealed record LoginRule(string AccountId, string Password) : IRule;
 
