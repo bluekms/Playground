@@ -26,11 +26,11 @@ namespace AccountServer.Controllers
         }
 
         [HttpPost, Route("Account/SignUp")]
-        public async Task<ActionResult<AccountData>> SignUp([FromBody] Argument request)
+        public async Task<ActionResult<AccountData>> SignUp([FromBody] ArgumentData args)
         {
             try
             {
-                return await HandleAsync(new(request.AccountId, request.Password, request.Authority));
+                return await HandleAsync(new(args.AccountId, args.Password, args.Authority));
             }
             catch (Exception e)
             {
@@ -39,18 +39,18 @@ namespace AccountServer.Controllers
             }
         }
 
-        private async Task<AccountData> HandleAsync(Argument request)
+        private async Task<AccountData> HandleAsync(ArgumentData args)
         {
-            await _rule.CheckAsync(new(request.AccountId));
+            await _rule.CheckAsync(new(args.AccountId));
 
             var account = await _insertAccount.ExecuteAsync(new(
-                request.AccountId,
-                request.Password,
-                request.Authority));
+                args.AccountId,
+                args.Password,
+                args.Authority));
 
             return account;
         }
 
-        public sealed record Argument(string AccountId, string Password, string Authority);
+        public sealed record ArgumentData(string AccountId, string Password, string Authority);
     }
 }

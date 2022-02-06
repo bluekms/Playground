@@ -7,13 +7,13 @@ namespace AuthDb
     {
         [AllowNull]
         public string WorldName { get; set; }
-        
+
         [AllowNull]
         public string WorldType { get; set; }
-        
+
         [AllowNull]
         public string Address { get; set; }
-        
+
         public DateTime ExpireAt { get; set; }
     }
 }
