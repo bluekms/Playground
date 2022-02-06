@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthDb
@@ -10,20 +10,13 @@ namespace AuthDb
         {
         }
 
-        public DbSet<Account> Accounts { get; set; } = null!;
+        [AllowNull] public DbSet<Account> Accounts { get; set; }
+        [AllowNull] public DbSet<World> Worlds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>().HasKey(k => new { k.AccountId });
-        }
-
-        public sealed class Account
-        {
-            public string? AccountId { get; set; }
-            public string? Password { get; set; }
-            public string? SessionId { get; set; }
-            public DateTime CreatedAt { get; set; }
-            public string? Authority { get; set; }
+            modelBuilder.Entity<World>().HasKey(k => new { k.WorldName });
         }
     }
 }

@@ -30,6 +30,19 @@ CREATE TABLE `Accounts` (
   UNIQUE KEY `SessionId` (`SessionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+/*Table structure for table `Worlds` */
+
+DROP TABLE IF EXISTS `Worlds`;
+
+CREATE TABLE `Worlds` (
+  `WorldName` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `WorldType` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Address` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ExpireAt` datetime NOT NULL,
+  PRIMARY KEY (`WorldName`),
+  KEY `WorldType` (`WorldType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
