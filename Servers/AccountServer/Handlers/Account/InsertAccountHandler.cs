@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AccountServer.Models;
 using AuthDb;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using MapsterMapper;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Account
 {
     public sealed record InsertAccountCommand(
         string AccountId,
@@ -31,14 +30,14 @@ namespace AccountServer.Handlers.Accounts
 
         public async Task<AccountData> ExecuteAsync(InsertAccountCommand command)
         {
-            var sessionId = Guid.NewGuid().ToString();
-
-            var newRow = new AuthContext.Account(
-                command.AccountId,
-                command.Password,
-                sessionId,
-                _time.Now,
-                command.Authority);
+            var newRow = new AuthDb.Account()
+            {
+                AccountId = command.AccountId,
+                Password = command.Password,
+                SessionId = string.Empty,
+                CreatedAt = _time.Now,
+                Authority = command.Authority,
+            };
 
             await _context.Accounts.AddAsync(newRow);
             await _context.SaveChangesAsync();

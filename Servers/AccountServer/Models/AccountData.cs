@@ -10,7 +10,7 @@ namespace AccountServer.Models
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<AuthContext.Account, AccountData>();
+            config.NewConfig<Account, AccountData>();
         }
     }
 }

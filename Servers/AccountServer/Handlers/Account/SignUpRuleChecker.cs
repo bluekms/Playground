@@ -3,22 +3,22 @@ using System.Threading.Tasks;
 using AccountServer.Models;
 using CommonLibrary.Handlers;
 
-namespace AccountServer.Handlers.Accounts
+namespace AccountServer.Handlers.Account
 {
     public sealed record SignUpRule(string AccountId) : IRule;
 
     public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
     {
-        private readonly IQueryHandler<GetAccountQuery, AccountData?> _getAccount;
+        private readonly IQueryHandler<SelectAccountQuery, AccountData?> _selectAccount;
 
-        public SignUpRuleChecker(IQueryHandler<GetAccountQuery, AccountData?> getAccount)
+        public SignUpRuleChecker(IQueryHandler<SelectAccountQuery, AccountData?> selectAccount)
         {
-            _getAccount = getAccount;
+            _selectAccount = selectAccount;
         }
 
         public async Task CheckAsync(SignUpRule rule)
         {
-            var account = await _getAccount.QueryAsync(new(rule.AccountId));
+            var account = await _selectAccount.QueryAsync(new(rule.AccountId));
             if (account != null)
             {
                 throw new DuplicateNameException(nameof(rule.AccountId));
