@@ -11,18 +11,18 @@ namespace AccountServer.Controllers
     [ApiController]
     public sealed class SignUpController : ControllerBase
     {
-        private readonly ILogger<SignUpController> _logger;
-        private readonly IRuleChecker<SignUpRule> _rule;
-        private readonly ICommandHandler<InsertAccountCommand, AccountData> _insertAccount;
+        private readonly ILogger<SignUpController> logger;
+        private readonly IRuleChecker<SignUpRule> rule;
+        private readonly ICommandHandler<InsertAccountCommand, AccountData> insertAccount;
 
         public SignUpController(
             ILogger<SignUpController> logger,
             IRuleChecker<SignUpRule> rule,
             ICommandHandler<InsertAccountCommand, AccountData> insertAccount)
         {
-            _logger = logger;
-            _rule = rule;
-            _insertAccount = insertAccount;
+            this.logger = logger;
+            this.rule = rule;
+            this.insertAccount = insertAccount;
         }
 
         [HttpPost, Route("Account/SignUp")]
@@ -34,16 +34,16 @@ namespace AccountServer.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
+                logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
                 return NotFound();
             }
         }
 
         private async Task<AccountData> HandleAsync(ArgumentData args)
         {
-            await _rule.CheckAsync(new(args.AccountId));
+            await rule.CheckAsync(new(args.AccountId));
 
-            var account = await _insertAccount.ExecuteAsync(new(
+            var account = await insertAccount.ExecuteAsync(new(
                 args.AccountId,
                 args.Password,
                 args.Authority));
