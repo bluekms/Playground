@@ -16,18 +16,18 @@ namespace AccountServer.Controllers
     {
         private readonly ILogger<SignUpController> logger;
         private readonly IRuleChecker<LoginRule> rule;
-        private readonly ICommandHandler<RemoveSessionIdCommand> removeSessionId;
+        private readonly ICommandHandler<DeleteSessionIdCommand> removeSessionId;
         private readonly ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId;
-        private readonly ICommandHandler<WriteSessionIdCommand> writeSessionId;
-        private readonly IQueryHandler<ListWorldsQuery, List<WorldData>> listWorlds;
+        private readonly ICommandHandler<InsertSessionIdCommand> writeSessionId;
+        private readonly IQueryHandler<GetWorldListQuery, List<WorldData>> listWorlds;
 
         public LoginController(
             ILogger<SignUpController> logger,
             IRuleChecker<LoginRule> rule,
-            ICommandHandler<RemoveSessionIdCommand> removeSessionId,
+            ICommandHandler<DeleteSessionIdCommand> removeSessionId,
             ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId,
-            ICommandHandler<WriteSessionIdCommand> writeSessionId,
-            IQueryHandler<ListWorldsQuery, List<WorldData>> listWorlds)
+            ICommandHandler<InsertSessionIdCommand> writeSessionId,
+            IQueryHandler<GetWorldListQuery, List<WorldData>> listWorlds)
         {
             this.logger = logger;
             this.rule = rule;

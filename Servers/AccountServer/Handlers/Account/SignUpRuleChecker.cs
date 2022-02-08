@@ -9,9 +9,9 @@ namespace AccountServer.Handlers.Account
 
     public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
     {
-        private readonly IQueryHandler<SelectAccountQuery, AccountData?> selectAccount;
+        private readonly IQueryHandler<GetAccountQuery, AccountData?> selectAccount;
 
-        public SignUpRuleChecker(IQueryHandler<SelectAccountQuery, AccountData?> selectAccount)
+        public SignUpRuleChecker(IQueryHandler<GetAccountQuery, AccountData?> selectAccount)
         {
             this.selectAccount = selectAccount;
         }

@@ -4,18 +4,18 @@ using StackExchange.Redis;
 
 namespace AccountServer.Handlers.Session
 {
-    public sealed record RemoveSessionIdCommand(string SessionId) : ICommand;
+    public sealed record DeleteSessionIdCommand(string SessionId) : ICommand;
 
-    public sealed class RemoveSessionIdHandler : ICommandHandler<RemoveSessionIdCommand>
+    public sealed class DeleteSessionIdHandler : ICommandHandler<DeleteSessionIdCommand>
     {
         private readonly IDatabase redis;
 
-        public RemoveSessionIdHandler(IDatabase redis)
+        public DeleteSessionIdHandler(IDatabase redis)
         {
             this.redis = redis;
         }
 
-        public async Task ExecuteAsync(RemoveSessionIdCommand command)
+        public async Task ExecuteAsync(DeleteSessionIdCommand command)
         {
             var key = $"Session:{command.SessionId}";
             await redis.KeyDeleteAsync(key);
