@@ -14,27 +14,27 @@ namespace AccountServer.Handlers.World
 
     public sealed class ListWorldsHandler : IQueryHandler<ListWorldsQuery, List<WorldData>>
     {
-        private readonly AuthContext _context;
-        private readonly ITimeService _time;
-        private readonly IMapper _mapper;
+        private readonly AuthContext context;
+        private readonly ITimeService time;
+        private readonly IMapper mapper;
 
         public ListWorldsHandler(AuthContext context, ITimeService time, IMapper mapper)
         {
-            _context = context;
-            _time = time;
-            _mapper = mapper;
+            this.context = context;
+            this.time = time;
+            this.mapper = mapper;
         }
 
         public async Task<List<WorldData>> QueryAsync(ListWorldsQuery query)
         {
-            var rows = await _context.Worlds
+            var rows = await context.Worlds
                 .Where(x => x.WorldType == query.WorldType)
                 .ToListAsync();
 
-            _context.Worlds.RemoveRange(rows.Where(x => x.ExpireAt <= _time.Now));
-            await _context.SaveChangesAsync();
+            context.Worlds.RemoveRange(rows.Where(x => x.ExpireAt <= time.Now));
+            await context.SaveChangesAsync();
 
-            return _mapper.Map<List<WorldData>>(rows.Where(x => _time.Now < x.ExpireAt));
+            return mapper.Map<List<WorldData>>(rows.Where(x => time.Now < x.ExpireAt));
         }
     }
 }

@@ -14,18 +14,18 @@ namespace AccountServer.Handlers.Account
 
     public sealed class InsertAccountHandler : ICommandHandler<InsertAccountCommand, AccountData>
     {
-        private readonly AuthContext _context;
-        private readonly IMapper _mapper;
-        private readonly ITimeService _time;
+        private readonly AuthContext context;
+        private readonly IMapper mapper;
+        private readonly ITimeService time;
 
         public InsertAccountHandler(
             AuthContext context,
             IMapper mapper,
             ITimeService time)
         {
-            _context = context;
-            _mapper = mapper;
-            _time = time;
+            this.context = context;
+            this.mapper = mapper;
+            this.time = time;
         }
 
         public async Task<AccountData> ExecuteAsync(InsertAccountCommand command)
@@ -35,14 +35,14 @@ namespace AccountServer.Handlers.Account
                 AccountId = command.AccountId,
                 Password = command.Password,
                 SessionId = string.Empty,
-                CreatedAt = _time.Now,
+                CreatedAt = time.Now,
                 Authority = command.Authority,
             };
 
-            await _context.Accounts.AddAsync(newRow);
-            await _context.SaveChangesAsync();
+            await context.Accounts.AddAsync(newRow);
+            await context.SaveChangesAsync();
 
-            return _mapper.Map<AccountData>(newRow);
+            return mapper.Map<AccountData>(newRow);
         }
     }
 }
