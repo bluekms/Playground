@@ -10,22 +10,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountServer.Handlers.World
 {
-    public sealed record ListWorldsQuery(string WorldType) : IQuery;
+    public sealed record GetWorldListQuery(string WorldType) : IQuery;
 
-    public sealed class ListWorldsHandler : IQueryHandler<ListWorldsQuery, List<WorldData>>
+    public sealed class GetWorldListHandler : IQueryHandler<GetWorldListQuery, List<WorldData>>
     {
         private readonly AuthContext context;
         private readonly ITimeService time;
         private readonly IMapper mapper;
 
-        public ListWorldsHandler(AuthContext context, ITimeService time, IMapper mapper)
+        public GetWorldListHandler(AuthContext context, ITimeService time, IMapper mapper)
         {
             this.context = context;
             this.time = time;
             this.mapper = mapper;
         }
 
-        public async Task<List<WorldData>> QueryAsync(ListWorldsQuery query)
+        public async Task<List<WorldData>> QueryAsync(GetWorldListQuery query)
         {
             var rows = await context.Worlds
                 .Where(x => x.WorldType == query.WorldType)

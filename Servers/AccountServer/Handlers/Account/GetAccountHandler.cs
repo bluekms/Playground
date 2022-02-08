@@ -8,20 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountServer.Handlers.Account
 {
-    public sealed record SelectAccountQuery(string AccountId) : IQuery;
+    public sealed record GetAccountQuery(string AccountId) : IQuery;
 
-    public sealed class SelectAccountHandler : IQueryHandler<SelectAccountQuery, AccountData?>
+    public sealed class GetAccountHandler : IQueryHandler<GetAccountQuery, AccountData?>
     {
         private readonly AuthContext context;
         private readonly IMapper mapper;
 
-        public SelectAccountHandler(AuthContext context, IMapper mapper)
+        public GetAccountHandler(AuthContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<AccountData?> QueryAsync(SelectAccountQuery query)
+        public async Task<AccountData?> QueryAsync(GetAccountQuery query)
         {
             var row = await context.Accounts
                 .Where(x => x.AccountId == query.AccountId)

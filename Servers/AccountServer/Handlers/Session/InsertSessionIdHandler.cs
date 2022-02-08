@@ -5,22 +5,22 @@ using StackExchange.Redis;
 
 namespace AccountServer.Handlers.Session
 {
-    public sealed record WriteSessionIdCommand(
+    public sealed record InsertSessionIdCommand(
         string SessionId,
         string Authority) : ICommand;
 
-    public sealed class WriteSessionIdHandler : ICommandHandler<WriteSessionIdCommand>
+    public sealed class InsertSessionIdHandler : ICommandHandler<InsertSessionIdCommand>
     {
         private static TimeSpan DefaultExpire = new(0, 0, 5, 0);
 
         private readonly IDatabase redis;
 
-        public WriteSessionIdHandler(IDatabase redis)
+        public InsertSessionIdHandler(IDatabase redis)
         {
             this.redis = redis;
         }
 
-        public async Task ExecuteAsync(WriteSessionIdCommand command)
+        public async Task ExecuteAsync(InsertSessionIdCommand command)
         {
             var key = $"Session:{command.SessionId}";
             await redis.StringSetAsync(key, $"PlayerId:{command.Authority}");
