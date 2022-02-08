@@ -13,18 +13,18 @@ namespace AccountServer.Handlers.Session
 
     public sealed class UpdateAccountHandler : ICommandHandler<UpdateSessionIdCommand, AccountData>
     {
-        private readonly AuthContext _context;
-        private readonly IMapper _mapper;
+        private readonly AuthContext context;
+        private readonly IMapper mapper;
 
         public UpdateAccountHandler(AuthContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<AccountData> ExecuteAsync(UpdateSessionIdCommand command)
         {
-            var row = await _context.Accounts
+            var row = await context.Accounts
                 .Where(x => x.AccountId == command.AccountId)
                 .SingleOrDefaultAsync();
 
@@ -34,9 +34,9 @@ namespace AccountServer.Handlers.Session
             }
 
             row.SessionId = command.SessionId;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-            return _mapper.Map<AccountData>(row);
+            return mapper.Map<AccountData>(row);
         }
     }
 }
