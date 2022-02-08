@@ -14,12 +14,12 @@ namespace AccountServer.Controllers
     [ApiController]
     public sealed class LoginController : ControllerBase
     {
-        private readonly ILogger<SignUpController> _logger;
-        private readonly IRuleChecker<LoginRule> _rule;
-        private readonly ICommandHandler<RemoveSessionIdCommand> _removeSessionId;
-        private readonly ICommandHandler<UpdateSessionIdCommand, AccountData> _updateSessionId;
-        private readonly ICommandHandler<WriteSessionIdCommand> _writeSessionId;
-        private readonly IQueryHandler<ListWorldsQuery, List<WorldData>> _listWorlds;
+        private readonly ILogger<SignUpController> logger;
+        private readonly IRuleChecker<LoginRule> rule;
+        private readonly ICommandHandler<RemoveSessionIdCommand> removeSessionId;
+        private readonly ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId;
+        private readonly ICommandHandler<WriteSessionIdCommand> writeSessionId;
+        private readonly IQueryHandler<ListWorldsQuery, List<WorldData>> listWorlds;
 
         public LoginController(
             ILogger<SignUpController> logger,
@@ -29,12 +29,12 @@ namespace AccountServer.Controllers
             ICommandHandler<WriteSessionIdCommand> writeSessionId,
             IQueryHandler<ListWorldsQuery, List<WorldData>> listWorlds)
         {
-            _logger = logger;
-            _rule = rule;
-            _removeSessionId = removeSessionId;
-            _updateSessionId = updateSessionId;
-            _writeSessionId = writeSessionId;
-            _listWorlds = listWorlds;
+            this.logger = logger;
+            this.rule = rule;
+            this.removeSessionId = removeSessionId;
+            this.updateSessionId = updateSessionId;
+            this.writeSessionId = writeSessionId;
+            this.listWorlds = listWorlds;
         }
 
         [HttpPut, Route("Account/Login")]
@@ -46,22 +46,22 @@ namespace AccountServer.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
+                logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
                 return NotFound();
             }
         }
 
         private async Task<ReturnData> HandleAsync(ArgumentData args)
         {
-            await _rule.CheckAsync(new(args.AccountId, args.Password));
+            await rule.CheckAsync(new(args.AccountId, args.Password));
 
             var sessionId = Guid.NewGuid().ToString();
-            var account = await _updateSessionId.ExecuteAsync(new(args.AccountId, sessionId));
+            var account = await updateSessionId.ExecuteAsync(new(args.AccountId, sessionId));
 
-            await _removeSessionId.ExecuteAsync(new(account.SessionId));
-            await _writeSessionId.ExecuteAsync(new(sessionId, account.Authority));
+            await removeSessionId.ExecuteAsync(new(account.SessionId));
+            await writeSessionId.ExecuteAsync(new(sessionId, account.Authority));
 
-            var worlds = await _listWorlds.QueryAsync(new(args.TargetWorldType));
+            var worlds = await listWorlds.QueryAsync(new(args.TargetWorldType));
 
             return new(account.SessionId, worlds);
         }

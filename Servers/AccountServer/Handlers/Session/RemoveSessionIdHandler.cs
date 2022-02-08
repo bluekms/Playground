@@ -8,17 +8,17 @@ namespace AccountServer.Handlers.Session
 
     public sealed class RemoveSessionIdHandler : ICommandHandler<RemoveSessionIdCommand>
     {
-        private readonly IDatabase _redis;
+        private readonly IDatabase redis;
 
         public RemoveSessionIdHandler(IDatabase redis)
         {
-            _redis = redis;
+            this.redis = redis;
         }
 
         public async Task ExecuteAsync(RemoveSessionIdCommand command)
         {
             var key = $"Session:{command.SessionId}";
-            await _redis.KeyDeleteAsync(key);
+            await redis.KeyDeleteAsync(key);
         }
     }
 }

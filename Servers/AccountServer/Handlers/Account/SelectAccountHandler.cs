@@ -12,18 +12,18 @@ namespace AccountServer.Handlers.Account
 
     public sealed class SelectAccountHandler : IQueryHandler<SelectAccountQuery, AccountData?>
     {
-        private readonly AuthContext _context;
-        private readonly IMapper _mapper;
+        private readonly AuthContext context;
+        private readonly IMapper mapper;
 
         public SelectAccountHandler(AuthContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<AccountData?> QueryAsync(SelectAccountQuery query)
         {
-            var row = await _context.Accounts
+            var row = await context.Accounts
                 .Where(x => x.AccountId == query.AccountId)
                 .SingleOrDefaultAsync();
 
@@ -32,7 +32,7 @@ namespace AccountServer.Handlers.Account
                 return null;
             }
 
-            return _mapper.Map<AccountData>(row);
+            return mapper.Map<AccountData>(row);
         }
     }
 }
