@@ -30,7 +30,7 @@ namespace AccountServer.Controllers
         {
             try
             {
-                return await HandleAsync(new(args.AccountId, args.Password, args.Authority));
+                return await HandleAsync(args);
             }
             catch (Exception e)
             {

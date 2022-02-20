@@ -7,7 +7,7 @@ namespace AccountServer.Handlers.Session
 {
     public sealed record InsertSessionIdCommand(
         string SessionId,
-        string Authority) : ICommand;
+        string UserRole) : ICommand;
 
     public sealed class InsertSessionIdHandler : ICommandHandler<InsertSessionIdCommand>
     {
@@ -23,8 +23,7 @@ namespace AccountServer.Handlers.Session
         public async Task ExecuteAsync(InsertSessionIdCommand command)
         {
             var key = $"Session:{command.SessionId}";
-            await redis.StringSetAsync(key, $"PlayerId:{command.Authority}");
-            await redis.KeyExpireAsync(key, DefaultExpire);
+            await redis.StringSetAsync(key, $"{command.UserRole}", DefaultExpire);
         }
     }
 }
