@@ -4,7 +4,7 @@ using Mapster;
 
 namespace AccountServer.Models
 {
-    public sealed record AccountData(string AccountId, string SessionId, DateTime CreatedAt, string Authority);
+    public sealed record AccountData(string AccountId, string SessionId, DateTime CreatedAt, string UserRole);
 
     internal sealed class AccountDataRegister : IRegister
     {
