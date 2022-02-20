@@ -25,9 +25,37 @@ CREATE TABLE `Accounts` (
   `Password` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `SessionId` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `CreatedAt` datetime NOT NULL,
-  `Authority` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `UserRole` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`AccountId`),
   UNIQUE KEY `SessionId` (`SessionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `Foos` */
+
+DROP TABLE IF EXISTS `Foos`;
+
+CREATE TABLE `Foos` (
+  `Seq` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Command` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Value` int(11) NOT NULL,
+  PRIMARY KEY (`Seq`),
+  KEY `Command` (`Command`),
+  KEY `AccountId` (`AccountId`),
+  CONSTRAINT `Foos_ibfk_1` FOREIGN KEY (`AccountId`) REFERENCES `Accounts` (`AccountId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `Maintenance` */
+
+DROP TABLE IF EXISTS `Maintenance`;
+
+CREATE TABLE `Maintenance` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Start` datetime NOT NULL,
+  `End` datetime NOT NULL,
+  `Reason` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`Start`,`End`),
+  KEY `Id` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `Worlds` */
