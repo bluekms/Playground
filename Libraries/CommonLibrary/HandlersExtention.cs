@@ -7,7 +7,7 @@ namespace CommonLibrary
 {
     public static class HandlersExtension
     {
-        public static IServiceCollection AddHandlers(this IServiceCollection serviceCollection, Assembly assembly)
+        public static IServiceCollection UseHandlers(this IServiceCollection serviceCollection, Assembly assembly)
         {
             var genericTypes = assembly.GetTypes()
                 .Where(x => x.IsPublic)

@@ -17,6 +17,6 @@ namespace AuthDb
         public DateTime CreatedAt { get; set; }
 
         [AllowNull]
-        public string Authority { get; set; }
+        public string UserRole { get; set; }
     }
 }

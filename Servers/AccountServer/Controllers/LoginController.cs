@@ -16,25 +16,25 @@ namespace AccountServer.Controllers
     {
         private readonly ILogger<SignUpController> logger;
         private readonly IRuleChecker<LoginRule> rule;
-        private readonly ICommandHandler<DeleteSessionIdCommand> removeSessionId;
+        private readonly ICommandHandler<DeleteSessionIdCommand> deleteSessionId;
         private readonly ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId;
-        private readonly ICommandHandler<InsertSessionIdCommand> writeSessionId;
-        private readonly IQueryHandler<GetWorldListQuery, List<WorldData>> listWorlds;
+        private readonly ICommandHandler<InsertSessionIdCommand> insertSessionId;
+        private readonly IQueryHandler<GetWorldListQuery, List<WorldData>> getWorldList;
 
         public LoginController(
             ILogger<SignUpController> logger,
             IRuleChecker<LoginRule> rule,
-            ICommandHandler<DeleteSessionIdCommand> removeSessionId,
+            ICommandHandler<DeleteSessionIdCommand> deleteSessionId,
             ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId,
-            ICommandHandler<InsertSessionIdCommand> writeSessionId,
-            IQueryHandler<GetWorldListQuery, List<WorldData>> listWorlds)
+            ICommandHandler<InsertSessionIdCommand> insertSessionId,
+            IQueryHandler<GetWorldListQuery, List<WorldData>> getWorldList)
         {
             this.logger = logger;
             this.rule = rule;
-            this.removeSessionId = removeSessionId;
+            this.deleteSessionId = deleteSessionId;
             this.updateSessionId = updateSessionId;
-            this.writeSessionId = writeSessionId;
-            this.listWorlds = listWorlds;
+            this.insertSessionId = insertSessionId;
+            this.getWorldList = getWorldList;
         }
 
         [HttpPut, Route("Account/Login")]
@@ -58,10 +58,10 @@ namespace AccountServer.Controllers
             var sessionId = Guid.NewGuid().ToString();
             var account = await updateSessionId.ExecuteAsync(new(args.AccountId, sessionId));
 
-            await removeSessionId.ExecuteAsync(new(account.SessionId));
-            await writeSessionId.ExecuteAsync(new(sessionId, account.Authority));
+            await deleteSessionId.ExecuteAsync(new(account.SessionId));
+            await insertSessionId.ExecuteAsync(new(sessionId, account.UserRole));
 
-            var worlds = await listWorlds.QueryAsync(new(args.TargetWorldType));
+            var worlds = await getWorldList.QueryAsync(new(args.TargetWorldType));
 
             return new(account.SessionId, worlds);
         }
