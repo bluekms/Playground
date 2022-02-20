@@ -1,52 +1,31 @@
 using System.Reflection;
-using AuthDb;
+using AccountServer.Extensions;
+using AccountServer.Extensions.Authentication;
+using AccountServer.Extensions.Authorizations;
 using CommonLibrary;
-using Mapster;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add Logger
-
+builder.Services.AddControllers();
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration
         .ReadFrom.Configuration(context.Configuration);
 });
 
-// Add Controllers
+builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
+builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
 
-builder.Services.AddControllers();
+builder.Services.UseHandlers(Assembly.GetExecutingAssembly());
+builder.Services.UseMapster(Assembly.GetExecutingAssembly());
 
-// Add Database
+builder.Services.UseSessionIdAuthentication();
+builder.Services.UsePermissionAuthorization();
 
-builder.Services.AddDbContext<AuthContext>(options =>
-{
-    options.UseMySQL(builder.Configuration.GetConnectionString("AuthDb"));
-});
-
-var redisConnection = ConnectionMultiplexer.Connect(
-    builder.Configuration.GetConnectionString("RedisCache"));
-builder.Services.AddScoped(x => redisConnection.GetDatabase());
-
-// Add Transient
-
-builder.Services.AddHandlers(Assembly.GetExecutingAssembly());
-
-builder.Services.AddMapster(config =>
-{
-    config.RequireDestinationMemberSource = true;
-    config.Default.MapToConstructor(true);
-});
-builder.Services.AddMapsterRegisters(Assembly.GetExecutingAssembly());
-
-// Add Scoped
-
+// TODO 이걸 전부 상속형태로 수정할지 고민
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
 // Configure the HTTP request pipeline.

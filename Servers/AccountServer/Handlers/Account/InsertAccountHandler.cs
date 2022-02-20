@@ -10,7 +10,7 @@ namespace AccountServer.Handlers.Account
     public sealed record InsertAccountCommand(
         string AccountId,
         string Password,
-        string Authority) : ICommand;
+        string UserRole) : ICommand;
 
     public sealed class InsertAccountHandler : ICommandHandler<InsertAccountCommand, AccountData>
     {
@@ -36,7 +36,7 @@ namespace AccountServer.Handlers.Account
                 Password = command.Password,
                 SessionId = string.Empty,
                 CreatedAt = time.Now,
-                Authority = command.Authority,
+                UserRole = command.UserRole,
             };
 
             await context.Accounts.AddAsync(newRow);
