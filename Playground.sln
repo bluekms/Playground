@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorldServer", "Servers\WorldServer\WorldServer.csproj", "{B792B6A7-F903-4CDE-BF46-5440CC472CA0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServer", "Servers\AccountServer\AccountServer.csproj", "{B37E87ED-246A-4098-AA95-0C1085A207A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer", "Servers\AuthServer\AuthServer.csproj", "{B37E87ED-246A-4098-AA95-0C1085A207A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OperationServer", "Servers\OperationServer\OperationServer.csproj", "{A2F2DA88-DA30-4E78-A5C8-C8F4A6FA02B7}"
 EndProject
