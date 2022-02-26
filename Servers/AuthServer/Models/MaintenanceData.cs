@@ -2,7 +2,7 @@ using System;
 using AuthDb;
 using Mapster;
 
-namespace AccountServer.Models
+namespace AuthServer.Models
 {
     public sealed record MaintenanceData(long Id, DateTime Start, DateTime End, string Reason);
 

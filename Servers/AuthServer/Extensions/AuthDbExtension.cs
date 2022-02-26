@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.Extensions
+namespace AuthServer.Extensions
 {
     public static class AuthDbExtension
     {

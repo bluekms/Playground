@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using AccountServer.Models;
 using AuthDb;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
 
-namespace AccountServer.Handlers.Maintenance
+namespace AuthServer.Handlers.Maintenance
 {
     public sealed record InsertMaintenanceCommand(
         DateTime Start,

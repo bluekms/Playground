@@ -2,9 +2,9 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using AccountServer.Extensions.Authorizations;
-using AccountServer.Handlers.Credential;
-using AccountServer.Models;
+using AuthServer.Models;
+using AuthServer.Extensions.Authorizations;
+using AuthServer.Handlers.Credential;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace AccountServer.Extensions.Authentication
+namespace AuthServer.Extensions.Authentication
 {
     public class CredentialAuthenticationHandler : AuthenticationHandler<CredentialAuthenticationSchemeOptions>
     {

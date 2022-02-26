@@ -2,7 +2,7 @@ using AuthDb;
 using CommonLibrary.Models;
 using Mapster;
 
-namespace AccountServer.Models
+namespace AuthServer.Models
 {
     public sealed record CredentialData(string Token, string Name, ServerRoles Role, string Description);
 
