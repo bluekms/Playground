@@ -1,9 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using AccountServer.Extensions.Authentication;
 using AccountServer.Handlers.Server;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountServer.Controllers
@@ -21,6 +23,7 @@ namespace AccountServer.Controllers
         }
 
         [HttpPost, Route("Auth/Server/Add")]
+        [Authorize(AuthenticationSchemes = CredentialAuthenticationSchemeOptions.Name)]
         public async Task<ActionResult> AddServer([FromBody] Arguments args)
         {
             var command = mapper.Map<UpsertServerCommand>(args);

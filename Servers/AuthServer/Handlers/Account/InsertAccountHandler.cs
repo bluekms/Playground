@@ -3,6 +3,7 @@ using AccountServer.Models;
 using AuthDb;
 using CommonLibrary;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using MapsterMapper;
 
 namespace AccountServer.Handlers.Account
@@ -10,7 +11,7 @@ namespace AccountServer.Handlers.Account
     public sealed record InsertAccountCommand(
         string AccountId,
         string Password,
-        string UserRole) : ICommand;
+        UserRoles UserRole) : ICommand;
 
     public sealed class InsertAccountHandler : ICommandHandler<InsertAccountCommand, AccountData>
     {
@@ -34,9 +35,9 @@ namespace AccountServer.Handlers.Account
             {
                 AccountId = command.AccountId,
                 Password = command.Password,
-                SessionId = string.Empty,
+                Token = string.Empty,
                 CreatedAt = time.Now,
-                UserRole = command.UserRole,
+                Role = command.UserRole,
             };
 
             await context.Accounts.AddAsync(newRow);

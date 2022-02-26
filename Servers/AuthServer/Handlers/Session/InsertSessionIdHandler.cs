@@ -1,13 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using StackExchange.Redis;
 
 namespace AccountServer.Handlers.Session
 {
     public sealed record InsertSessionIdCommand(
         string SessionId,
-        string UserRole) : ICommand;
+        UserRoles UserRole) : ICommand;
 
     public sealed class InsertSessionIdHandler : ICommandHandler<InsertSessionIdCommand>
     {

@@ -59,12 +59,12 @@ namespace AccountServer.Controllers
             var sessionId = Guid.NewGuid().ToString();
             var account = await updateSessionId.ExecuteAsync(new(args.AccountId, sessionId));
 
-            await deleteSessionId.ExecuteAsync(new(account.SessionId));
-            await insertSessionId.ExecuteAsync(new(sessionId, account.UserRole));
+            await deleteSessionId.ExecuteAsync(new(account.Token));
+            await insertSessionId.ExecuteAsync(new(sessionId, account.Role));
 
             var worlds = await getWorldList.QueryAsync(new(args.Role));
 
-            return new(account.SessionId, worlds);
+            return new(account.Token, worlds);
         }
 
         public sealed record Arguments(string AccountId, string Password, ServerRoles Role);

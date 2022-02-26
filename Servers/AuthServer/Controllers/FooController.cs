@@ -18,7 +18,7 @@ namespace AccountServer.Controllers
         }
 
         [HttpPost, Route("Auth/Foo")]
-        [Authorize(AuthenticationSchemes = SessionIdAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+        [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
         public async Task<ActionResult<string>> Foo([FromBody] ArgumentData args)
         {
             try

@@ -1,6 +1,6 @@
 namespace CommonLibrary.Models
 {
-    public enum ClientRoles
+    public enum UserRoles
     {
         Administrator,
         Developer,

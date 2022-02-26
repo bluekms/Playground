@@ -1,22 +1,23 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using CommonLibrary.Models;
 
 namespace AuthDb
 {
     public sealed class Account
     {
         [AllowNull]
+        public string Token { get; set; }
+        
+        [AllowNull]
         public string AccountId { get; set; }
 
         [AllowNull]
         public string Password { get; set; }
 
-        [AllowNull]
-        public string SessionId { get; set; }
-
         public DateTime CreatedAt { get; set; }
 
         [AllowNull]
-        public string UserRole { get; set; }
+        public UserRoles Role { get; set; }
     }
 }

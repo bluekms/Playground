@@ -8,23 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountServer.Handlers.Account
 {
-    public sealed record GetAccountBySessionIdQuery(string SessionId) : IQuery;
+    public sealed record GetAccountBySessionQuery(string Token) : IQuery;
 
-    public class GetAccountBySessionIdHandler : IQueryHandler<GetAccountBySessionIdQuery, AccountData?>
+    public class GetAccountBySessionHandler : IQueryHandler<GetAccountBySessionQuery, AccountData?>
     {
         private readonly AuthContext context;
         private readonly IMapper mapper;
 
-        public GetAccountBySessionIdHandler(AuthContext context, IMapper mapper)
+        public GetAccountBySessionHandler(AuthContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<AccountData?> QueryAsync(GetAccountBySessionIdQuery query)
+        public async Task<AccountData?> QueryAsync(GetAccountBySessionQuery query)
         {
             var row = await context.Accounts
-                .Where(x => x.SessionId == query.SessionId)
+                .Where(x => x.Token == query.Token)
                 .SingleOrDefaultAsync();
 
             if (row == null)

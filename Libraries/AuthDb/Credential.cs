@@ -1,20 +1,17 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
 
 namespace AuthDb
 {
-    public sealed class Server
+    public class Credential
     {
         [AllowNull]
-        public string Name { get; set; }
-
-        public ServerRoles Role { get; set; }
-
+        public string Token { get; set; }
+        
         [AllowNull]
-        public string Address { get; set; }
-
-        public DateTime ExpireAt { get; set; }
+        public string Name { get; set; }
+        
+        public ServerRoles Role { get; set; }
         
         [AllowNull]
         public string Description { get; set; }
