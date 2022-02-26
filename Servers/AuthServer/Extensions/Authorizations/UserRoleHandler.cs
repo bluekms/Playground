@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AccountServer.Handlers.Maintenance;
+using AuthServer.Handlers.Maintenance;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace AccountServer.Extensions.Authorizations
+namespace AuthServer.Extensions.Authorizations
 {
     public class UserRoleHandler : AuthorizationHandler<UserRoleRequirment>
     {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace AccountServer.Extensions.Authorizations
+namespace AuthServer.Extensions.Authorizations
 {
     public class FooRequirement : IAuthorizationRequirement
     {

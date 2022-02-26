@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using System.Threading.Tasks;
-using AccountServer.Models;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 
-namespace AccountServer.Handlers.Account
+namespace AuthServer.Handlers.Account
 {
     public sealed record SignUpRule(string AccountId) : IRule;
 

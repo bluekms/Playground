@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using AccountServer.Models;
 using AuthDb;
+using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
 
-namespace AccountServer.Handlers.Account
+namespace AuthServer.Handlers.Account
 {
     public sealed record InsertAccountCommand(
         string AccountId,

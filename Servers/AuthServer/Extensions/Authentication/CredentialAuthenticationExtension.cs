@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.Extensions.Authentication
+namespace AuthServer.Extensions.Authentication
 {
     public static class CredentialAuthenticationExtension
     {

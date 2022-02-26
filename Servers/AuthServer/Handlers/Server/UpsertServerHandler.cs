@@ -6,7 +6,7 @@ using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
 
-namespace AccountServer.Handlers.Server
+namespace AuthServer.Handlers.Server
 {
     public sealed record UpsertServerCommand(
         string Name,

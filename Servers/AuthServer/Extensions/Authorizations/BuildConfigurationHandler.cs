@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
-namespace AccountServer.Extensions.Authorizations
+namespace AuthServer.Extensions.Authorizations
 {
     public class BuildConfigurationHandler : AuthorizationHandler<BuildConfigurationRequirment>
     {

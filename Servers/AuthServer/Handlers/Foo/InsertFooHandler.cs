@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using AuthDb;
 using CommonLibrary.Handlers;
 
-namespace AccountServer.Handlers.Foo
+namespace AuthServer.Handlers.Foo
 {
     public sealed record InsertFooCommand(string AccountId, AuthDb.Foo.FooCommand Cmd, int Value) : ICommand;
 

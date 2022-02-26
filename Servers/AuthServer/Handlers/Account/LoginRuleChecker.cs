@@ -5,7 +5,7 @@ using AuthDb;
 using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Account
+namespace AuthServer.Handlers.Account
 {
     public sealed record LoginRule(string AccountId, string Password) : IRule;
 

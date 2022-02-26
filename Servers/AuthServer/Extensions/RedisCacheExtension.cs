@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace AccountServer.Extensions
+namespace AuthServer.Extensions
 {
     public static class RedisCacheExtension
     {

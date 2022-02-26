@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using AccountServer.Extensions.Authentication;
+using AuthServer.Extensions.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AccountServer.Controllers
+namespace AuthServer.Controllers
 {
     [ApiController]
     public class FooController : ControllerBase

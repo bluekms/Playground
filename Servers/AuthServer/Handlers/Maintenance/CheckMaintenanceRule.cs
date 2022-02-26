@@ -7,7 +7,7 @@ using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
 using Serilog.Core;
 
-namespace AccountServer.Handlers.Maintenance
+namespace AuthServer.Handlers.Maintenance
 {
     public sealed record AddMaintenanceRule(DateTime Start, DateTime End, string Reason) : IRule;
 

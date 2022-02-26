@@ -5,7 +5,7 @@ using CommonLibrary;
 using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Maintenance
+namespace AuthServer.Handlers.Maintenance
 {
     public sealed record IsMaintenanceTimeQuery() : IQuery;
 

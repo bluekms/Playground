@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.Extensions
+namespace AuthServer.Extensions
 {
     public static class ControllersExtension
     {

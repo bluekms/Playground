@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using AccountServer.Handlers.Maintenance;
-using AccountServer.Models;
+using AuthServer.Handlers.Maintenance;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AccountServer.Controllers
+namespace AuthServer.Controllers
 {
     [ApiController]
     public class AddMaintenanceController : ControllerBase
