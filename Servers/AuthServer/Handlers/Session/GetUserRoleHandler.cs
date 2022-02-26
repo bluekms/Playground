@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
-namespace AccountServer.Handlers.Session
+namespace AuthServer.Handlers.Session
 {
     public sealed record GetUserRoleQuery(string Token) : IQuery;
 

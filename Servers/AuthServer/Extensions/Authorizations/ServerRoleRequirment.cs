@@ -1,7 +1,7 @@
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace AccountServer.Extensions.Authorizations
+namespace AuthServer.Extensions.Authorizations
 {
     public class ServerRoleRequirment : IAuthorizationRequirement
     {

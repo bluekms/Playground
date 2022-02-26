@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AccountServer.Handlers.Account;
-using AccountServer.Models;
+using AuthServer.Handlers.Account;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AccountServer.Controllers
+namespace AuthServer.Controllers
 {
     [ApiController]
     public sealed class SignUpController : ControllerBase

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 
-namespace AccountServer.Extensions.Authentication
+namespace AuthServer.Extensions.Authentication
 {
     public class CredentialAuthenticationSchemeOptions : AuthenticationSchemeOptions
     {

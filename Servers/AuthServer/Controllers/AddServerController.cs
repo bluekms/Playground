@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
-using AccountServer.Extensions.Authentication;
-using AccountServer.Handlers.Server;
+using AuthServer.Extensions.Authentication;
+using AuthServer.Handlers.Server;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AccountServer.Controllers
+namespace AuthServer.Controllers
 {
     [ApiController]
     public class AddServerController : ControllerBase

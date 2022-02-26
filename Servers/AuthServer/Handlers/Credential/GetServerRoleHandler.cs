@@ -5,7 +5,7 @@ using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Credential
+namespace AuthServer.Handlers.Credential
 {
     public sealed record GetServerRoleQuery(string Token) : IQuery;
 

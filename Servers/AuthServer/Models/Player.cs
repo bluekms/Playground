@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccountServer.Models
+namespace AuthServer.Models
 {
     // TODO AccountContext에 record로 합치기
     public sealed class Player
