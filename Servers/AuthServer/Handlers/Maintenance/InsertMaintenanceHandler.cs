@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AuthDb;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.Handlers.Maintenance
 {
@@ -31,11 +33,8 @@ namespace AuthServer.Handlers.Maintenance
                 End = command.End,
                 Reason = command.Reason,
             };
-
             await context.Maintenance.AddAsync(newRow);
-
             await context.SaveChangesAsync();
-
             return mapper.Map<MaintenanceData>(newRow);
         }
     }

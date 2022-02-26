@@ -35,8 +35,4 @@
     <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\Authorization" />
-  </ItemGroup>
-
 </Project>

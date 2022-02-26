@@ -6,24 +6,24 @@ using StackExchange.Redis;
 
 namespace AuthServer.Handlers.Session
 {
-    public sealed record InsertSessionIdCommand(
-        string SessionId,
+    public sealed record InsertSessionCommand(
+        string Token,
         UserRoles UserRole) : ICommand;
 
-    public sealed class InsertSessionIdHandler : ICommandHandler<InsertSessionIdCommand>
+    public sealed class InsertSessionHandler : ICommandHandler<InsertSessionCommand>
     {
         private static TimeSpan DefaultExpire = new(0, 0, 5, 0);
 
         private readonly IDatabase redis;
 
-        public InsertSessionIdHandler(IDatabase redis)
+        public InsertSessionHandler(IDatabase redis)
         {
             this.redis = redis;
         }
 
-        public async Task ExecuteAsync(InsertSessionIdCommand command)
+        public async Task ExecuteAsync(InsertSessionCommand command)
         {
-            var key = $"Session:{command.SessionId}";
+            var key = $"Session:{command.Token}";
             await redis.StringSetAsync(key, $"{command.UserRole}", DefaultExpire);
         }
     }

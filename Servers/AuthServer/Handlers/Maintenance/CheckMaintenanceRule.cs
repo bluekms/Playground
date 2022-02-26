@@ -41,6 +41,16 @@ namespace AuthServer.Handlers.Maintenance
             {
                 throw new Exception($"Duplicate End. {@row}");
             }
+
+            var exist = await context.Maintenance
+                .Where(x => rule.Start <= x.Start)
+                .Where(x => x.End <= rule.End)
+                .AnyAsync();
+
+            if (exist)
+            {
+                throw new Exception($"Duplicate Start and End. {@row}");
+            }
         }
     }
 }
