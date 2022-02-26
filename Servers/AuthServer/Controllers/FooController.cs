@@ -17,7 +17,7 @@ namespace AccountServer.Controllers
             this.logger = logger;
         }
 
-        [HttpPost, Route("Account/Foo")]
+        [HttpPost, Route("Auth/Foo")]
         [Authorize(AuthenticationSchemes = SessionIdAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
         public async Task<ActionResult<string>> Foo([FromBody] ArgumentData args)
         {

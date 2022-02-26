@@ -1,3 +1,4 @@
+using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,9 +14,9 @@ namespace AccountServer.Extensions.Authorizations
                 {
                     policy.Requirements.Add(new ClientRoleRequirment(new[]
                     {
-                        ClientRoleRequirment.ClientRoles.Developer,
-                        ClientRoleRequirment.ClientRoles.WhitelistedUser,
-                        ClientRoleRequirment.ClientRoles.User,
+                        ClientRoles.Developer,
+                        ClientRoles.WhitelistedUser,
+                        ClientRoles.User,
                     }));
                 });
 
@@ -24,7 +25,7 @@ namespace AccountServer.Extensions.Authorizations
                     policy.Requirements.Add(new BuildConfigurationRequirment(BuildConfigurationRequirment.BuildConfigurations.Debug));
                     policy.Requirements.Add(new ClientRoleRequirment(new[]
                     {
-                        ClientRoleRequirment.ClientRoles.Developer,
+                        ClientRoles.Developer,
                     }));
                 });
 
@@ -32,9 +33,9 @@ namespace AccountServer.Extensions.Authorizations
                 {
                     policy.Requirements.Add(new ClientRoleRequirment(new[]
                     {
-                        ClientRoleRequirment.ClientRoles.Administrator,
-                        ClientRoleRequirment.ClientRoles.Developer,
-                        ClientRoleRequirment.ClientRoles.InternalService,
+                        ClientRoles.Administrator,
+                        ClientRoles.Developer,
+                        ClientRoles.InternalService,
                     }));
                 });
             });
