@@ -9,19 +9,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
 builder.Host.UseSerilog((context, configuration) =>
 {
     configuration
         .ReadFrom.Configuration(context.Configuration);
 });
 
+builder.Services.UseControllers();
 builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
-
 builder.Services.UseHandlers(Assembly.GetExecutingAssembly());
 builder.Services.UseMapster(Assembly.GetExecutingAssembly());
-
 builder.Services.UseSessionIdAuthentication();
 builder.Services.UsePermissionAuthorization();
 
