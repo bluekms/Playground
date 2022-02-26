@@ -12,36 +12,36 @@ namespace AccountServer.Extensions.Authorizations
             {
                 options.AddPolicy("ServiceApi", policy =>
                 {
-                    policy.Requirements.Add(new ClientRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
-                        ClientRoles.Developer,
-                        ClientRoles.WhitelistedUser,
-                        ClientRoles.User,
+                        UserRoles.Developer,
+                        UserRoles.WhitelistedUser,
+                        UserRoles.User,
                     }));
                 });
 
                 options.AddPolicy("CheatApi", policy =>
                 {
                     policy.Requirements.Add(new BuildConfigurationRequirment(BuildConfigurationRequirment.BuildConfigurations.Debug));
-                    policy.Requirements.Add(new ClientRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
-                        ClientRoles.Developer,
+                        UserRoles.Developer,
                     }));
                 });
 
                 options.AddPolicy("InternalApi", policy =>
                 {
-                    policy.Requirements.Add(new ClientRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
-                        ClientRoles.Administrator,
-                        ClientRoles.Developer,
-                        ClientRoles.InternalService,
+                        UserRoles.Administrator,
+                        UserRoles.Developer,
+                        UserRoles.InternalService,
                     }));
                 });
             });
 
             services.AddScoped<IAuthorizationHandler, BuildConfigurationHandler>();
-            services.AddScoped<IAuthorizationHandler, ClientRoleHandler>();
+            services.AddScoped<IAuthorizationHandler, UserRoleHandler>();
         }
     }
 }

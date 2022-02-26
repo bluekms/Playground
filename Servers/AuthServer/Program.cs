@@ -20,7 +20,8 @@ builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
 builder.Services.UseHandlers(Assembly.GetExecutingAssembly());
 builder.Services.UseMapster(Assembly.GetExecutingAssembly());
-builder.Services.UseSessionIdAuthentication();
+builder.Services.UseSessionAuthentication();
+builder.Services.UseCredentialAuthentication();
 builder.Services.UsePermissionAuthorization();
 
 // TODO 이걸 전부 상속형태로 수정할지 고민

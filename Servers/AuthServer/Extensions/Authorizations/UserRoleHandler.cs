@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AccountServer.Extensions.Authorizations
 {
-    public class ClientRoleHandler : AuthorizationHandler<ClientRoleRequirment>
+    public class UserRoleHandler : AuthorizationHandler<UserRoleRequirment>
     {
         private readonly IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime;
 
-        public ClientRoleHandler(IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime)
+        public UserRoleHandler(IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime)
         {
             this.isMaintenanceTime = isMaintenanceTime;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ClientRoleRequirment requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserRoleRequirment requirement)
         {
             if (context.User?.Identity == null)
             {
@@ -31,7 +31,7 @@ namespace AccountServer.Extensions.Authorizations
             }
 
             var claim = context.User.Claims
-                .FirstOrDefault(x => x.Type == ClientRoleRequirment.ClaimType);
+                .FirstOrDefault(x => x.Type == UserRoleRequirment.ClaimType);
 
             if (claim == null)
             {
@@ -39,13 +39,13 @@ namespace AccountServer.Extensions.Authorizations
                 return;
             }
 
-            if (requirement.ClientRoleList.All(x => x != claim.Value))
+            if (requirement.UserRoleList.All(x => x != claim.Value))
             {
                 context.Fail();
                 return;
             }
 
-            if (claim.Value == ClientRoles.User.ToString())
+            if (claim.Value == UserRoles.User.ToString())
             {
                 if (await isMaintenanceTime.QueryAsync(new()))
                 {

@@ -8,6 +8,7 @@ using AccountServer.Handlers.Account;
 using AccountServer.Handlers.Session;
 using AccountServer.Models;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,20 +16,19 @@ using Microsoft.Net.Http.Headers;
 
 namespace AccountServer.Extensions.Authentication
 {
-    // https://www.c-sharpcorner.com/article/policy-based-role-based-authorization-in-asp-net-core/
-    public class SessionIdAuthenticationHandler : AuthenticationHandler<SessionIdAuthenticationSchemeOptions>
+    public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
     {
-        private readonly IQueryHandler<GetUserRoleQuery, string> getUserRole;
-        private readonly IQueryHandler<GetAccountBySessionIdQuery, AccountData?> getAccount;
+        private readonly IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole;
+        private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
         private readonly ICommandHandler<InsertSessionIdCommand> insertSessionId;
 
-        public SessionIdAuthenticationHandler(
-            IOptionsMonitor<SessionIdAuthenticationSchemeOptions> options,
+        public SessionAuthenticationHandler(
+            IOptionsMonitor<SessionAuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IQueryHandler<GetUserRoleQuery, string> getUserRole,
-            IQueryHandler<GetAccountBySessionIdQuery, AccountData?> getAccount,
+            IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole,
+            IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
             ICommandHandler<InsertSessionIdCommand> insertSessionId)
             : base(options, logger, encoder, clock)
         {
@@ -39,15 +39,15 @@ namespace AccountServer.Extensions.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var sessionId = GetSessionIdFromHeaders();
-            if (string.IsNullOrEmpty(sessionId))
+            var token = GetSessionToken();
+            if (string.IsNullOrEmpty(token))
             {
                 return AuthenticateResult.NoResult();
             }
 
-            var claimsIdentity = new ClaimsIdentity(SessionIdAuthenticationSchemeOptions.Name);
+            var claimsIdentity = new ClaimsIdentity(SessionAuthenticationSchemeOptions.Name);
             claimsIdentity.AddClaim(CreateBuildConfigurationClaim());
-            claimsIdentity.AddClaim(await CreateUserRoleClaim(sessionId));
+            claimsIdentity.AddClaim(await CreateClientRoleClaim(token));
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
@@ -55,7 +55,7 @@ namespace AccountServer.Extensions.Authentication
             return AuthenticateResult.Success(authTicket);
         }
 
-        private string? GetSessionIdFromHeaders()
+        private string? GetSessionToken()
         {
             var autorization = Request.Headers[HeaderNames.Authorization];
             if (string.IsNullOrEmpty(autorization))
@@ -68,7 +68,7 @@ namespace AccountServer.Extensions.Authentication
                 return string.Empty;
             }
 
-            if (headerValue.Scheme != SessionIdAuthenticationSchemeOptions.Name)
+            if (headerValue.Scheme != SessionAuthenticationSchemeOptions.Name)
             {
                 return string.Empty;
             }
@@ -87,22 +87,13 @@ namespace AccountServer.Extensions.Authentication
             return new(BuildConfigurationRequirment.ClaimType, buildConfiguration.ToString());
         }
 
-        private async Task<Claim> CreateUserRoleClaim(string sessionId)
+        private async Task<Claim> CreateClientRoleClaim(string token)
         {
-            var userRole = await getUserRole.QueryAsync(new(sessionId));
-            if (string.IsNullOrEmpty(userRole))
-            {
-                var account = await getAccount.QueryAsync(new(sessionId));
-                if (account == null)
-                {
-                    throw new Exception("Invalid SessionId Token");
-                }
+            var userRole = await getUserRole.QueryAsync(new(token));
 
-                userRole = account.UserRole;
-                await insertSessionId.ExecuteAsync(new(sessionId, userRole));
-            }
+            // TODO 추후 없으면 mysql에서 가져오는 로직 추가
 
-            return new(ClientRoleRequirment.ClaimType, userRole);
+            return new(UserRoleRequirment.ClaimType, userRole.ToString());
         }
     }
 }
