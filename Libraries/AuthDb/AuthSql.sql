@@ -56,19 +56,19 @@ CREATE TABLE `Maintenance` (
   `Reason` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`Start`,`End`),
   KEY `Id` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*Table structure for table `Worlds` */
+/*Table structure for table `Servers` */
 
-DROP TABLE IF EXISTS `Worlds`;
+DROP TABLE IF EXISTS `Servers`;
 
-CREATE TABLE `Worlds` (
-  `WorldName` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `WorldType` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `Servers` (
+  `ServerName` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ServerRole` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Address` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ExpireAt` datetime NOT NULL,
-  PRIMARY KEY (`WorldName`),
-  KEY `WorldType` (`WorldType`)
+  PRIMARY KEY (`ServerName`),
+  KEY `WorldType` (`ServerRole`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

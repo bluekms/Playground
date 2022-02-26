@@ -25,7 +25,7 @@ namespace AccountServer.Controllers
             this.insertAccount = insertAccount;
         }
 
-        [HttpPost, Route("Account/SignUp")]
+        [HttpPost, Route("Auth/SignUp")]
         public async Task<ActionResult<AccountData>> SignUp([FromBody] ArgumentData args)
         {
             try

@@ -29,7 +29,7 @@ namespace AccountServer.Controllers
             this.insertMaintenance = insertMaintenance;
         }
 
-        [HttpPost, Route("Account/Maintenance/Add")]
+        [HttpPost, Route("Auth/Maintenance/Add")]
         public async Task<ActionResult<ReturnData>> AddMaintenance([FromBody] ArgumentData args)
         {
             await rule.CheckAsync(new(args.Start, args.End, args.Reason));

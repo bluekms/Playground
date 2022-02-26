@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AccountServer.Handlers.Maintenance;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AccountServer.Extensions.Authorizations
@@ -44,7 +45,7 @@ namespace AccountServer.Extensions.Authorizations
                 return;
             }
 
-            if (claim.Value == ClientRoleRequirment.ClientRoles.User.ToString())
+            if (claim.Value == ClientRoles.User.ToString())
             {
                 if (await isMaintenanceTime.QueryAsync(new()))
                 {
