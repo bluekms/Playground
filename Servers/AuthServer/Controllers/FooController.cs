@@ -17,8 +17,8 @@ namespace AccountServer.Controllers
             this.logger = logger;
         }
 
-        [HttpPost, Route("Account/Foo")]
-        [Authorize(AuthenticationSchemes = SessionIdAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+        [HttpPost, Route("Auth/Foo")]
+        [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
         public async Task<ActionResult<string>> Foo([FromBody] ArgumentData args)
         {
             try

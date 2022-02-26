@@ -21,13 +21,25 @@ USE `Auth`;
 DROP TABLE IF EXISTS `Accounts`;
 
 CREATE TABLE `Accounts` (
+  `Token` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `AccountId` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Password` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SessionId` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `CreatedAt` datetime NOT NULL,
-  `UserRole` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`AccountId`),
-  UNIQUE KEY `SessionId` (`SessionId`)
+  `Role` tinyint(4) NOT NULL,
+  PRIMARY KEY (`Token`),
+  UNIQUE KEY `AccountId` (`AccountId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `Credentials` */
+
+DROP TABLE IF EXISTS `Credentials`;
+
+CREATE TABLE `Credentials` (
+  `Token` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Name` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Role` tinyint(4) NOT NULL,
+  `Description` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`Token`,`Name`,`Role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `Foos` */
@@ -56,19 +68,20 @@ CREATE TABLE `Maintenance` (
   `Reason` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`Start`,`End`),
   KEY `Id` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*Table structure for table `Worlds` */
+/*Table structure for table `Servers` */
 
-DROP TABLE IF EXISTS `Worlds`;
+DROP TABLE IF EXISTS `Servers`;
 
-CREATE TABLE `Worlds` (
-  `WorldName` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `WorldType` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+CREATE TABLE `Servers` (
+  `Name` char(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Role` tinyint(4) NOT NULL,
   `Address` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ExpireAt` datetime NOT NULL,
-  PRIMARY KEY (`WorldName`),
-  KEY `WorldType` (`WorldType`)
+  `Description` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`Name`),
+  KEY `WorldType` (`Role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

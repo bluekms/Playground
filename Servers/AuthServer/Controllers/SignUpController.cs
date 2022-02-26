@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AccountServer.Handlers.Account;
 using AccountServer.Models;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -25,32 +26,17 @@ namespace AccountServer.Controllers
             this.insertAccount = insertAccount;
         }
 
-        [HttpPost, Route("Account/SignUp")]
-        public async Task<ActionResult<AccountData>> SignUp([FromBody] ArgumentData args)
-        {
-            try
-            {
-                return await HandleAsync(args);
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
-                return NotFound();
-            }
-        }
-
-        private async Task<AccountData> HandleAsync(ArgumentData args)
+        [HttpPost, Route("Auth/SignUp")]
+        public async Task<ActionResult<AccountData>> SignUp([FromBody] Arguments args)
         {
             await rule.CheckAsync(new(args.AccountId));
 
-            var account = await insertAccount.ExecuteAsync(new(
+            return await insertAccount.ExecuteAsync(new(
                 args.AccountId,
                 args.Password,
-                args.Authority));
-
-            return account;
+                args.Role));
         }
 
-        public sealed record ArgumentData(string AccountId, string Password, string Authority);
+        public sealed record Arguments(string AccountId, string Password, UserRoles Role);
     }
 }
