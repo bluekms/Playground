@@ -9,20 +9,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.Handlers.Session
 {
-    public sealed record UpdateSessionIdCommand(string AccountId, string SessionId) : ICommand;
+    public sealed record UpdateSessionCommand(string AccountId, string Token) : ICommand;
 
-    public sealed class UpdateAccountHandler : ICommandHandler<UpdateSessionIdCommand, AccountData>
+    public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, AccountData>
     {
         private readonly AuthContext context;
         private readonly IMapper mapper;
 
-        public UpdateAccountHandler(AuthContext context, IMapper mapper)
+        public UpdateSessionHandler(AuthContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<AccountData> ExecuteAsync(UpdateSessionIdCommand command)
+        public async Task<AccountData> ExecuteAsync(UpdateSessionCommand command)
         {
             var row = await context.Accounts
                 .Where(x => x.AccountId == command.AccountId)
@@ -33,7 +33,7 @@ namespace AuthServer.Handlers.Session
                 throw new NullReferenceException(nameof(command.AccountId));
             }
 
-            row.Token = command.SessionId;
+            row.Token = command.Token;
             await context.SaveChangesAsync();
 
             return mapper.Map<AccountData>(row);

@@ -17,58 +17,45 @@ namespace AuthServer.Controllers
     {
         private readonly ILogger<SignUpController> logger;
         private readonly IRuleChecker<LoginRule> rule;
-        private readonly ICommandHandler<DeleteSessionIdCommand> deleteSessionId;
-        private readonly ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId;
-        private readonly ICommandHandler<InsertSessionIdCommand> insertSessionId;
-        private readonly IQueryHandler<GetWorldListQuery, List<ServerData>> getWorldList;
+        private readonly ICommandHandler<DeleteSessionCommand> deleteSession;
+        private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
+        private readonly ICommandHandler<InsertSessionCommand> insertSession;
+        private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
         public LoginController(
             ILogger<SignUpController> logger,
             IRuleChecker<LoginRule> rule,
-            ICommandHandler<DeleteSessionIdCommand> deleteSessionId,
-            ICommandHandler<UpdateSessionIdCommand, AccountData> updateSessionId,
-            ICommandHandler<InsertSessionIdCommand> insertSessionId,
-            IQueryHandler<GetWorldListQuery, List<ServerData>> getWorldList)
+            ICommandHandler<DeleteSessionCommand> deleteSession,
+            ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
+            ICommandHandler<InsertSessionCommand> insertSession,
+            IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
         {
             this.logger = logger;
             this.rule = rule;
-            this.deleteSessionId = deleteSessionId;
-            this.updateSessionId = updateSessionId;
-            this.insertSessionId = insertSessionId;
-            this.getWorldList = getWorldList;
+            this.deleteSession = deleteSession;
+            this.updateSession = updateSession;
+            this.insertSession = insertSession;
+            this.getServerList = getServerList;
         }
 
         [HttpPut, Route("Auth/Login")]
-        public async Task<ActionResult<ReturnData>> Login([FromBody] Arguments args)
-        {
-            try
-            {
-                return await HandleAsync(new(args.AccountId, args.Password, args.Role));
-            }
-            catch (Exception e)
-            {
-                logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
-                return NotFound();
-            }
-        }
-
-        private async Task<ReturnData> HandleAsync(Arguments args)
+        public async Task<ActionResult<Returns>> Login([FromBody] Arguments args)
         {
             await rule.CheckAsync(new(args.AccountId, args.Password));
 
             var sessionId = Guid.NewGuid().ToString();
-            var account = await updateSessionId.ExecuteAsync(new(args.AccountId, sessionId));
+            var account = await updateSession.ExecuteAsync(new(args.AccountId, sessionId));
 
-            await deleteSessionId.ExecuteAsync(new(account.Token));
-            await insertSessionId.ExecuteAsync(new(sessionId, account.Role));
+            await deleteSession.ExecuteAsync(new(account.Token));
+            await insertSession.ExecuteAsync(new(sessionId, account.Role));
 
-            var worlds = await getWorldList.QueryAsync(new(args.Role));
+            var worlds = await getServerList.QueryAsync(new(ServerRoles.World));
 
-            return new(account.Token, worlds);
+            return new Returns(account.Token, worlds);
         }
 
-        public sealed record Arguments(string AccountId, string Password, ServerRoles Role);
+        public sealed record Arguments(string AccountId, string Password);
 
-        public sealed record ReturnData(string SessionId, List<ServerData> Worlds);
+        public sealed record Returns(string SessionToken, List<ServerData> Worlds);
     }
 }
