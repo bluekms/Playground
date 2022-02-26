@@ -5,14 +5,15 @@ using AccountServer.Models;
 using AuthDb;
 using CommonLibrary;
 using CommonLibrary.Handlers;
+using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountServer.Handlers.World
 {
-    public sealed record GetWorldListQuery(string WorldType) : IQuery;
+    public sealed record GetWorldListQuery(ServerRoles Role) : IQuery;
 
-    public sealed class GetWorldListHandler : IQueryHandler<GetWorldListQuery, List<WorldData>>
+    public sealed class GetWorldListHandler : IQueryHandler<GetWorldListQuery, List<ServerData>>
     {
         private readonly AuthContext context;
         private readonly ITimeService time;
@@ -25,16 +26,16 @@ namespace AccountServer.Handlers.World
             this.mapper = mapper;
         }
 
-        public async Task<List<WorldData>> QueryAsync(GetWorldListQuery query)
+        public async Task<List<ServerData>> QueryAsync(GetWorldListQuery query)
         {
-            var rows = await context.Worlds
-                .Where(x => x.WorldType == query.WorldType)
+            var rows = await context.Servers
+                .Where(x => x.Role == query.Role)
                 .ToListAsync();
 
-            context.Worlds.RemoveRange(rows.Where(x => x.ExpireAt <= time.Now));
+            context.Servers.RemoveRange(rows.Where(x => x.ExpireAt <= time.Now));
             await context.SaveChangesAsync();
 
-            return mapper.Map<List<WorldData>>(rows.Where(x => time.Now < x.ExpireAt));
+            return mapper.Map<List<ServerData>>(rows.Where(x => time.Now < x.ExpireAt));
         }
     }
 }

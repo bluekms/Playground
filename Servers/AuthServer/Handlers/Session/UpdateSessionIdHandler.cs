@@ -33,7 +33,7 @@ namespace AccountServer.Handlers.Session
                 throw new NullReferenceException(nameof(command.AccountId));
             }
 
-            row.SessionId = command.SessionId;
+            row.Token = command.SessionId;
             await context.SaveChangesAsync();
 
             return mapper.Map<AccountData>(row);
