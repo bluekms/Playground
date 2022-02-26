@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using CommonLibrary.Handlers;
 using StackExchange.Redis;
 
-namespace AccountServer.Handlers.Session
+namespace AuthServer.Handlers.Session
 {
     public sealed record DeleteSessionIdCommand(string SessionId) : ICommand;
 

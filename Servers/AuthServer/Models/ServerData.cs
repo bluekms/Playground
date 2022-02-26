@@ -1,7 +1,7 @@
 using AuthDb;
 using Mapster;
 
-namespace AccountServer.Models
+namespace AuthServer.Models
 {
     public sealed record ServerData(string Name, string Address);
 

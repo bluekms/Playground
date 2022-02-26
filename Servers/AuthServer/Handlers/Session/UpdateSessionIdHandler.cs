@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AccountServer.Models;
 using AuthDb;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.Session
+namespace AuthServer.Handlers.Session
 {
     public sealed record UpdateSessionIdCommand(string AccountId, string SessionId) : ICommand;
 

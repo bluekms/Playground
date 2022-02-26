@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AccountServer.Handlers.Account;
-using AccountServer.Handlers.Session;
-using AccountServer.Handlers.World;
-using AccountServer.Models;
+using AuthServer.Handlers.Account;
+using AuthServer.Handlers.Session;
+using AuthServer.Handlers.World;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AccountServer.Controllers
+namespace AuthServer.Controllers
 {
     [ApiController]
     public sealed class LoginController : ControllerBase

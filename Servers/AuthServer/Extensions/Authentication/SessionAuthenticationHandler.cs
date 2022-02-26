@@ -3,10 +3,10 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using AccountServer.Extensions.Authorizations;
-using AccountServer.Handlers.Account;
-using AccountServer.Handlers.Session;
-using AccountServer.Models;
+using AuthServer.Extensions.Authorizations;
+using AuthServer.Handlers.Account;
+using AuthServer.Handlers.Session;
+using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace AccountServer.Extensions.Authentication
+namespace AuthServer.Extensions.Authentication
 {
     public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
     {

@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AccountServer.Models;
 using AuthDb;
+using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountServer.Handlers.World
+namespace AuthServer.Handlers.World
 {
     public sealed record GetWorldListQuery(ServerRoles Role) : IQuery;
 

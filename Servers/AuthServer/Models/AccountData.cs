@@ -3,7 +3,7 @@ using AuthDb;
 using CommonLibrary.Models;
 using Mapster;
 
-namespace AccountServer.Models
+namespace AuthServer.Models
 {
     public sealed record AccountData(string Token, string AccountId, DateTime CreatedAt, UserRoles Role);
 

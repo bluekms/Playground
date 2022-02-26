@@ -4,7 +4,7 @@ using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using StackExchange.Redis;
 
-namespace AccountServer.Handlers.Session
+namespace AuthServer.Handlers.Session
 {
     public sealed record InsertSessionIdCommand(
         string SessionId,

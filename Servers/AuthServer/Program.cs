@@ -1,7 +1,7 @@
 using System.Reflection;
-using AccountServer.Extensions;
-using AccountServer.Extensions.Authentication;
-using AccountServer.Extensions.Authorizations;
+using AuthServer.Extensions;
+using AuthServer.Extensions.Authentication;
+using AuthServer.Extensions.Authorizations;
 using CommonLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

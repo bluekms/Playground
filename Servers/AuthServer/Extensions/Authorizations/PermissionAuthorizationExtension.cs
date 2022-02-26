@@ -2,7 +2,7 @@ using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountServer.Extensions.Authorizations
+namespace AuthServer.Extensions.Authorizations
 {
     public static class PermissionAuthorizationExtension
     {
