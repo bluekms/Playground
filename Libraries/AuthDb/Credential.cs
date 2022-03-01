@@ -6,10 +6,10 @@ namespace AuthDb
     public class Credential
     {
         [AllowNull]
-        public string Token { get; set; }
+        public string Name { get; set; }
         
         [AllowNull]
-        public string Name { get; set; }
+        public string Token { get; set; }
         
         public ServerRoles Role { get; set; }
         
