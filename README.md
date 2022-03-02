@@ -3,12 +3,12 @@ dotnet core 6로 구성된 R&D를 위한 개인 서버군입니다.
 
 ## 사용된 기술
 * dotnet core 6
-* ef core
-* serilog
-* mysqal 8
-* redis 6
-* docker
-* protobuf
+* EF Core (Pomelo)
+* Serilog
+* Mysqal 8
+* Redis 6
+* Docker
+* Protobuf
 
 ## 개발에 사용된 도구
 * Rider
