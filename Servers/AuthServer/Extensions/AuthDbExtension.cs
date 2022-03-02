@@ -8,9 +8,11 @@ namespace AuthServer.Extensions
     {
         public static void UseMySql(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<AuthContext>(options =>
+            services.AddDbContextPool<AuthContext>(options =>
             {
-                options.UseMySQL(connectionString);
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect("connectionString"));
             });
         }
     }
