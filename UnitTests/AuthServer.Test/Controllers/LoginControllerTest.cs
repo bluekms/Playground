@@ -51,8 +51,6 @@ namespace AuthServer.Test.Controllers
         [InlineData("bluekms", "1234")]
         public async void Login(string accountId, string password)
         {
-            var mockLogger = new Mock<ILogger<SignUpController>>();
-
             var rule = new LoginRuleChecker(context);
             var deleteSession = new DeleteSessionHandler(redisConnection.GetDatabase());
             var updateSession = new UpdateSessionHandler(context, mapper);
@@ -60,12 +58,11 @@ namespace AuthServer.Test.Controllers
             var getServerList = new GetServerListHandler(context, timeService, mapper);
             
             var controller = new LoginController(
-                mockLogger.Object,
-                rule,
-                deleteSession,
-                updateSession,
-                insertSession,
-                getServerList);
+                new LoginRuleChecker(context),
+                new DeleteSessionHandler(redisConnection.GetDatabase()),
+                new UpdateSessionHandler(context, mapper),
+                new AddSessionHandler(redisConnection.GetDatabase()),
+                new GetServerListHandler(context, timeService, mapper));
             
             var result = await controller.Login(new(accountId, password));
             var actionResult = Assert.IsType<ActionResult<LoginController.Returns>>(result);

@@ -15,7 +15,6 @@ namespace AuthServer.Controllers
     [ApiController]
     public sealed class LoginController : ControllerBase
     {
-        private readonly ILogger<SignUpController> logger;
         private readonly IRuleChecker<LoginRule> rule;
         private readonly ICommandHandler<DeleteSessionCommand> deleteSession;
         private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
@@ -23,14 +22,12 @@ namespace AuthServer.Controllers
         private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
         public LoginController(
-            ILogger<SignUpController> logger,
             IRuleChecker<LoginRule> rule,
             ICommandHandler<DeleteSessionCommand> deleteSession,
             ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
             ICommandHandler<AddSessionCommand> addSession,
             IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
         {
-            this.logger = logger;
             this.rule = rule;
             this.deleteSession = deleteSession;
             this.updateSession = updateSession;
