@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
 
@@ -7,10 +8,11 @@ namespace AuthDb
     public sealed class Account
     {
         [AllowNull]
-        public string AccountId { get; set; }
+        [Key]
+        public string AccountId { get; init; }
         
         [AllowNull]
-        public string Password { get; set; }
+        public string Password { get; init; }
         
         public DateTime CreatedAt { get; set; }
         
