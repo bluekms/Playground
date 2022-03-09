@@ -20,7 +20,7 @@ namespace AuthServer.Extensions.Authentication
     {
         private readonly IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole;
         private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
-        private readonly ICommandHandler<InsertSessionCommand> insertSessionId;
+        private readonly ICommandHandler<AddSessionCommand> insertSessionId;
 
         public SessionAuthenticationHandler(
             IOptionsMonitor<SessionAuthenticationSchemeOptions> options,
@@ -29,7 +29,7 @@ namespace AuthServer.Extensions.Authentication
             ISystemClock clock,
             IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole,
             IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
-            ICommandHandler<InsertSessionCommand> insertSessionId)
+            ICommandHandler<AddSessionCommand> insertSessionId)
             : base(options, logger, encoder, clock)
         {
             this.getUserRole = getUserRole;
