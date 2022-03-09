@@ -19,7 +19,7 @@ namespace AuthServer.Controllers
         private readonly IRuleChecker<LoginRule> rule;
         private readonly ICommandHandler<DeleteSessionCommand> deleteSession;
         private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
-        private readonly ICommandHandler<AddSessionCommand> insertSession;
+        private readonly ICommandHandler<AddSessionCommand> addSession;
         private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
         public LoginController(
@@ -27,14 +27,14 @@ namespace AuthServer.Controllers
             IRuleChecker<LoginRule> rule,
             ICommandHandler<DeleteSessionCommand> deleteSession,
             ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
-            ICommandHandler<AddSessionCommand> insertSession,
+            ICommandHandler<AddSessionCommand> addSession,
             IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
         {
             this.logger = logger;
             this.rule = rule;
             this.deleteSession = deleteSession;
             this.updateSession = updateSession;
-            this.insertSession = insertSession;
+            this.addSession = addSession;
             this.getServerList = getServerList;
         }
 
@@ -47,7 +47,7 @@ namespace AuthServer.Controllers
             var account = await updateSession.ExecuteAsync(new(args.AccountId, sessionId));
 
             await deleteSession.ExecuteAsync(new(account.Token));
-            await insertSession.ExecuteAsync(new(sessionId, account.Role));
+            await addSession.ExecuteAsync(new(sessionId, account.Role));
 
             var worlds = await getServerList.QueryAsync(new(ServerRoles.World));
 
