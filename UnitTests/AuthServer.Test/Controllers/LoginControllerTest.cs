@@ -9,8 +9,6 @@ using CommonLibrary;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Shouldly;
 using StackExchange.Redis;
 using Xunit;
@@ -22,8 +20,8 @@ namespace AuthServer.Test.Controllers
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthContext context;
-        private readonly IMapper mapper;
         private readonly ConnectionMultiplexer redisConnection;
+        private readonly IMapper mapper;
         private readonly ITimeService timeService;
 
         public LoginControllerTest()
@@ -51,12 +49,6 @@ namespace AuthServer.Test.Controllers
         [InlineData("bluekms", "1234")]
         public async void Login(string accountId, string password)
         {
-            var rule = new LoginRuleChecker(context);
-            var deleteSession = new DeleteSessionHandler(redisConnection.GetDatabase());
-            var updateSession = new UpdateSessionHandler(context, mapper);
-            var insertSession = new AddSessionHandler(redisConnection.GetDatabase());
-            var getServerList = new GetServerListHandler(context, timeService, mapper);
-            
             var controller = new LoginController(
                 new LoginRuleChecker(context),
                 new DeleteSessionHandler(redisConnection.GetDatabase()),
@@ -70,7 +62,6 @@ namespace AuthServer.Test.Controllers
             actionResult.Value?.SessionToken.ShouldNotBeNull();
             actionResult.Value?.Worlds.Count.ShouldBe(2);
         }
-        
         
         private void InitData()
         {
