@@ -12,14 +12,14 @@ using Xunit;
 
 namespace AuthServer.Test.Controllers
 {
-    public class AddServerControllerTest : IDisposable
+    public class RegisterServerControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthContext context;
         private readonly IMapper mapper;
         private readonly ConnectionMultiplexer redisConnection;
 
-        public AddServerControllerTest()
+        public RegisterServerControllerTest()
         {
             authDbFixture = new();
             context = authDbFixture.CreateContext();
@@ -41,11 +41,11 @@ namespace AuthServer.Test.Controllers
         [InlineData("KmsWorld", ServerRoles.World, "localhost:1234", "2022-03-10", "xUnit Test")]
         public async void AddServer(string name, ServerRoles role, string address, DateTime expireAt, string description)
         {
-            var controller = new AddServerController(
+            var controller = new RegisterServerController(
                 mapper,
                 new UpsertServerHandler(context, mapper));
 
-            var result = await controller.AddServer(new(name, role, address, expireAt, description));
+            var result = await controller.RegisterServer(new(name, role, address, expireAt, description));
             
             Assert.IsType<OkResult>(result);
         }
