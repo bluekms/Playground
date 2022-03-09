@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AuthDb
 {
     public sealed class Foo
     {
+        [Key]
         public long Seq { get; set; }
 
         [AllowNull]
