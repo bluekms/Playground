@@ -14,23 +14,23 @@ namespace AuthServer.Controllers
     {
         private readonly IMapper mapper;
         private readonly IRuleChecker<AddMaintenanceRule> rule;
-        private readonly ICommandHandler<AddMaintenanceCommand, MaintenanceData> insertMaintenance;
+        private readonly ICommandHandler<AddMaintenanceCommand, MaintenanceData> addMaintenance;
 
         public AddMaintenanceController(
             IMapper mapper,
             IRuleChecker<AddMaintenanceRule> rule,
-            ICommandHandler<AddMaintenanceCommand, MaintenanceData> insertMaintenance)
+            ICommandHandler<AddMaintenanceCommand, MaintenanceData> addMaintenance)
         {
             this.mapper = mapper;
             this.rule = rule;
-            this.insertMaintenance = insertMaintenance;
+            this.addMaintenance = addMaintenance;
         }
 
         [HttpPost, Route("Auth/Maintenance/Add")]
         public async Task<ActionResult<Returns>> AddMaintenance([FromBody] Arguments args)
         {
             await rule.CheckAsync(new(args.Start, args.End, args.Reason));
-            var newData = await insertMaintenance.ExecuteAsync(new(args.Start, args.End, args.Reason));
+            var newData = await addMaintenance.ExecuteAsync(new(args.Start, args.End, args.Reason));
             return mapper.Map<Returns>(newData);
         }
 
