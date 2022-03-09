@@ -9,23 +9,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.Handlers.Maintenance
 {
-    public sealed record InsertMaintenanceCommand(
+    public sealed record AddMaintenanceCommand(
         DateTime Start,
         DateTime End,
         string Reason) : ICommand;
 
-    public class InsertMaintenanceHandler : ICommandHandler<InsertMaintenanceCommand, MaintenanceData>
+    public class AddMaintenanceHandler : ICommandHandler<AddMaintenanceCommand, MaintenanceData>
     {
         private readonly AuthContext context;
         private readonly IMapper mapper;
 
-        public InsertMaintenanceHandler(AuthContext context, IMapper mapper)
+        public AddMaintenanceHandler(AuthContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<MaintenanceData> ExecuteAsync(InsertMaintenanceCommand command)
+        public async Task<MaintenanceData> ExecuteAsync(AddMaintenanceCommand command)
         {
             var newRow = new AuthDb.Maintenance()
             {

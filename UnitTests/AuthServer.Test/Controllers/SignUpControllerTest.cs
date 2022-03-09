@@ -41,7 +41,7 @@ namespace AuthServer.Test.Controllers
         {
             var controller = new SignUpController(
                 new SignUpRuleChecker(new GetAccountHandler(context, mapper)),
-                new InsertAccountHandler(context, mapper, timeService));
+                new AddAccountHandler(context, mapper, timeService));
 
             var result = await controller.SignUp(new(accountId, password, role));
             var actionResult = Assert.IsType<ActionResult<AccountData>>(result);

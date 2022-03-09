@@ -19,7 +19,7 @@ namespace AuthServer.Controllers
         private readonly IRuleChecker<LoginRule> rule;
         private readonly ICommandHandler<DeleteSessionCommand> deleteSession;
         private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
-        private readonly ICommandHandler<InsertSessionCommand> insertSession;
+        private readonly ICommandHandler<AddSessionCommand> insertSession;
         private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
         public LoginController(
@@ -27,7 +27,7 @@ namespace AuthServer.Controllers
             IRuleChecker<LoginRule> rule,
             ICommandHandler<DeleteSessionCommand> deleteSession,
             ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
-            ICommandHandler<InsertSessionCommand> insertSession,
+            ICommandHandler<AddSessionCommand> insertSession,
             IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
         {
             this.logger = logger;
