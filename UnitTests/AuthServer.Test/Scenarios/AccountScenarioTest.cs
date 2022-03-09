@@ -3,14 +3,19 @@ using AuthDb;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Server;
+using AuthServer.Handlers.Session;
+using AuthServer.Handlers.World;
 using AuthServer.Models;
 using AuthServer.Test.Models;
 using CommonLibrary;
 using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Shouldly;
+using StackExchange.Redis;
 using Xunit;
+using Xunit.Priority;
 
 namespace AuthServer.Test.Scenarios
 {
@@ -18,6 +23,7 @@ namespace AuthServer.Test.Scenarios
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthContext context;
+        private readonly ConnectionMultiplexer redisConnection;
         private readonly IMapper mapper;
         private readonly ITimeService timeService;
 
@@ -26,42 +32,91 @@ namespace AuthServer.Test.Scenarios
             authDbFixture = new();
             context = authDbFixture.CreateContext();
             
+            var config = InitConfig.Use();
+            redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
+            
             mapper = InitMapper.Use();
             timeService = new ScopedTimeService();
         }
         
-        [Theory]
-        [InlineData("KmsWorld", ServerRoles.World, "localhost:1234", "2022-03-10", "xUnit Test")]
-        [InlineData("KmsWorld2", ServerRoles.World, "localhost:1234", "2022-03-10", "xUnit Test")]
-        public async void AddServer(string name, ServerRoles role, string address, DateTime expireAt, string description)
-        {
-            var controller = new AddServerController(
-                mapper,
-                new UpsertServerHandler(context, mapper));
-
-            var result = await controller.AddServer(new(name, role, address, expireAt, description));
-            
-            Assert.IsType<OkResult>(result);
-        }
-
         public void Dispose()
         {
             authDbFixture.Dispose();
             context.Dispose();
+            redisConnection.Dispose();
         }
         
-        [Theory]
-        [InlineData("bluekms1", "1234", UserRoles.User)]
-        public async void SignUp(string accountId, string password, UserRoles role)
+        [Fact]
+        public async void AccountScenario()
         {
-            var controller = new SignUpController(
+            InitData();
+
+            var accountId = "bluekms";
+            var password = "1234";
+            var role = UserRoles.User;
+            
+            var signUpController = new SignUpController(
                 new SignUpRuleChecker(new GetAccountHandler(context, mapper)),
                 new AddAccountHandler(context, mapper, timeService));
 
-            var result = await controller.SignUp(new(accountId, password, role));
-            var actionResult = Assert.IsType<ActionResult<AccountData>>(result);
+            var resultSignUp = await signUpController.SignUp(new(accountId, password, role));
+            var actionResultSignUp = Assert.IsType<ActionResult<AccountData>>(resultSignUp);
             
-            actionResult.Value?.CreatedAt.ShouldBe(timeService.Now);
+            actionResultSignUp.Value?.CreatedAt.ShouldBe(timeService.Now);
+            
+            var loginController = new LoginController(
+                new LoginRuleChecker(context),
+                new DeleteSessionHandler(redisConnection.GetDatabase()),
+                new UpdateSessionHandler(context, mapper),
+                new AddSessionHandler(redisConnection.GetDatabase()),
+                new GetServerListHandler(context, timeService, mapper));
+            
+            var resultLogin = await loginController.Login(new(accountId, password));
+            var actionResultLogin = Assert.IsType<ActionResult<LoginController.Returns>>(resultLogin);
+
+            actionResultLogin.Value?.SessionToken.ShouldNotBeNull();
+            actionResultLogin.Value?.Worlds.Count.ShouldBe(2);
+        }
+        
+        private void InitData()
+        {
+            context.Servers.Add(new()
+            {
+                Name = "a",
+                Role = ServerRoles.Auth,
+                Address = string.Empty,
+                ExpireAt = DateTime.Now.AddDays(1),
+                Description = "Unit Test Auth Server"
+            });
+            
+            context.Servers.Add(new()
+            {
+                Name = "b",
+                Role = ServerRoles.Operation,
+                Address = string.Empty,
+                ExpireAt = DateTime.Now.AddDays(1),
+                Description = "Unit Test Op Server"
+            });
+            
+            context.Servers.Add(new()
+            {
+                Name = "c",
+                Role = ServerRoles.World,
+                Address = string.Empty,
+                ExpireAt = DateTime.Now.AddDays(1),
+                Description = "Unit Test World Server 1"
+            });
+            
+            context.Servers.Add(new()
+            {
+                Name = "d",
+                Role = ServerRoles.World,
+                Address = string.Empty,
+                ExpireAt = DateTime.Now.AddDays(1),
+                Description = "Unit Test World Server 2"
+            });
+            
+            context.SaveChanges();
         }
     }
 }
