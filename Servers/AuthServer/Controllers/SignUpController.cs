@@ -13,14 +13,14 @@ namespace AuthServer.Controllers
     public sealed class SignUpController : ControllerBase
     {
         private readonly IRuleChecker<SignUpRule> rule;
-        private readonly ICommandHandler<AddAccountCommand, AccountData> insertAccount;
+        private readonly ICommandHandler<AddAccountCommand, AccountData> addAccount;
 
         public SignUpController(
             IRuleChecker<SignUpRule> rule,
-            ICommandHandler<AddAccountCommand, AccountData> insertAccount)
+            ICommandHandler<AddAccountCommand, AccountData> addAccount)
         {
             this.rule = rule;
-            this.insertAccount = insertAccount;
+            this.addAccount = addAccount;
         }
 
         [HttpPost, Route("Auth/SignUp")]
@@ -28,7 +28,7 @@ namespace AuthServer.Controllers
         {
             await rule.CheckAsync(new(args.AccountId));
 
-            return await insertAccount.ExecuteAsync(new(
+            return await addAccount.ExecuteAsync(new(
                 args.AccountId,
                 args.Password,
                 args.Role));
