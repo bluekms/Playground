@@ -14,12 +14,12 @@ namespace AuthServer.Controllers
     {
         private readonly IMapper mapper;
         private readonly IRuleChecker<AddMaintenanceRule> rule;
-        private readonly ICommandHandler<InsertMaintenanceCommand, MaintenanceData> insertMaintenance;
+        private readonly ICommandHandler<AddMaintenanceCommand, MaintenanceData> insertMaintenance;
 
         public AddMaintenanceController(
             IMapper mapper,
             IRuleChecker<AddMaintenanceRule> rule,
-            ICommandHandler<InsertMaintenanceCommand, MaintenanceData> insertMaintenance)
+            ICommandHandler<AddMaintenanceCommand, MaintenanceData> insertMaintenance)
         {
             this.mapper = mapper;
             this.rule = rule;

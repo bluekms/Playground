@@ -4,18 +4,18 @@ using CommonLibrary.Handlers;
 
 namespace AuthServer.Handlers.Foo
 {
-    public sealed record InsertFooCommand(string AccountId, AuthDb.Foo.FooCommand Cmd, int Value) : ICommand;
+    public sealed record AddFooCommand(string AccountId, AuthDb.Foo.FooCommand Cmd, int Value) : ICommand;
 
-    public sealed class InsertFooHandler : ICommandHandler<InsertFooCommand>
+    public sealed class AddFooHandler : ICommandHandler<AddFooCommand>
     {
         private readonly AuthContext _context;
 
-        public InsertFooHandler(AuthContext context)
+        public AddFooHandler(AuthContext context)
         {
             _context = context;
         }
 
-        public async Task ExecuteAsync(InsertFooCommand command)
+        public async Task ExecuteAsync(AddFooCommand command)
         {
             await _context.Foos.AddAsync(new()
             {

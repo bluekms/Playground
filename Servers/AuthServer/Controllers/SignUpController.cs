@@ -13,11 +13,11 @@ namespace AuthServer.Controllers
     public sealed class SignUpController : ControllerBase
     {
         private readonly IRuleChecker<SignUpRule> rule;
-        private readonly ICommandHandler<InsertAccountCommand, AccountData> insertAccount;
+        private readonly ICommandHandler<AddAccountCommand, AccountData> insertAccount;
 
         public SignUpController(
             IRuleChecker<SignUpRule> rule,
-            ICommandHandler<InsertAccountCommand, AccountData> insertAccount)
+            ICommandHandler<AddAccountCommand, AccountData> insertAccount)
         {
             this.rule = rule;
             this.insertAccount = insertAccount;

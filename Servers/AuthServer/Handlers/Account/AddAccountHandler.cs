@@ -8,18 +8,18 @@ using MapsterMapper;
 
 namespace AuthServer.Handlers.Account
 {
-    public sealed record InsertAccountCommand(
+    public sealed record AddAccountCommand(
         string AccountId,
         string Password,
         UserRoles UserRole) : ICommand;
 
-    public sealed class InsertAccountHandler : ICommandHandler<InsertAccountCommand, AccountData>
+    public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
     {
         private readonly AuthContext context;
         private readonly IMapper mapper;
         private readonly ITimeService time;
 
-        public InsertAccountHandler(
+        public AddAccountHandler(
             AuthContext context,
             IMapper mapper,
             ITimeService time)
@@ -29,7 +29,7 @@ namespace AuthServer.Handlers.Account
             this.time = time;
         }
 
-        public async Task<AccountData> ExecuteAsync(InsertAccountCommand command)
+        public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
         {
             var newRow = new AuthDb.Account()
             {

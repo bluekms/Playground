@@ -44,7 +44,7 @@ namespace AuthServer.Test.Controllers
             var controller = new AddMaintenanceController(
                 mapper,
                 new CheckMaintenanceRule(context),
-                new InsertMaintenanceHandler(context, mapper));
+                new AddMaintenanceHandler(context, mapper));
 
             var result = await controller.AddMaintenance(new(start, end, reason));
             var actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);

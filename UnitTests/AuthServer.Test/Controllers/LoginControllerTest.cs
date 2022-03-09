@@ -56,7 +56,7 @@ namespace AuthServer.Test.Controllers
             var rule = new LoginRuleChecker(context);
             var deleteSession = new DeleteSessionHandler(redisConnection.GetDatabase());
             var updateSession = new UpdateSessionHandler(context, mapper);
-            var insertSession = new InsertSessionHandler(redisConnection.GetDatabase());
+            var insertSession = new AddSessionHandler(redisConnection.GetDatabase());
             var getServerList = new GetServerListHandler(context, timeService, mapper);
             
             var controller = new LoginController(
