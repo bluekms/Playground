@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
 
@@ -7,7 +8,8 @@ namespace AuthDb
     public sealed class Server
     {
         [AllowNull]
-        public string Name { get; set; }
+        [Key]
+        public string Name { get; init; }
 
         public ServerRoles Role { get; set; }
 
