@@ -22,7 +22,7 @@ namespace AuthServer.Extensions.Authorizations
 
                 options.AddPolicy("CheatApi", policy =>
                 {
-                    policy.Requirements.Add(new BuildConfigurationRequirment(BuildConfigurationRequirment.BuildConfigurations.Debug));
+                    policy.Requirements.Add(new BuildConfigurationRequirement(BuildConfigurationRequirement.BuildConfigurations.Debug));
                     policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
                         UserRoles.Developer,
