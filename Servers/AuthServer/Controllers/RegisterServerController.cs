@@ -32,6 +32,6 @@ namespace AuthServer.Controllers
             return Ok();
         }
 
-        public sealed record Arguments(string Name, ServerRoles Role, string Address, DateTime ExpireAt, string Description);
+        public sealed record Arguments(string Name, ServerRoles Role, string Address, string Description, long ExpireSec);
     }
 }
