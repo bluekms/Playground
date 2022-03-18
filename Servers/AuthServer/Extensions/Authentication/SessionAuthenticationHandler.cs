@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -79,12 +78,12 @@ namespace AuthServer.Extensions.Authentication
         private Claim CreateBuildConfigurationClaim()
         {
 #if DEBUG
-            var buildConfiguration = BuildConfigurationRequirment.BuildConfigurations.Debug;
+            var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Debug;
 #else
             var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Release;
 #endif
 
-            return new(BuildConfigurationRequirment.ClaimType, buildConfiguration.ToString());
+            return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
         }
 
         private async Task<Claim> CreateClientRoleClaim(string token)

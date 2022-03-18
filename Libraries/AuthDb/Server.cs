@@ -2,23 +2,32 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AuthDb
+namespace AuthDb;
+
+public sealed class Server
 {
-    public sealed class Server
+    [AllowNull]
+    [Key]
+    public string Name { get; init; }
+
+    public ServerRoles Role { get; set; }
+
+    [AllowNull]
+    public string Address { get; set; }
+
+    public DateTime ExpireAt { get; set; }
+
+    [AllowNull]
+    public string Description { get; set; }
+}
+
+internal sealed class ServerConfiguration : IEntityTypeConfiguration<Server>
+{
+    public void Configure(EntityTypeBuilder<Server> builder)
     {
-        [AllowNull]
-        [Key]
-        public string Name { get; init; }
-
-        public ServerRoles Role { get; set; }
-
-        [AllowNull]
-        public string Address { get; set; }
-
-        public DateTime ExpireAt { get; set; }
-        
-        [AllowNull]
-        public string Description { get; set; }
+        builder.HasKey(k => new {k.Name});
     }
 }

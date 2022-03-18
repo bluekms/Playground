@@ -2,11 +2,11 @@
 
 namespace AuthServer.Extensions.Authorizations
 {
-    public class BuildConfigurationRequirment : IAuthorizationRequirement
+    public class BuildConfigurationRequirement : IAuthorizationRequirement
     {
         public const string ClaimType = "BuildConfiguration";
 
-        public BuildConfigurationRequirment(BuildConfigurations buildConfiguration)
+        public BuildConfigurationRequirement(BuildConfigurations buildConfiguration)
         {
             BuildConfiguration = buildConfiguration;
         }
