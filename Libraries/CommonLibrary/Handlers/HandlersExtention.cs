@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Reflection;
-using CommonLibrary.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommonLibrary
+namespace CommonLibrary.Handlers
 {
     public static class HandlersExtension
     {
