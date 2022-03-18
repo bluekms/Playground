@@ -11,20 +11,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthServer.Controllers
 {
     [ApiController]
-    public class AddServerController : ControllerBase
+    public class RegisterServerController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly ICommandHandler<UpsertServerCommand> upsertServer;
 
-        public AddServerController(IMapper mapper, ICommandHandler<UpsertServerCommand> upsertServer)
+        public RegisterServerController(IMapper mapper, ICommandHandler<UpsertServerCommand> upsertServer)
         {
             this.mapper = mapper;
             this.upsertServer = upsertServer;
         }
 
-        [HttpPost, Route("Auth/Server/Add")]
+        [HttpPost, Route("Auth/Server/Register")]
         [Authorize(AuthenticationSchemes = CredentialAuthenticationSchemeOptions.Name)]
-        public async Task<ActionResult> AddServer([FromBody] Arguments args)
+        public async Task<ActionResult> RegisterServer([FromBody] Arguments args)
         {
             var command = mapper.Map<UpsertServerCommand>(args);
             await upsertServer.ExecuteAsync(command);
@@ -32,6 +32,6 @@ namespace AuthServer.Controllers
             return Ok();
         }
 
-        public sealed record Arguments(string Name, ServerRoles Role, string Address, DateTime ExpireAt, string Description);
+        public sealed record Arguments(string Name, ServerRoles Role, string Address, string Description, long ExpireSec);
     }
 }

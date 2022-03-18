@@ -3,6 +3,7 @@ using AuthServer.Extensions;
 using AuthServer.Extensions.Authentication;
 using AuthServer.Extensions.Authorizations;
 using CommonLibrary;
+using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
 {
-    configuration
-        .ReadFrom.Configuration(context.Configuration);
+    configuration.ReadFrom.Configuration(context.Configuration);
 });
 
 builder.Services.UseControllers();
@@ -30,7 +30,6 @@ builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 // Configure the HTTP request pipeline.
 
 var app = builder.Build();
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

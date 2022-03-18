@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthServer.Extensions.Authorizations
 {
-    public class BuildConfigurationHandler : AuthorizationHandler<BuildConfigurationRequirment>
+    public class BuildConfigurationHandler : AuthorizationHandler<BuildConfigurationRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BuildConfigurationRequirment requirment)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BuildConfigurationRequirement requirement)
         {
             if (context.User?.Identity == null)
             {
@@ -21,7 +21,7 @@ namespace AuthServer.Extensions.Authorizations
             }
 
             var claim = context.User.Claims
-                .FirstOrDefault(x => x.Type == BuildConfigurationRequirment.ClaimType);
+                .FirstOrDefault(x => x.Type == BuildConfigurationRequirement.ClaimType);
 
             if (claim == null)
             {
@@ -29,13 +29,13 @@ namespace AuthServer.Extensions.Authorizations
                 return Task.CompletedTask;
             }
 
-            if (claim.Value != requirment.BuildConfiguration.ToString())
+            if (claim.Value != requirement.BuildConfiguration.ToString())
             {
                 context.Fail();
                 return Task.CompletedTask;
             }
 
-            context.Succeed(requirment);
+            context.Succeed(requirement);
             return Task.CompletedTask;
         }
     }
