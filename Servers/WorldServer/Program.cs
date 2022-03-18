@@ -1,14 +1,14 @@
+using CommonLibrary.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using WorldServer.Extensions;
 using WorldServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Host.UseSerilog((context, configuration) =>
 {
-    configuration
-        .ReadFrom.Configuration(context.Configuration);
+    configuration.ReadFrom.Configuration(context.Configuration);
 });
 
 
@@ -17,6 +17,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 // Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.UseServerRegistry(builder.Configuration.GetSection(ServerRegistryOptions.ConfigurationSection));
 
 var app = builder.Build();
 
