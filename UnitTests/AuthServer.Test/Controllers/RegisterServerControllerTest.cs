@@ -3,6 +3,7 @@ using AuthDb;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Server;
 using AuthServer.Test.Models;
+using CommonLibrary;
 using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace AuthServer.Test.Controllers
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthContext context;
+        private readonly ITimeService timeService;
         private readonly IMapper mapper;
         private readonly ConnectionMultiplexer redisConnection;
 
@@ -26,7 +28,8 @@ namespace AuthServer.Test.Controllers
             
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
-            
+
+            timeService = new ScopedTimeService();
             mapper = InitMapper.Use();
         }
 
@@ -38,14 +41,14 @@ namespace AuthServer.Test.Controllers
         }
 
         [Theory]
-        [InlineData("KmsWorld", ServerRoles.World, "localhost:1234", "2022-03-10", "xUnit Test")]
-        public async void AddServer(string name, ServerRoles role, string address, DateTime expireAt, string description)
+        [InlineData("KmsWorld", ServerRoles.World, "localhost:1234", "xUnit Test", 60 * 5)]
+        public async void AddServer(string name, ServerRoles role, string address, string description, long expireSec)
         {
             var controller = new RegisterServerController(
                 mapper,
-                new UpsertServerHandler(context, mapper));
+                new UpsertServerHandler(context, timeService, mapper));
 
-            var result = await controller.RegisterServer(new(name, role, address, expireAt, description));
+            var result = await controller.RegisterServer(new(name, role, address, description, expireSec));
             
             Assert.IsType<OkResult>(result);
         }

@@ -15,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Shouldly;
 using StackExchange.Redis;
 using Xunit;
-using Xunit.Priority;
 
 namespace AuthServer.Test.Scenarios
 {
