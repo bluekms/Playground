@@ -1,30 +1,35 @@
-using System.Linq;
-using System.Reflection;
+using CommonLibrary.Handlers.Decorators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonLibrary.Handlers
 {
     public static class HandlersExtension
     {
-        public static IServiceCollection UseHandlers(this IServiceCollection serviceCollection, Assembly assembly)
+        public static IServiceCollection UseHandlers(
+            this IServiceCollection services,
+            GenericDerivedTypeSelector types)
         {
-            var genericTypes = assembly.GetTypes()
-                .Where(x => x.IsPublic)
-                .Where(x => !x.IsAbstract)
-                .Where(x => !x.IsInterface)
-                .Where(x => x.GetInterfaces()
-                    .Where(y => y.IsGenericType)
-                    .Any(y => typeof(IHandlerBase).IsAssignableFrom(y)))
-                .ToList();
-
-            foreach (var t in genericTypes)
+            foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(IQueryHandler<,>)))
             {
-                var serviceType = t.GetInterfaces().First(x => typeof(IHandlerBase).IsAssignableFrom(x));
-
-                serviceCollection.AddTransient(serviceType, t);
+                services.AddTransient(serviceType, type);
+            }
+            
+            foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(ICommandHandler<>)))
+            {
+                services.AddTransient(serviceType, type);
+            }
+            
+            foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(ICommandHandler<,>)))
+            {
+                services.AddTransient(serviceType, type);
+            }
+            
+            foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(IRuleChecker<>)))
+            {
+                services.AddTransient(serviceType, type);
             }
 
-            return serviceCollection;
+            return services;
         }
     }
 }
