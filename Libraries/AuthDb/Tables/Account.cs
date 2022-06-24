@@ -1,25 +1,23 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
+/// <summary>
+/// 1 Account 1 User
+/// </summary>
 public sealed class Account
 {
-    [AllowNull]
     [Key]
-    public string AccountId { get; init; }
+    public string AccountId { get; init; } = null!;
 
-    [AllowNull]
-    public string Password { get; init; }
+    public string Password { get; init; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
-    [AllowNull]
-    public string Token { get; set; }
+    public string Token { get; set; } = null!;
 
     public UserRoles Role { get; set; }
 }
@@ -28,6 +26,6 @@ internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
     public void Configure(EntityTypeBuilder<Account> builder)
     {
-        builder.HasKey(k => new {k.AccountId});
+        builder.ToTable("Account");
     }
 }

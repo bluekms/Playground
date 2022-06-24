@@ -12,17 +12,17 @@ namespace AuthServer.Handlers.Maintenance
     public class IsMaintenanceTimeHandler : IQueryHandler<IsMaintenanceTimeQuery, bool>
     {
         private readonly ITimeService timeService;
-        private readonly AuthContext authContext;
+        private readonly AuthDbContext authDbContext;
 
-        public IsMaintenanceTimeHandler(ITimeService timeService, AuthContext authContext)
+        public IsMaintenanceTimeHandler(ITimeService timeService, AuthDbContext authDbContext)
         {
             this.timeService = timeService;
-            this.authContext = authContext;
+            this.authDbContext = authDbContext;
         }
 
         public async Task<bool> QueryAsync(IsMaintenanceTimeQuery query)
         {
-            return await authContext.Maintenance
+            return await authDbContext.Maintenance
                 .Where(x => x.Start <= timeService.Now)
                 .Where(x => timeService.Now <= x.End)
                 .AnyAsync();

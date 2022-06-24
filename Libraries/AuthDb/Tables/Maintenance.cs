@@ -1,12 +1,13 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
+/// <summary>
+/// 서버 점검
+/// </summary>
 public class Maintenance
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,8 +18,7 @@ public class Maintenance
 
     public DateTime End { get; init; }
 
-    [AllowNull]
-    public string Reason { get; init; }
+    public string Reason { get; init; } = null!;
 
     public override string ToString()
     {
@@ -30,6 +30,6 @@ internal sealed class MaintenanceConfiguration : IEntityTypeConfiguration<Mainte
 {
     public void Configure(EntityTypeBuilder<Maintenance> builder)
     {
-        builder.HasKey(k => new {k.Id});
+        builder.ToTable("Maintenance");
     }
 }

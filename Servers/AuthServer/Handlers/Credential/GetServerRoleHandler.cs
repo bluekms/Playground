@@ -11,19 +11,16 @@ namespace AuthServer.Handlers.Credential
 
     public class GetServerRoleHandler : IQueryHandler<GetServerRoleQuery, ServerRoles>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
 
-        public GetServerRoleHandler(AuthContext context)
+        public GetServerRoleHandler(AuthDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
-        public async Task<ServerRoles> QueryAsync(GetServerRoleQuery query)
+        public Task<ServerRoles> QueryAsync(GetServerRoleQuery query)
         {
-            return await context.Credentials
-                .Where(x => x.Token == query.Token)
-                .Select(x => x.Role)
-                .SingleAsync();
+            throw new NotImplementedException();
         }
     }
 }

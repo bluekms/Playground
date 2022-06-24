@@ -1,30 +1,30 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using CommonLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
+/// <summary>
+/// 1 Credential 1 Server (Service)
+/// 약간 모호한걸?
+/// </summary>
 public class Credential
 {
-    [AllowNull]
     [Key]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    [AllowNull]
-    public string Token { get; set; }
+    public string Token { get; set; } = null!;
 
     public ServerRoles Role { get; set; }
 
-    [AllowNull]
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 }
 
 internal sealed class CredentialConfiguration : IEntityTypeConfiguration<Credential>
 {
     public void Configure(EntityTypeBuilder<Credential> builder)
     {
-        builder.HasKey(k => new {k.Name});
+        builder.ToTable("Credential");
     }
 }

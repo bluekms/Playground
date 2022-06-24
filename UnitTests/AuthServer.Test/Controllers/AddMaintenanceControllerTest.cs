@@ -15,14 +15,14 @@ namespace AuthServer.Test.Controllers
     public class AddMaintenanceControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
         private readonly ConnectionMultiplexer redisConnection;
 
         public AddMaintenanceControllerTest()
         {
             authDbFixture = new();
-            context = authDbFixture.CreateContext();
+            dbContext = authDbFixture.CreateContext();
             
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
@@ -33,7 +33,7 @@ namespace AuthServer.Test.Controllers
         public void Dispose()
         {
             authDbFixture.Dispose();
-            context.Dispose();
+            dbContext.Dispose();
             redisConnection.Dispose();
         }
 
@@ -43,8 +43,8 @@ namespace AuthServer.Test.Controllers
         {
             var controller = new AddMaintenanceController(
                 mapper,
-                new CheckMaintenanceRule(context),
-                new AddMaintenanceHandler(context, mapper));
+                new CheckMaintenanceRule(dbContext),
+                new AddMaintenanceHandler(dbContext, mapper));
 
             var result = await controller.AddMaintenance(new(start, end, reason));
             var actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);

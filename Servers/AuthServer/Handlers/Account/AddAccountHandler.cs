@@ -15,16 +15,16 @@ namespace AuthServer.Handlers.Account
 
     public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
         private readonly ITimeService time;
 
         public AddAccountHandler(
-            AuthContext context,
+            AuthDbContext dbContext,
             IMapper mapper,
             ITimeService time)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.mapper = mapper;
             this.time = time;
         }
@@ -40,8 +40,8 @@ namespace AuthServer.Handlers.Account
                 Role = command.UserRole,
             };
 
-            await context.Accounts.AddAsync(newRow);
-            await context.SaveChangesAsync();
+            await dbContext.Accounts.AddAsync(newRow);
+            await dbContext.SaveChangesAsync();
 
             return mapper.Map<AccountData>(newRow);
         }

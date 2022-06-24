@@ -1,20 +1,22 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
+/// <summary>
+/// For Dev
+/// </summary>
 public sealed class Foo
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
     public long Seq { get; set; }
 
-    [AllowNull]
-    public string AccountId { get; set; }
+    public string AccountId { get; set; } = null!;
 
-    [AllowNull]
-    public string Command { get; set; }
+    public string Command { get; set; } = null!;
 
     public int Value { get; set; }
 
@@ -33,6 +35,6 @@ internal sealed class FooConfiguration : IEntityTypeConfiguration<Foo>
 {
     public void Configure(EntityTypeBuilder<Foo> builder)
     {
-        builder.HasKey(k => new {k.Seq});
+        builder.ToTable("Foo");
     }
 }
