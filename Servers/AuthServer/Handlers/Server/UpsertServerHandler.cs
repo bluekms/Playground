@@ -18,23 +18,23 @@ namespace AuthServer.Handlers.Server
 
     public class UpsertServerHandler : ICommandHandler<UpsertServerCommand>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly ITimeService timeService;
         private readonly IMapper mapper;
 
         public UpsertServerHandler(
-            AuthContext context,
+            AuthDbContext dbContext,
             ITimeService timeService,
             IMapper mapper)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.timeService = timeService;
             this.mapper = mapper;
         }
 
         public async Task ExecuteAsync(UpsertServerCommand command)
         {
-            var row = await context.Servers
+            var row = await dbContext.Servers
                 .FindAsync(command.Name);
 
             if (row == null)
@@ -48,7 +48,7 @@ namespace AuthServer.Handlers.Server
                     Description = command.Description,
                 };
 
-                await context.Servers.AddAsync(row);
+                await dbContext.Servers.AddAsync(row);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace AuthServer.Handlers.Server
                 row.Description = command.Description;
             }
 
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
     }
 }
