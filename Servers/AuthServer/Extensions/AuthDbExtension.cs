@@ -1,6 +1,5 @@
 ﻿using AuthDb;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace AuthServer.Extensions

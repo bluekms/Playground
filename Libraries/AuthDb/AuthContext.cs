@@ -25,6 +25,15 @@ namespace AuthDb
         
         [AllowNull]
         public DbSet<Foo> Foos { get; set; }
+        
+        [AllowNull]
+        public DbSet<Course> Courses { get; set; }
+        
+        [AllowNull]
+        public DbSet<Enrollment> Enrollments { get; set; }
+        
+        [AllowNull]
+        public DbSet<Student> Students { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
