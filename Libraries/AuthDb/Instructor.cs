@@ -3,25 +3,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthDb;
 
-public class Student
+public class Instructor
 {
     public int Id { get; set; }
-    
+
     [Required]
-    [StringLength(50, MinimumLength = 2)]
     [Display(Name = "Last Name")]
+    [StringLength(50)]
     public string LastName { get; set; } = null!;
     
     [Required]
-    [StringLength(50)]
     [Column("FirstName")]
     [Display(Name = "First Name")]
+    [StringLength(50)]
     public string FirstMidName { get; set; } = null!;
     
-    [DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-    [Display(Name = "Enrollment Date")]
-    public DateTime EnrollmentDate { get; set; }
+    [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Display(Name = "Hire Date")]
+    public DateTime HireDate { get; set; }
 
     [Display(Name = "Full Name")]
     public string FullName
@@ -32,5 +30,6 @@ public class Student
         }
     }
     
-    public ICollection<Enrollment> Enrollments { get; set; } = null!;
+    public ICollection<CourseAssignment> CourseAssignments { get; set; } = null!;
+    public OfficeAssignment OfficeAssignment { get; set; } = null!;
 }

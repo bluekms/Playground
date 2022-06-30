@@ -9,8 +9,8 @@ public class AuthContextFactory : IDesignTimeDbContextFactory<AuthContext>
     public AuthContext CreateDbContext(string[] args)
     {
         var optionBuilder = new DbContextOptionsBuilder<AuthContext>();
-        optionBuilder.UseMySql($"Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;", ServerVersion.Create(8, 0, 0, ServerType.MySql));
-
+        optionBuilder.UseMySql($"Server=localhost;Port=3307;Database=Auth;Uid=root;Pwd=Pineapple1;", ServerVersion.Create(8, 0, 0, ServerType.MySql));
+        
         return new AuthContext(optionBuilder.Options);
     }
 }
