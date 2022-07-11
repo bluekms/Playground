@@ -3,6 +3,7 @@ using System;
 using AuthDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthDb.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20220627084651_MaxLengthOnNames")]
+    partial class MaxLengthOnNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,34 +53,13 @@ namespace AuthDb.Migrations
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CourseId");
 
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Course", (string)null);
-                });
-
-            modelBuilder.Entity("AuthDb.CourseAssignment", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "InstructorId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.ToTable("CourseAssignments");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("AuthDb.Credential", b =>
@@ -100,33 +81,6 @@ namespace AuthDb.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("Credentials");
-                });
-
-            modelBuilder.Entity("AuthDb.Department", b =>
-                {
-                    b.Property<int>("DepartmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Budget")
-                        .HasColumnType("money(65,30)");
-
-                    b.Property<int?>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("DepartmentId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("AuthDb.Enrollment", b =>
@@ -175,31 +129,6 @@ namespace AuthDb.Migrations
                     b.ToTable("Foos");
                 });
 
-            modelBuilder.Entity("AuthDb.Instructor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirstMidName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("FirstName");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Instructors");
-                });
-
             modelBuilder.Entity("AuthDb.Maintenance", b =>
                 {
                     b.Property<long>("Id")
@@ -219,21 +148,6 @@ namespace AuthDb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Maintenance");
-                });
-
-            modelBuilder.Entity("AuthDb.OfficeAssignment", b =>
-                {
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("InstructorId");
-
-                    b.ToTable("OfficeAssignments");
                 });
 
             modelBuilder.Entity("AuthDb.Server", b =>
@@ -272,8 +186,7 @@ namespace AuthDb.Migrations
                     b.Property<string>("FirstMidName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("FirstName");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -283,45 +196,6 @@ namespace AuthDb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("AuthDb.Course", b =>
-                {
-                    b.HasOne("AuthDb.Department", "Department")
-                        .WithMany("Courses")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("AuthDb.CourseAssignment", b =>
-                {
-                    b.HasOne("AuthDb.Course", "Course")
-                        .WithMany("CourseAssignments")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AuthDb.Instructor", "Instructor")
-                        .WithMany("CourseAssignments")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
-            modelBuilder.Entity("AuthDb.Department", b =>
-                {
-                    b.HasOne("AuthDb.Instructor", "Adminstrator")
-                        .WithMany()
-                        .HasForeignKey("InstructorId");
-
-                    b.Navigation("Adminstrator");
                 });
 
             modelBuilder.Entity("AuthDb.Enrollment", b =>
@@ -343,35 +217,9 @@ namespace AuthDb.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("AuthDb.OfficeAssignment", b =>
-                {
-                    b.HasOne("AuthDb.Instructor", "Instructor")
-                        .WithOne("OfficeAssignment")
-                        .HasForeignKey("AuthDb.OfficeAssignment", "InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Instructor");
-                });
-
             modelBuilder.Entity("AuthDb.Course", b =>
                 {
-                    b.Navigation("CourseAssignments");
-
                     b.Navigation("Enrollments");
-                });
-
-            modelBuilder.Entity("AuthDb.Department", b =>
-                {
-                    b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("AuthDb.Instructor", b =>
-                {
-                    b.Navigation("CourseAssignments");
-
-                    b.Navigation("OfficeAssignment")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("AuthDb.Student", b =>

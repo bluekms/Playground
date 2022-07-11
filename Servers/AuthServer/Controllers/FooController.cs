@@ -21,7 +21,7 @@ namespace AuthServer.Controllers
         }
 
         [HttpPost, Route("Auth/Foo")]
-        [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+        //[Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
         public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args)
         {
             if (context.Students.Any())
@@ -42,6 +42,8 @@ namespace AuthServer.Controllers
             await CreateInstructors(courses, instructors);
             
             await CreateEnrollments(students, courses);
+            
+            return "Ok";
         }
 
         private async Task CreateEnrollments(Student[] students, Course[] courses)
