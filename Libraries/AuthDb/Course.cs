@@ -30,3 +30,11 @@ public class Course
     public ICollection<Enrollment> Enrollments { get; set; } = null!;
     public ICollection<CourseAssignment> CourseAssignments { get; set; } = null!;
 }
+
+internal sealed class CourseConfiguration : IEntityTypeConfiguration<Course>
+{
+    public void Configure(EntityTypeBuilder<Course> builder)
+    {
+        builder.ToTable("Course");
+    }
+}

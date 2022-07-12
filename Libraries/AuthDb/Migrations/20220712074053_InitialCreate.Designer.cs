@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthDb.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20220630153612_ComplexDataModel")]
-    partial class ComplexDataModel
+    [Migration("20220712074053_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Account", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Course", b =>
@@ -80,7 +80,7 @@ namespace AuthDb.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.ToTable("CourseAssignments");
+                    b.ToTable("CourseAssignment", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Credential", b =>
@@ -101,7 +101,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Credentials");
+                    b.ToTable("Credential", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Department", b =>
@@ -111,7 +111,7 @@ namespace AuthDb.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Budget")
-                        .HasColumnType("money(65,30)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int?>("InstructorId")
                         .HasColumnType("int");
@@ -128,7 +128,7 @@ namespace AuthDb.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Enrollment", b =>
@@ -152,7 +152,7 @@ namespace AuthDb.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollment", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Foo", b =>
@@ -174,7 +174,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Seq");
 
-                    b.ToTable("Foos");
+                    b.ToTable("Foo", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Instructor", b =>
@@ -199,7 +199,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Instructors");
+                    b.ToTable("Instructor", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Maintenance", b =>
@@ -220,7 +220,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Maintenance");
+                    b.ToTable("Maintenance", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.OfficeAssignment", b =>
@@ -235,7 +235,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("InstructorId");
 
-                    b.ToTable("OfficeAssignments");
+                    b.ToTable("OfficeAssignment", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Server", b =>
@@ -259,7 +259,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Servers");
+                    b.ToTable("Server", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Student", b =>
@@ -284,7 +284,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.ToTable("Student", (string)null);
                 });
 
             modelBuilder.Entity("AuthDb.Course", b =>

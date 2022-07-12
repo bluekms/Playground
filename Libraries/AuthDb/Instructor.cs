@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
@@ -32,4 +34,12 @@ public class Instructor
     
     public ICollection<CourseAssignment> CourseAssignments { get; set; } = null!;
     public OfficeAssignment OfficeAssignment { get; set; } = null!;
+}
+
+internal sealed class InstructorConfiguration : IEntityTypeConfiguration<Instructor>
+{
+    public void Configure(EntityTypeBuilder<Instructor> builder)
+    {
+        builder.ToTable("Instructor");
+    }
 }

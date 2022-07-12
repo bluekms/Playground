@@ -28,6 +28,7 @@ internal sealed class ServerConfiguration : IEntityTypeConfiguration<Server>
 {
     public void Configure(EntityTypeBuilder<Server> builder)
     {
+        builder.ToTable("Server");
         builder.HasKey(k => new {k.Name});
     }
 }

@@ -25,6 +25,7 @@ internal sealed class CredentialConfiguration : IEntityTypeConfiguration<Credent
 {
     public void Configure(EntityTypeBuilder<Credential> builder)
     {
+        builder.ToTable("Credential");
         builder.HasKey(k => new {k.Name});
     }
 }

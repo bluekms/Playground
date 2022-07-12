@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
@@ -11,10 +13,11 @@ public class Department
 
     [StringLength(50, MinimumLength = 3)] public string Name { get; set; } = null!;
     
-    [DataType(DataType.Date)]
-    [Column(TypeName = "money")]
+    [DataType(DataType.Currency)]
+    [Column(TypeName = "decimal")]
     public decimal Budget { get; set; }
     
+    [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Display(Name = "Start Date")]
     public DateTime StartDate { get; set; }
@@ -28,4 +31,12 @@ public class Department
     public Instructor Adminstrator { get; set; } = null!;
     
     public ICollection<Course> Courses { get; set; } = null!;
+}
+
+internal sealed class DepartmentConfiguration : IEntityTypeConfiguration<Department>
+{
+    public void Configure(EntityTypeBuilder<Department> builder)
+    {
+        builder.ToTable("Department");
+    }
 }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
@@ -33,4 +35,12 @@ public class Student
     }
     
     public ICollection<Enrollment> Enrollments { get; set; } = null!;
+}
+
+internal sealed class StudentConfiguration : IEntityTypeConfiguration<Student>
+{
+    public void Configure(EntityTypeBuilder<Student> builder)
+    {
+        builder.ToTable("Student");
+    }
 }

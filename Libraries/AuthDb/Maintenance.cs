@@ -30,6 +30,7 @@ internal sealed class MaintenanceConfiguration : IEntityTypeConfiguration<Mainte
 {
     public void Configure(EntityTypeBuilder<Maintenance> builder)
     {
+        builder.ToTable("Maintenance");
         builder.HasKey(k => new {k.Id});
     }
 }

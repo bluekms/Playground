@@ -33,6 +33,7 @@ internal sealed class FooConfiguration : IEntityTypeConfiguration<Foo>
 {
     public void Configure(EntityTypeBuilder<Foo> builder)
     {
+        builder.ToTable("Foo");
         builder.HasKey(k => new {k.Seq});
     }
 }

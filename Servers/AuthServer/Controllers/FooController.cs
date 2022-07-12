@@ -24,9 +24,25 @@ namespace AuthServer.Controllers
         //[Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
         public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args)
         {
+            return args.Command switch
+            {
+                "Create" => await CreateData(),
+                "Select" => await SelectData(args.Id), 
+                _ => throw new InvalidOperationException();
+            };
+        }
+
+        private async Task<ActionResult<string>> SelectData(int Id)
+        {
+            var data = await context.Enrollments
+                .Where(row => row.EnrollmentId == Id)
+        }
+
+        private async Task<ActionResult<string>> CreateData()
+        {
             if (context.Students.Any())
             {
-                return "Ok";
+                return "Already";
             }
 
             var students = await CreateStudents();
@@ -42,7 +58,7 @@ namespace AuthServer.Controllers
             await CreateInstructors(courses, instructors);
             
             await CreateEnrollments(students, courses);
-            
+
             return "Ok";
         }
 
@@ -336,6 +352,6 @@ namespace AuthServer.Controllers
             return students;
         }
 
-        public sealed record ArgumentData(string Data);
+        public sealed record ArgumentData(string Command, int Id);
     }
 }

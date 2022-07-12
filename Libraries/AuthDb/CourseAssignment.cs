@@ -20,6 +20,7 @@ internal sealed class CourseAssignmentConfiguration : IEntityTypeConfiguration<C
 {
     public void Configure(EntityTypeBuilder<CourseAssignment> builder)
     {
+        builder.ToTable("CourseAssignment");
         builder.HasKey(t => new { t.CourseId, t.InstructorId });
     }
 }

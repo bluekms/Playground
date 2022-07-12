@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AuthDb;
 
@@ -16,4 +18,12 @@ public class OfficeAssignment
     public string Location { get; set; } = null!;
     
     public Instructor Instructor { get; set; } = null!;
+}
+
+internal sealed class OfficeAssignmentConfiguration : IEntityTypeConfiguration<OfficeAssignment>
+{
+    public void Configure(EntityTypeBuilder<OfficeAssignment> builder)
+    {
+        builder.ToTable("OfficeAssignment");
+    }
 }
