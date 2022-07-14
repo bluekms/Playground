@@ -27,15 +27,88 @@ namespace AuthServer.Controllers
             return args.Command switch
             {
                 "Create" => await CreateData(),
-                "Select" => await SelectData(args.Id), 
-                _ => throw new InvalidOperationException();
+                "Select1" => await SelectData1(args.Id),
+                "Select2" => await SelectData2(args.Id),
+                "Select3" => await SelectData3(args.Id),
+                "Select4" => await SelectData4(args.Id),
+                _ => throw new InvalidOperationException(),
             };
         }
 
-        private async Task<ActionResult<string>> SelectData(int Id)
+        private async Task<ActionResult<string>> SelectData1(int Id)
         {
-            var data = await context.Enrollments
+            var sql = context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                .Include(model => model.Student)
                 .Where(row => row.EnrollmentId == Id)
+                .ToQueryString();
+            
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return data.ToString();
+        }
+        
+        private async Task<ActionResult<string>> SelectData2(int Id)
+        {
+            var sql = context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToQueryString();
+            
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return data.ToString();
+        }
+        
+        private async Task<ActionResult<string>> SelectData3(int Id)
+        {
+            var sql = context.Enrollments
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToQueryString();
+                
+            var data = await context.Enrollments
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return data.ToString();
+        }
+        
+        private async Task<ActionResult<string>> SelectData4(int Id)
+        {
+            var sql = context.Enrollments
+                .Include(model => model.Course)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToQueryString();
+            
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return data.ToString();
         }
 
         private async Task<ActionResult<string>> CreateData()
