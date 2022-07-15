@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AuthDb;
 using AuthServer.Extensions.Authentication;
@@ -27,15 +28,86 @@ namespace AuthServer.Controllers
             return args.Command switch
             {
                 "Create" => await CreateData(),
-                "Select" => await SelectData(args.Id), 
+                "Select" => await SelectTest(args.Id),
+                "Update1" => await UpdateTest1(args.Id),
+                "Update2" => await UpdateTest2(args.Id),
+                "Update3" => await UpdateTest3(args.Id),
                 _ => throw new InvalidOperationException();
             };
         }
 
-        private async Task<ActionResult<string>> SelectData(int Id)
+        private async Task<ActionResult<string>> SelectTest(int Id)
+        {
+            var sql = context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToQueryString();
+            
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return "Ok";
+        }
+
+        private async Task<ActionResult<string>> UpdateTest1(int Id)
         {
             var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
                 .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            await context.SaveChangesAsync();
+
+            return JsonSerializer.Serialize(data);
+        }
+        
+        private async Task<ActionResult<string>> UpdateTest2(int Id)
+        {
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+            
+            await context.Enrollments.
+
+            return JsonSerializer.Serialize(data);
+        }
+        
+        private async Task<ActionResult<string>> UpdateTest3(int Id)
+        {
+            var data = await context.Enrollments
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.CourseAssignments)
+                    .ThenInclude(model => model.Instructor)
+                .Include(model => model.Course)
+                    .ThenInclude(model => model.Department)
+                .Include(model => model.Student)
+                .Where(row => row.EnrollmentId == Id)
+                .ToListAsync();
+
+            return JsonSerializer.Serialize(data);
         }
 
         private async Task<ActionResult<string>> CreateData()

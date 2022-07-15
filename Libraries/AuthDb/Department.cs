@@ -11,7 +11,8 @@ public class Department
 {
     public int DepartmentId { get; set; }
 
-    [StringLength(50, MinimumLength = 3)] public string Name { get; set; } = null!;
+    [StringLength(50, MinimumLength = 3)]
+    public string Name { get; set; } = null!;
     
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal")]
@@ -28,7 +29,10 @@ public class Department
     /// modelBuilder.Entity<Department>().HasOne(d => d.Administrator).WithMany().OnDelete(DeleteBehavior.Restrict) 
     /// </summary>
     public int? InstructorId { get; set; }
-    public Instructor Adminstrator { get; set; } = null!;
+    
+    // https://docs.microsoft.com/ko-kr/aspnet/core/data/ef-rp/concurrency?view=aspnetcore-6.0&tabs=visual-studio
+    [Timestamp]
+    public byte[] ConcurrencyToken { get; set; }
     
     public ICollection<Course> Courses { get; set; } = null!;
 }
