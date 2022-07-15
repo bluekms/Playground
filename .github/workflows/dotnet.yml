@@ -1,15 +1,11 @@
 name: helloGithubAction
+ 
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: hello world 출력!!
-      run: echo Hello, world!
-    - name: 디렉토리 출력!!
-      run: ls -al
-    - name: 파이썬 버전 출력!!
-      run: python -v
-    - name: 파이썬 파일 실행!!
-      run: python 'test.py'
+    - name: Run Python
+      run: python test.py
