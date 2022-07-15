@@ -4,6 +4,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: hello world 출력!!
       run: echo Hello, world!
     - name: 디렉토리 출력!!
