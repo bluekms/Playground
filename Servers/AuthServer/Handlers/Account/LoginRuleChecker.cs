@@ -11,16 +11,16 @@ namespace AuthServer.Handlers.Account
 
     public sealed class LoginRuleChecker : IRuleChecker<LoginRule>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
 
-        public LoginRuleChecker(AuthContext context)
+        public LoginRuleChecker(AuthDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
         public async Task CheckAsync(LoginRule rule)
         {
-            var row = await context.Accounts
+            var row = await dbContext.Accounts
                 .Where(x => x.AccountId == rule.AccountId)
                 .SingleOrDefaultAsync();
 

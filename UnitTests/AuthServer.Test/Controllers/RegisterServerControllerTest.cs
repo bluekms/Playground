@@ -16,7 +16,7 @@ namespace AuthServer.Test.Controllers
     public class RegisterServerControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly ITimeService timeService;
         private readonly IMapper mapper;
         private readonly ConnectionMultiplexer redisConnection;
@@ -24,7 +24,7 @@ namespace AuthServer.Test.Controllers
         public RegisterServerControllerTest()
         {
             authDbFixture = new();
-            context = authDbFixture.CreateContext();
+            dbContext = authDbFixture.CreateContext();
             
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
@@ -36,7 +36,7 @@ namespace AuthServer.Test.Controllers
         public void Dispose()
         {
             authDbFixture.Dispose();
-            context.Dispose();
+            dbContext.Dispose();
             redisConnection.Dispose();
         }
 
@@ -46,7 +46,7 @@ namespace AuthServer.Test.Controllers
         {
             var controller = new RegisterServerController(
                 mapper,
-                new UpsertServerHandler(context, timeService, mapper));
+                new UpsertServerHandler(dbContext, timeService, mapper));
 
             var result = await controller.RegisterServer(new(name, role, address, description, expireSec));
             
