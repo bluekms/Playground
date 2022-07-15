@@ -20,13 +20,13 @@ namespace AuthServer.Test.Models
             connection.Dispose();
         }
 
-        public AuthContext CreateContext()
+        public AuthDbContext CreateContext()
         {
-            var options = new DbContextOptionsBuilder<AuthContext>()
+            var options = new DbContextOptionsBuilder<AuthDbContext>()
                 .UseSqlite(connection)
                 .Options;
             
-            var result = new AuthContext(options);
+            var result = new AuthDbContext(options);
             result.Database.EnsureCreated();
             
             return result;

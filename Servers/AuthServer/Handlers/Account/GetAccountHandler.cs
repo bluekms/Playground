@@ -12,18 +12,18 @@ namespace AuthServer.Handlers.Account
 
     public sealed class GetAccountHandler : IQueryHandler<GetAccountQuery, AccountData?>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
 
-        public GetAccountHandler(AuthContext context, IMapper mapper)
+        public GetAccountHandler(AuthDbContext dbContext, IMapper mapper)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
         public async Task<AccountData?> QueryAsync(GetAccountQuery query)
         {
-            var row = await context.Accounts
+            var row = await dbContext.Accounts
                 .Where(x => x.AccountId == query.AccountId)
                 .SingleOrDefaultAsync();
 

@@ -19,7 +19,7 @@ namespace AuthServer.Test.Controllers
     public class LoginControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly IMapper mapper;
         private readonly ITimeService timeService;
@@ -27,7 +27,7 @@ namespace AuthServer.Test.Controllers
         public LoginControllerTest()
         {
             authDbFixture = new();
-            context = authDbFixture.CreateContext();
+            dbContext = authDbFixture.CreateContext();
             
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
@@ -41,7 +41,7 @@ namespace AuthServer.Test.Controllers
         public void Dispose()
         {
             authDbFixture.Dispose();
-            context.Dispose();
+            dbContext.Dispose();
             redisConnection.Dispose();
         }
         
@@ -50,11 +50,11 @@ namespace AuthServer.Test.Controllers
         public async void Login(string accountId, string password)
         {
             var controller = new LoginController(
-                new LoginRuleChecker(context),
+                new LoginRuleChecker(dbContext),
                 new DeleteSessionHandler(redisConnection.GetDatabase()),
-                new UpdateSessionHandler(context, mapper),
+                new UpdateSessionHandler(dbContext, mapper),
                 new AddSessionHandler(redisConnection.GetDatabase()),
-                new GetServerListHandler(context, timeService, mapper));
+                new GetServerListHandler(dbContext, timeService, mapper));
             
             var result = await controller.Login(new(accountId, password));
             var actionResult = Assert.IsType<ActionResult<LoginController.Returns>>(result);
@@ -65,7 +65,7 @@ namespace AuthServer.Test.Controllers
         
         private void InitData()
         {
-            context.Accounts.Add(new()
+            dbContext.Accounts.Add(new()
             {
                 Token = string.Empty,
                 AccountId = "bluekms",
@@ -74,7 +74,7 @@ namespace AuthServer.Test.Controllers
                 Role = UserRoles.Administrator,
             });
 
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "a",
                 Role = ServerRoles.Auth,
@@ -83,7 +83,7 @@ namespace AuthServer.Test.Controllers
                 Description = "Unit Test Auth Server"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "b",
                 Role = ServerRoles.Operation,
@@ -92,7 +92,7 @@ namespace AuthServer.Test.Controllers
                 Description = "Unit Test Op Server"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "c",
                 Role = ServerRoles.World,
@@ -101,7 +101,7 @@ namespace AuthServer.Test.Controllers
                 Description = "Unit Test World Server 1"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "d",
                 Role = ServerRoles.World,
@@ -110,7 +110,7 @@ namespace AuthServer.Test.Controllers
                 Description = "Unit Test World Server 2"
             });
             
-            context.SaveChanges();
+            dbContext.SaveChanges();
         }
     }
 }

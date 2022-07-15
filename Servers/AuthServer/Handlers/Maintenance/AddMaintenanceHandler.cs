@@ -16,12 +16,12 @@ namespace AuthServer.Handlers.Maintenance
 
     public class AddMaintenanceHandler : ICommandHandler<AddMaintenanceCommand, MaintenanceData>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
 
-        public AddMaintenanceHandler(AuthContext context, IMapper mapper)
+        public AddMaintenanceHandler(AuthDbContext dbContext, IMapper mapper)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
@@ -33,8 +33,8 @@ namespace AuthServer.Handlers.Maintenance
                 End = command.End,
                 Reason = command.Reason,
             };
-            await context.Maintenance.AddAsync(newRow);
-            await context.SaveChangesAsync();
+            await dbContext.Maintenance.AddAsync(newRow);
+            await dbContext.SaveChangesAsync();
             return mapper.Map<MaintenanceData>(newRow);
         }
     }

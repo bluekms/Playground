@@ -21,7 +21,7 @@ namespace AuthServer.Test.Scenarios
     public class AccountScenarioTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
         private readonly ConnectionMultiplexer redisConnection;
         private readonly IMapper mapper;
         private readonly ITimeService timeService;
@@ -29,7 +29,7 @@ namespace AuthServer.Test.Scenarios
         public AccountScenarioTest()
         {
             authDbFixture = new();
-            context = authDbFixture.CreateContext();
+            dbContext = authDbFixture.CreateContext();
             
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
@@ -41,7 +41,7 @@ namespace AuthServer.Test.Scenarios
         public void Dispose()
         {
             authDbFixture.Dispose();
-            context.Dispose();
+            dbContext.Dispose();
             redisConnection.Dispose();
         }
         
@@ -55,8 +55,8 @@ namespace AuthServer.Test.Scenarios
             var role = UserRoles.User;
             
             var signUpController = new SignUpController(
-                new SignUpRuleChecker(new GetAccountHandler(context, mapper)),
-                new AddAccountHandler(context, mapper, timeService));
+                new SignUpRuleChecker(new GetAccountHandler(dbContext, mapper)),
+                new AddAccountHandler(dbContext, mapper, timeService));
 
             var resultSignUp = await signUpController.SignUp(new(accountId, password, role));
             var actionResultSignUp = Assert.IsType<ActionResult<AccountData>>(resultSignUp);
@@ -64,11 +64,11 @@ namespace AuthServer.Test.Scenarios
             actionResultSignUp.Value?.CreatedAt.ShouldBe(timeService.Now);
             
             var loginController = new LoginController(
-                new LoginRuleChecker(context),
+                new LoginRuleChecker(dbContext),
                 new DeleteSessionHandler(redisConnection.GetDatabase()),
-                new UpdateSessionHandler(context, mapper),
+                new UpdateSessionHandler(dbContext, mapper),
                 new AddSessionHandler(redisConnection.GetDatabase()),
-                new GetServerListHandler(context, timeService, mapper));
+                new GetServerListHandler(dbContext, timeService, mapper));
             
             var resultLogin = await loginController.Login(new(accountId, password));
             var actionResultLogin = Assert.IsType<ActionResult<LoginController.Returns>>(resultLogin);
@@ -79,7 +79,7 @@ namespace AuthServer.Test.Scenarios
         
         private void InitData()
         {
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "a",
                 Role = ServerRoles.Auth,
@@ -88,7 +88,7 @@ namespace AuthServer.Test.Scenarios
                 Description = "Unit Test Auth Server"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "b",
                 Role = ServerRoles.Operation,
@@ -97,7 +97,7 @@ namespace AuthServer.Test.Scenarios
                 Description = "Unit Test Op Server"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "c",
                 Role = ServerRoles.World,
@@ -106,7 +106,7 @@ namespace AuthServer.Test.Scenarios
                 Description = "Unit Test World Server 1"
             });
             
-            context.Servers.Add(new()
+            dbContext.Servers.Add(new()
             {
                 Name = "d",
                 Role = ServerRoles.World,
@@ -115,7 +115,7 @@ namespace AuthServer.Test.Scenarios
                 Description = "Unit Test World Server 2"
             });
             
-            context.SaveChanges();
+            dbContext.SaveChanges();
         }
     }
 }

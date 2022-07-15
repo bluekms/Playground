@@ -13,16 +13,16 @@ namespace AuthServer.Handlers.Maintenance
 
     public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
     {
-        private readonly AuthContext context;
+        private readonly AuthDbContext dbContext;
 
-        public CheckMaintenanceRule(AuthContext context)
+        public CheckMaintenanceRule(AuthDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
         public async Task CheckAsync(AddMaintenanceRule rule)
         {
-            var row = await context.Maintenance
+            var row = await dbContext.Maintenance
                 .Where(x => x.Start <= rule.Start)
                 .Where(x => rule.Start <= x.End)
                 .SingleOrDefaultAsync();
@@ -32,7 +32,7 @@ namespace AuthServer.Handlers.Maintenance
                 throw new Exception($"Duplicate Start. {row.ToString()}");
             }
 
-            row = await context.Maintenance
+            row = await dbContext.Maintenance
                 .Where(x => x.Start <= rule.End)
                 .Where(x => rule.End <= x.End)
                 .SingleOrDefaultAsync();
@@ -42,7 +42,7 @@ namespace AuthServer.Handlers.Maintenance
                 throw new Exception($"Duplicate End. {@row}");
             }
 
-            var exist = await context.Maintenance
+            var exist = await dbContext.Maintenance
                 .Where(x => rule.Start <= x.Start)
                 .Where(x => x.End <= rule.End)
                 .AnyAsync();

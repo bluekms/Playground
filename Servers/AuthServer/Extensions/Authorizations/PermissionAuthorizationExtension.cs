@@ -1,6 +1,5 @@
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthServer.Extensions.Authorizations
 {
@@ -10,12 +9,20 @@ namespace AuthServer.Extensions.Authorizations
         {
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("AdminApi", policy =>
+                {
+                    policy.Requirements.Add(new UserRoleRequirment(new[]
+                    {
+                        UserRoles.Administrator,
+                    }));
+                });
+                
                 options.AddPolicy("ServiceApi", policy =>
                 {
                     policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
                         UserRoles.Developer,
-                        UserRoles.WhitelistedUser,
+                        UserRoles.WhitelistUser,
                         UserRoles.User,
                     }));
                 });
@@ -26,16 +33,7 @@ namespace AuthServer.Extensions.Authorizations
                     policy.Requirements.Add(new UserRoleRequirment(new[]
                     {
                         UserRoles.Developer,
-                    }));
-                });
-
-                options.AddPolicy("InternalApi", policy =>
-                {
-                    policy.Requirements.Add(new UserRoleRequirment(new[]
-                    {
-                        UserRoles.Administrator,
-                        UserRoles.Developer,
-                        UserRoles.InternalService,
+                        UserRoles.OpUser,
                     }));
                 });
             });
