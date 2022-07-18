@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthServer.Extensions.Authorizations
 {
-    public class UserRoleHandler : AuthorizationHandler<UserRoleRequirment>
+    public class UserRoleHandler : AuthorizationHandler<UserRoleRequirement>
     {
         private readonly IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime;
 
@@ -16,7 +16,7 @@ namespace AuthServer.Extensions.Authorizations
             this.isMaintenanceTime = isMaintenanceTime;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserRoleRequirment requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserRoleRequirement requirement)
         {
             if (context.User?.Identity == null)
             {
@@ -31,7 +31,7 @@ namespace AuthServer.Extensions.Authorizations
             }
 
             var claim = context.User.Claims
-                .FirstOrDefault(x => x.Type == UserRoleRequirment.ClaimType);
+                .FirstOrDefault(x => x.Type == UserRoleRequirement.ClaimType);
 
             if (claim == null)
             {
