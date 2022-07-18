@@ -15,7 +15,7 @@ namespace CommonLibrary.Worker
         private readonly IServiceProvider provider;
 
         public WorkService(
-            ILogger<WorkService<TWork>> logger, 
+            ILogger<WorkService<TWork>> logger,
             IWorkServiceOptions<TWork> options,
             IServiceProvider provider)
         {
@@ -32,7 +32,7 @@ namespace CommonLibrary.Worker
             {
                 using var innerScope = provider.CreateScope();
                 await RunAsync(innerScope.ServiceProvider);
-                
+
                 await Task.Delay(options.Interval, stoppingToken);
             }
         }
@@ -41,7 +41,7 @@ namespace CommonLibrary.Worker
         {
             var activitySource = provider.GetRequiredService<ActivitySource>();
             using var activity = activitySource.StartActivity(typeof(TWork).Name);
-            
+
             logger.LogTrace("{Work} is starting", typeof(TWork));
             var work = (IWork)ActivatorUtilities.CreateInstance(provider, typeof(TWork));
             try

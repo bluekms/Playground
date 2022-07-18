@@ -9,7 +9,7 @@ namespace AuthServer.Test
         public static IConfiguration Use()
         {
             var path = Path.Join(AppContext.BaseDirectory, @"../../..");
-            
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(path)
                 .AddJsonFile($"appsettings.Test.json", optional: false, reloadOnChange: true);

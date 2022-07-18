@@ -13,13 +13,13 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
     {
         var path = Path.Join(AppContext.BaseDirectory, @"..\..\..\..\..\", @"Servers\AuthServer");
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        
+
         if (env != null)
         {
             if (env[0] != '.')
             {
                 env = $".{env}";
-            }    
+            }
         }
 
         var builder = new ConfigurationBuilder()
@@ -32,7 +32,7 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
     public AuthDbContext CreateDbContext(string[] args)
     {
         var conn = config.GetConnectionString("AuthDb");
-        
+
         var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
         optionsBuilder.UseMySql(
             conn,
