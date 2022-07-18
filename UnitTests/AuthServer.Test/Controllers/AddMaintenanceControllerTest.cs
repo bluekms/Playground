@@ -23,13 +23,13 @@ namespace AuthServer.Test.Controllers
         {
             authDbFixture = new();
             dbContext = authDbFixture.CreateContext();
-            
+
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
-            
+
             mapper = InitMapper.Use();
         }
-        
+
         public void Dispose()
         {
             authDbFixture.Dispose();
@@ -49,11 +49,11 @@ namespace AuthServer.Test.Controllers
             var result = await controller.AddMaintenance(new(start, end, reason));
             var actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
             actionResult.Value?.Id.ShouldBe(1);
-                
+
             result = await controller.AddMaintenance(new(start.AddDays(1), end.AddDays(1), reason));
             actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
             actionResult.Value?.Id.ShouldBe(2);
-            
+
             result = await controller.AddMaintenance(new(start.AddDays(3), end.AddDays(3), reason));
             actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
             actionResult.Value?.Id.ShouldBe(3);

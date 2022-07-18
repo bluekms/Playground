@@ -30,21 +30,21 @@ namespace AuthServer.Test.Scenarios
         {
             authDbFixture = new();
             dbContext = authDbFixture.CreateContext();
-            
+
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
-            
+
             mapper = InitMapper.Use();
             timeService = new ScopedTimeService();
         }
-        
+
         public void Dispose()
         {
             authDbFixture.Dispose();
             dbContext.Dispose();
             redisConnection.Dispose();
         }
-        
+
         [Fact]
         public async void AccountScenario()
         {
@@ -53,30 +53,30 @@ namespace AuthServer.Test.Scenarios
             var accountId = "bluekms";
             var password = "1234";
             var role = UserRoles.User;
-            
+
             var signUpController = new SignUpController(
                 new SignUpRuleChecker(new GetAccountHandler(dbContext, mapper)),
                 new AddAccountHandler(dbContext, mapper, timeService));
 
             var resultSignUp = await signUpController.SignUp(new(accountId, password, role));
             var actionResultSignUp = Assert.IsType<ActionResult<AccountData>>(resultSignUp);
-            
+
             actionResultSignUp.Value?.CreatedAt.ShouldBe(timeService.Now);
-            
+
             var loginController = new LoginController(
                 new LoginRuleChecker(dbContext),
                 new DeleteSessionHandler(redisConnection.GetDatabase()),
                 new UpdateSessionHandler(dbContext, mapper),
                 new AddSessionHandler(redisConnection.GetDatabase()),
                 new GetServerListHandler(dbContext, timeService, mapper));
-            
+
             var resultLogin = await loginController.Login(new(accountId, password));
             var actionResultLogin = Assert.IsType<ActionResult<LoginController.Returns>>(resultLogin);
 
             actionResultLogin.Value?.SessionToken.ShouldNotBeNull();
             actionResultLogin.Value?.Worlds.Count.ShouldBe(2);
         }
-        
+
         private void InitData()
         {
             dbContext.Servers.Add(new()
@@ -87,7 +87,7 @@ namespace AuthServer.Test.Scenarios
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test Auth Server"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "b",
@@ -96,7 +96,7 @@ namespace AuthServer.Test.Scenarios
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test Op Server"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "c",
@@ -105,7 +105,7 @@ namespace AuthServer.Test.Scenarios
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test World Server 1"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "d",
@@ -114,7 +114,7 @@ namespace AuthServer.Test.Scenarios
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test World Server 2"
             });
-            
+
             dbContext.SaveChanges();
         }
     }

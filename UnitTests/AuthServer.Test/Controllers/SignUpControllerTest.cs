@@ -24,7 +24,7 @@ namespace AuthServer.Test.Controllers
         {
             authDbFixture = new();
             dbContext = authDbFixture.CreateContext();
-            
+
             mapper = InitMapper.Use();
             timeService = new ScopedTimeService();
         }
@@ -45,7 +45,7 @@ namespace AuthServer.Test.Controllers
 
             var result = await controller.SignUp(new(accountId, password, role));
             var actionResult = Assert.IsType<ActionResult<AccountData>>(result);
-            
+
             actionResult.Value?.CreatedAt.ShouldBe(timeService.Now);
         }
     }

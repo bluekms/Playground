@@ -28,23 +28,23 @@ namespace AuthServer.Test.Controllers
         {
             authDbFixture = new();
             dbContext = authDbFixture.CreateContext();
-            
+
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
-            
+
             mapper = InitMapper.Use();
             timeService = new ScopedTimeService();
-            
+
             InitData();
         }
-        
+
         public void Dispose()
         {
             authDbFixture.Dispose();
             dbContext.Dispose();
             redisConnection.Dispose();
         }
-        
+
         [Theory]
         [InlineData("bluekms", "1234")]
         public async void Login(string accountId, string password)
@@ -55,14 +55,14 @@ namespace AuthServer.Test.Controllers
                 new UpdateSessionHandler(dbContext, mapper),
                 new AddSessionHandler(redisConnection.GetDatabase()),
                 new GetServerListHandler(dbContext, timeService, mapper));
-            
+
             var result = await controller.Login(new(accountId, password));
             var actionResult = Assert.IsType<ActionResult<LoginController.Returns>>(result);
 
             actionResult.Value?.SessionToken.ShouldNotBeNull();
             actionResult.Value?.Worlds.Count.ShouldBe(2);
         }
-        
+
         private void InitData()
         {
             dbContext.Accounts.Add(new()
@@ -82,7 +82,7 @@ namespace AuthServer.Test.Controllers
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test Auth Server"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "b",
@@ -91,7 +91,7 @@ namespace AuthServer.Test.Controllers
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test Op Server"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "c",
@@ -100,7 +100,7 @@ namespace AuthServer.Test.Controllers
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test World Server 1"
             });
-            
+
             dbContext.Servers.Add(new()
             {
                 Name = "d",
@@ -109,7 +109,7 @@ namespace AuthServer.Test.Controllers
                 ExpireAt = DateTime.Now.AddDays(1),
                 Description = "Unit Test World Server 2"
             });
-            
+
             dbContext.SaveChanges();
         }
     }

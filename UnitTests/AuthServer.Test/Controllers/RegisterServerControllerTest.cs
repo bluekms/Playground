@@ -25,7 +25,7 @@ namespace AuthServer.Test.Controllers
         {
             authDbFixture = new();
             dbContext = authDbFixture.CreateContext();
-            
+
             var config = InitConfig.Use();
             redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
 
@@ -49,7 +49,7 @@ namespace AuthServer.Test.Controllers
                 new UpsertServerHandler(dbContext, timeService, mapper));
 
             var result = await controller.RegisterServer(new(name, role, address, description, expireSec));
-            
+
             Assert.IsType<OkResult>(result);
         }
     }

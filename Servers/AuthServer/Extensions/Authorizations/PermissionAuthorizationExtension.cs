@@ -16,7 +16,7 @@ namespace AuthServer.Extensions.Authorizations
                         UserRoles.Administrator,
                     }));
                 });
-                
+
                 options.AddPolicy("ServiceApi", policy =>
                 {
                     policy.Requirements.Add(new UserRoleRequirement(new[]
