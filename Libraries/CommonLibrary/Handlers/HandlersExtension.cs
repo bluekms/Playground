@@ -13,17 +13,17 @@ namespace CommonLibrary.Handlers
             {
                 services.AddTransient(serviceType, type);
             }
-            
+
             foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(ICommandHandler<>)))
             {
                 services.AddTransient(serviceType, type);
             }
-            
+
             foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(ICommandHandler<,>)))
             {
                 services.AddTransient(serviceType, type);
             }
-            
+
             foreach (var (type, serviceType) in types.GetGenericInheritedTypes(typeof(IRuleChecker<>)))
             {
                 services.AddTransient(serviceType, type);

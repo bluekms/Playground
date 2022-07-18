@@ -8,7 +8,7 @@ namespace AuthServer.Test.Models
     public class AuthDbFixture : IDisposable
     {
         private readonly SqliteConnection connection;
-        
+
         public AuthDbFixture()
         {
             connection = new SqliteConnection("DataSource=:memory:");
@@ -25,10 +25,10 @@ namespace AuthServer.Test.Models
             var options = new DbContextOptionsBuilder<AuthDbContext>()
                 .UseSqlite(connection)
                 .Options;
-            
+
             var result = new AuthDbContext(options);
             result.Database.EnsureCreated();
-            
+
             return result;
         }
     }

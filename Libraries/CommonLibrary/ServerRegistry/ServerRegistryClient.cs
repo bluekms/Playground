@@ -10,7 +10,7 @@ namespace CommonLibrary.ServerRegistry
     public class ServerRegistryClient
     {
         private const string RegisterUrl = "Auth/Server/Register";
-        
+
         private readonly HttpClient client;
         private readonly ServerRegistryOptions options;
 

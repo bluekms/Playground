@@ -12,7 +12,7 @@ internal sealed class QueryDecorator<TQuery, TResult> : IQueryHandler<TQuery, TR
 
     public QueryDecorator(
         IQueryHandler<TQuery, TResult> handler,
-        ILogger<QueryDecorator<TQuery, TResult>> logger, 
+        ILogger<QueryDecorator<TQuery, TResult>> logger,
         ActivitySource activitySource)
     {
         this.handler = handler;

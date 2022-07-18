@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout Actions Repository
         uses: actions/checkout@v3
+        
+      - name: Formatting
+        run: dotnet format --no-restore
 
       - name: Check spelling
         uses: crate-ci/typos@master
