@@ -6,11 +6,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  spell:
-    uses: ./.github/workflows/ci-spell.yaml
+  SpellCheck:
+    uses: ./.github/workflows/ci-spell.yml
   
-  build:
-    uses: ./.github/workflows/ci-build.yaml  
+  Build:
+    uses: ./.github/workflows/ci-build.yml  
       
-#  test:
-#    uses: ./.github/workflows/ci-test.yaml
+  UnitTest:
+    uses: ./.github/workflows/ci-test.yml
