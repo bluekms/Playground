@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  spell:
+    uses: ./.github/workflows/ci-spell.yaml
+  
+  build:
+    uses: ./.github/workflows/ci-build.yaml  
+      
+#  test:
+#    uses: ./.github/workflows/ci-test.yaml
