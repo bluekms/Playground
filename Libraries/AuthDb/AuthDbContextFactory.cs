@@ -12,11 +12,19 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
     public AuthDbContextFactory()
     {
         var path = Path.Join(AppContext.BaseDirectory, @"..\..\..\..\..\", @"Servers\AuthServer");
-        string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        
+        if (env != null)
+        {
+            if (env[0] != '.')
+            {
+                env = $".{env}";
+            }    
+        }
 
         var builder = new ConfigurationBuilder()
             .SetBasePath(path)
-            .AddJsonFile($"appsettings.{env}.json", optional: false, reloadOnChange: true);
+            .AddJsonFile($"appsettings{env}.json", optional: false, reloadOnChange: true);
 
         config = builder.Build();
     }

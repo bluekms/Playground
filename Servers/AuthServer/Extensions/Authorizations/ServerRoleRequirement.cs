@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthServer.Extensions.Authorizations
 {
-    public class ServerRoleRequirment : IAuthorizationRequirement
+    public class ServerRoleRequirement : IAuthorizationRequirement
     {
         public const string ClaimType = "ServerRole";
 
-        public ServerRoleRequirment(ServerRoles serverRole)
+        public ServerRoleRequirement(ServerRoles serverRole)
         {
             ServerRole = serverRole;
         }
