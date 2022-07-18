@@ -9,7 +9,7 @@ namespace AuthServer.Test
             var config = new TypeAdapterConfig();
             config.RequireDestinationMemberSource = true;
             config.Default.MapToConstructor(true);
-            
+
             return new MapsterMapper.Mapper(config);
         }
     }

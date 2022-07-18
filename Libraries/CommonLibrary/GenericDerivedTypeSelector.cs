@@ -12,7 +12,7 @@ public sealed class GenericDerivedTypeSelector
     {
         this.assemblies = assemblies;
     }
-    
+
     public IEnumerable<Type> GetInheritedTypes(Type baseType)
     {
         if (baseType.IsGenericType && !baseType.IsConstructedGenericType)
@@ -28,7 +28,7 @@ public sealed class GenericDerivedTypeSelector
             }
         }
     }
-    
+
     public IEnumerable<TypeDerivation> GetGenericInheritedTypes(Type baseType)
     {
         if (!baseType.IsGenericType || baseType.IsConstructedGenericType)
@@ -41,7 +41,7 @@ public sealed class GenericDerivedTypeSelector
             var types = GetDerivingTypes(type)
                 .Where(x => x.IsGenericType)
                 .Where(x => x.IsConstructedGenericType);
-            
+
             foreach (var deriving in types)
             {
                 var definition = deriving.GetGenericTypeDefinition();
