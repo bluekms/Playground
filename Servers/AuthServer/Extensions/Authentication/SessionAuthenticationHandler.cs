@@ -56,13 +56,13 @@ namespace AuthServer.Extensions.Authentication
 
         private string? GetSessionToken()
         {
-            var autorization = Request.Headers[HeaderNames.Authorization];
-            if (string.IsNullOrEmpty(autorization))
+            var authorization = Request.Headers[HeaderNames.Authorization];
+            if (string.IsNullOrEmpty(authorization))
             {
                 return string.Empty;
             }
 
-            if (!AuthenticationHeaderValue.TryParse(autorization, out var headerValue))
+            if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             {
                 return string.Empty;
             }
@@ -92,7 +92,7 @@ namespace AuthServer.Extensions.Authentication
 
             // TODO 추후 없으면 mysql에서 가져오는 로직 추가
 
-            return new(UserRoleRequirment.ClaimType, userRole.ToString());
+            return new(UserRoleRequirement.ClaimType, userRole.ToString());
         }
     }
 }

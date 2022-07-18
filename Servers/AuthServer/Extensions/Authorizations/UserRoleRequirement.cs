@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthServer.Extensions.Authorizations
 {
-    public class UserRoleRequirment : IAuthorizationRequirement
+    public class UserRoleRequirement : IAuthorizationRequirement
     {
         public const string ClaimType = "UserRole";
 
-        public UserRoleRequirment(UserRoles[] userRoles)
+        public UserRoleRequirement(UserRoles[] userRoles)
         {
             UserRoleList = new(userRoles.Select(x => x.ToString()));
         }

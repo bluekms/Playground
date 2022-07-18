@@ -11,7 +11,7 @@ namespace AuthServer.Extensions.Authorizations
             {
                 options.AddPolicy("AdminApi", policy =>
                 {
-                    policy.Requirements.Add(new UserRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirement(new[]
                     {
                         UserRoles.Administrator,
                     }));
@@ -19,7 +19,7 @@ namespace AuthServer.Extensions.Authorizations
                 
                 options.AddPolicy("ServiceApi", policy =>
                 {
-                    policy.Requirements.Add(new UserRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirement(new[]
                     {
                         UserRoles.Developer,
                         UserRoles.WhitelistUser,
@@ -30,7 +30,7 @@ namespace AuthServer.Extensions.Authorizations
                 options.AddPolicy("CheatApi", policy =>
                 {
                     policy.Requirements.Add(new BuildConfigurationRequirement(BuildConfigurationRequirement.BuildConfigurations.Debug));
-                    policy.Requirements.Add(new UserRoleRequirment(new[]
+                    policy.Requirements.Add(new UserRoleRequirement(new[]
                     {
                         UserRoles.Developer,
                         UserRoles.OpUser,
