@@ -47,13 +47,13 @@ namespace AuthServer.Extensions.Authentication
 
         private string? GetCredentialToken()
         {
-            var autorization = Request.Headers[HeaderNames.Authorization];
-            if (string.IsNullOrEmpty(autorization))
+            var authorization = Request.Headers[HeaderNames.Authorization];
+            if (string.IsNullOrEmpty(authorization))
             {
                 return string.Empty;
             }
 
-            if (!AuthenticationHeaderValue.TryParse(autorization, out var headerValue))
+            if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
             {
                 return string.Empty;
             }
@@ -70,7 +70,7 @@ namespace AuthServer.Extensions.Authentication
         {
             var serverRole = await getServerRole.QueryAsync(new(token));
 
-            return new(ServerRoleRequirment.ClaimType, serverRole.ToString());
+            return new(ServerRoleRequirement.ClaimType, serverRole.ToString());
         }
     }
 }
