@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 
 namespace AuthServer.Test
@@ -6,10 +8,13 @@ namespace AuthServer.Test
     {
         public static IConfiguration Use()
         {
-            return new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Testing.json")
-                .AddEnvironmentVariables()
-                .Build();
+            var path = Path.Join(AppContext.BaseDirectory, @"../../..");
+            
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(path)
+                .AddJsonFile($"appsettings.Test.json", optional: false, reloadOnChange: true);
+
+            return builder.Build();
         }
     }
 }
