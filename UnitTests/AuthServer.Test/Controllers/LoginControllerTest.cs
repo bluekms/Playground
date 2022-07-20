@@ -57,9 +57,9 @@ namespace AuthServer.Test.Controllers
                 new GetServerListHandler(dbContext, timeService, mapper));
 
             var result = await controller.Login(new(accountId, password));
-            var actionResult = Assert.IsType<ActionResult<LoginController.Returns>>(result);
+            var actionResult = Assert.IsType<ActionResult<LoginController.Result>>(result);
 
-            actionResult.Value?.SessionToken.ShouldNotBeNull();
+            actionResult.Value?.SessionId.ShouldNotBeNull();
             actionResult.Value?.Worlds.Count.ShouldBe(2);
         }
 

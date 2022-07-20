@@ -1,32 +1,30 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AuthDb;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
-namespace AuthServer.Handlers.Session
+namespace AuthServer.Handlers.Session;
+
+public sealed record GetUserRoleQuery(string Token) : IQuery;
+
+public class GetUserRoleHandler : IQueryHandler<GetUserRoleQuery, UserRoles?>
 {
-    public sealed record GetUserRoleQuery(string Token) : IQuery;
+    private readonly IDatabase redis;
 
-    public class GetUserRoleHandler : IQueryHandler<GetUserRoleQuery, UserRoles>
+    public GetUserRoleHandler(IDatabase redis)
     {
-        private readonly IDatabase redis;
+        this.redis = redis;
+    }
 
-        public GetUserRoleHandler(IDatabase redis)
+    public async Task<UserRoles?> QueryAsync(GetUserRoleQuery query)
+    {
+        var key = $"Session:{query.Token}";
+        var userRole = await redis.StringGetAsync(key);
+
+        if (!userRole.HasValue)
         {
-            this.redis = redis;
+            return null;
         }
 
-        public async Task<UserRoles> QueryAsync(GetUserRoleQuery query)
-        {
-            var key = $"Session:{query.Token}";
-            var userRole = await redis.StringGetAsync(key);
-
-            return Enum.Parse<UserRoles>(userRole.ToString());
-        }
+        return Enum.Parse<UserRoles>(userRole.ToString());
     }
 }
