@@ -36,14 +36,15 @@ namespace AuthServer.Test.Controllers
         }
 
         [Theory]
-        [InlineData("bluekms1", "1234", UserRoles.User)]
-        public async void SignUp(string accountId, string password, UserRoles role)
+        [InlineData("bluekms1", "1234")]
+        public async void SignUp(string accountId, string password)
         {
             var controller = new SignUpController(
                 new SignUpRuleChecker(new GetAccountHandler(dbContext, mapper)),
-                new AddAccountHandler(dbContext, mapper, timeService));
+                new AddAccountHandler(dbContext, mapper, timeService),
+                mapper);
 
-            var result = await controller.SignUp(new(accountId, password, role));
+            var result = await controller.SignUp(new(accountId, password));
             var actionResult = Assert.IsType<ActionResult<AccountData>>(result);
 
             actionResult.Value?.CreatedAt.ShouldBe(timeService.Now);
