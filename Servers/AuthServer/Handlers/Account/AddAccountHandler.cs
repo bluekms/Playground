@@ -1,49 +1,47 @@
-﻿using System.Threading.Tasks;
-using AuthDb;
+﻿using AuthDb;
 using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
 
-namespace AuthServer.Handlers.Account
+namespace AuthServer.Handlers.Account;
+
+public sealed record AddAccountCommand(
+    string AccountId,
+    string Password,
+    UserRoles UserRole) : ICommand;
+
+public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 {
-    public sealed record AddAccountCommand(
-        string AccountId,
-        string Password,
-        UserRoles UserRole) : ICommand;
+    private readonly AuthDbContext dbContext;
+    private readonly IMapper mapper;
+    private readonly ITimeService time;
 
-    public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
+    public AddAccountHandler(
+        AuthDbContext dbContext,
+        IMapper mapper,
+        ITimeService time)
     {
-        private readonly AuthDbContext dbContext;
-        private readonly IMapper mapper;
-        private readonly ITimeService time;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+        this.time = time;
+    }
 
-        public AddAccountHandler(
-            AuthDbContext dbContext,
-            IMapper mapper,
-            ITimeService time)
+    public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
+    {
+        var newRow = new AuthDb.Account()
         {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-            this.time = time;
-        }
+            AccountId = command.AccountId,
+            Password = command.Password,
+            Token = string.Empty,
+            CreatedAt = time.Now,
+            Role = command.UserRole,
+        };
 
-        public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
-        {
-            var newRow = new AuthDb.Account()
-            {
-                AccountId = command.AccountId,
-                Password = command.Password,
-                Token = string.Empty,
-                CreatedAt = time.Now,
-                Role = command.UserRole,
-            };
+        await dbContext.Accounts.AddAsync(newRow);
+        await dbContext.SaveChangesAsync();
 
-            await dbContext.Accounts.AddAsync(newRow);
-            await dbContext.SaveChangesAsync();
-
-            return mapper.Map<AccountData>(newRow);
-        }
+        return mapper.Map<AccountData>(newRow);
     }
 }
