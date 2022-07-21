@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.Test.Models
 {
-    public class AuthDbFixture : IDisposable
+    public sealed class AuthDbFixture : IDisposable
     {
         private readonly SqliteConnection connection;
 

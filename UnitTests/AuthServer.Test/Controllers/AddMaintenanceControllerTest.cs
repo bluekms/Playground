@@ -12,7 +12,7 @@ using Xunit;
 
 namespace AuthServer.Test.Controllers
 {
-    public class AddMaintenanceControllerTest : IDisposable
+    public sealed class AddMaintenanceControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthDbContext dbContext;

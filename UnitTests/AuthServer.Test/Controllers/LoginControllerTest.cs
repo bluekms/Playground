@@ -17,7 +17,7 @@ using IMapper = MapsterMapper.IMapper;
 
 namespace AuthServer.Test.Controllers
 {
-    public class LoginControllerTest : IDisposable
+    public sealed class LoginControllerTest : IDisposable
     {
         private readonly AuthDbFixture authDbFixture;
         private readonly AuthDbContext dbContext;
