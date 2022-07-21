@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
-namespace AuthServer.Extensions.Authorizations;
+namespace AuthLibrary.Extensions.Authorizations;
 
 public class BuildConfigurationClaimHandler : AuthorizationHandler<BuildConfigurationRequirement>
 {

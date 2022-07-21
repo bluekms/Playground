@@ -1,7 +1,8 @@
 using System.Reflection;
+using AuthLibrary.Extensions;
+using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
 using AuthServer.Extensions;
-using AuthServer.Extensions.Authentication;
-using AuthServer.Extensions.Authorizations;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;

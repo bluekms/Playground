@@ -1,3 +1,5 @@
+using AuthLibrary.Handlers;
+using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
 using AuthServer.Handlers.World;

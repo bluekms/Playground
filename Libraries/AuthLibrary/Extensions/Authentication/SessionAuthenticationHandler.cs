@@ -1,17 +1,17 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using AuthServer.Extensions.Authorizations;
-using AuthServer.Handlers.Account;
-using AuthServer.Handlers.Session;
-using AuthServer.Models;
+using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Handlers;
+using AuthLibrary.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace AuthServer.Extensions.Authentication;
+namespace AuthLibrary.Extensions.Authentication;
 
 public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
