@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using AuthServer.Extensions.Authorizations;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
@@ -9,90 +8,101 @@ using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace AuthServer.Extensions.Authentication
+namespace AuthServer.Extensions.Authentication;
+
+public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
-    public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
+    private const string AuthType = "Bearer";
+    
+    private readonly IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole;
+    private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
+    private readonly ICommandHandler<AddSessionCommand> addSessionId;
+
+    public SessionAuthenticationHandler(
+        IOptionsMonitor<SessionAuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole,
+        IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
+        ICommandHandler<AddSessionCommand> addSessionId)
+        : base(options, logger, encoder, clock)
     {
-        private readonly IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole;
-        private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
-        private readonly ICommandHandler<AddSessionCommand> addSessionId;
+        this.getUserRole = getUserRole;
+        this.getAccount = getAccount;
+        this.addSessionId = addSessionId;
+    }
 
-        public SessionAuthenticationHandler(
-            IOptionsMonitor<SessionAuthenticationSchemeOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock,
-            IQueryHandler<GetUserRoleQuery, UserRoles> getUserRole,
-            IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
-            ICommandHandler<AddSessionCommand> addSessionId)
-            : base(options, logger, encoder, clock)
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var token = GetSessionToken();
+        if (string.IsNullOrEmpty(token))
         {
-            this.getUserRole = getUserRole;
-            this.getAccount = getAccount;
-            this.addSessionId = addSessionId;
+            return AuthenticateResult.NoResult();
         }
 
-        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+        var claimsIdentity = new ClaimsIdentity(SessionAuthenticationSchemeOptions.Name);
+        claimsIdentity.AddClaim(CreateBuildConfigurationClaim());
+        claimsIdentity.AddClaim(await CreateClientRoleClaim(token));
+
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
+
+        return AuthenticateResult.Success(authTicket);
+    }
+
+    private string? GetSessionToken()
+    {
+        var authorization = Request.Headers[HeaderNames.Authorization];
+        if (string.IsNullOrEmpty(authorization))
         {
-            var token = GetSessionToken();
-            if (string.IsNullOrEmpty(token))
-            {
-                return AuthenticateResult.NoResult();
-            }
-
-            var claimsIdentity = new ClaimsIdentity(SessionAuthenticationSchemeOptions.Name);
-            claimsIdentity.AddClaim(CreateBuildConfigurationClaim());
-            claimsIdentity.AddClaim(await CreateClientRoleClaim(token));
-
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-            var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
-
-            return AuthenticateResult.Success(authTicket);
+            return string.Empty;
         }
 
-        private string? GetSessionToken()
+        if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
         {
-            var authorization = Request.Headers[HeaderNames.Authorization];
-            if (string.IsNullOrEmpty(authorization))
-            {
-                return string.Empty;
-            }
-
-            if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-            {
-                return string.Empty;
-            }
-
-            if (headerValue.Scheme != SessionAuthenticationSchemeOptions.Name)
-            {
-                return string.Empty;
-            }
-
-            return headerValue.Parameter;
+            return string.Empty;
         }
 
-        private Claim CreateBuildConfigurationClaim()
+        if (headerValue.Scheme != AuthType)
         {
+            return string.Empty;
+        }
+
+        return headerValue.Parameter;
+    }
+
+    private Claim CreateBuildConfigurationClaim()
+    {
 #if DEBUG
-            var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Debug;
+        var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Debug;
 #else
-            var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Release;
+        var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Release;
 #endif
 
-            return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
-        }
+        return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
+    }
 
-        private async Task<Claim> CreateClientRoleClaim(string token)
+    private async Task<Claim> CreateClientRoleClaim(string token)
+    {
+        var userRole = await getUserRole.QueryAsync(new(token));
+
+        if (userRole is null)
         {
-            var userRole = await getUserRole.QueryAsync(new(token));
+            var accountData = await getAccount.QueryAsync(new(token));
+            if (accountData == null)
+            {
+                throw new KeyNotFoundException();
+            }
 
-            // TODO 추후 없으면 mysql에서 가져오는 로직 추가
-
-            return new(UserRoleRequirement.ClaimType, userRole.ToString());
+            await addSessionId.ExecuteAsync(new(accountData.Token, accountData.Role));
+            
+            userRole = accountData.Role;
         }
+
+        return new(UserRoleRequirement.ClaimType, userRole.ToString()!);
     }
 }
