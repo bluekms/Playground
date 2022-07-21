@@ -6,7 +6,7 @@ using Xunit;
 
 namespace AuthServer.Test.Controllers
 {
-    public class FooControllerTest
+    public sealed class FooControllerTest
     {
         [Theory]
         [InlineData("Kms")]
