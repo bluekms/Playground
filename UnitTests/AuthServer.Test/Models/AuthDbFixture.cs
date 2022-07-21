@@ -3,33 +3,32 @@ using AuthDb;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthServer.Test.Models
+namespace AuthServer.Test.Models;
+
+public sealed class AuthDbFixture : IDisposable
 {
-    public sealed class AuthDbFixture : IDisposable
+    private readonly SqliteConnection connection;
+
+    public AuthDbFixture()
     {
-        private readonly SqliteConnection connection;
+        connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+    }
 
-        public AuthDbFixture()
-        {
-            connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-        }
+    public void Dispose()
+    {
+        connection.Dispose();
+    }
 
-        public void Dispose()
-        {
-            connection.Dispose();
-        }
+    public AuthDbContext CreateContext()
+    {
+        var options = new DbContextOptionsBuilder<AuthDbContext>()
+            .UseSqlite(connection)
+            .Options;
 
-        public AuthDbContext CreateContext()
-        {
-            var options = new DbContextOptionsBuilder<AuthDbContext>()
-                .UseSqlite(connection)
-                .Options;
+        var result = new AuthDbContext(options);
+        result.Database.EnsureCreated();
 
-            var result = new AuthDbContext(options);
-            result.Database.EnsureCreated();
-
-            return result;
-        }
+        return result;
     }
 }
