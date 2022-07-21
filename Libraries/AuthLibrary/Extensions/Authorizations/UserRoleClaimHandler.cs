@@ -1,10 +1,9 @@
-﻿using AuthLibrary.Extensions.Authorizations;
-using AuthServer.Handlers.Maintenance;
+using AuthLibrary.Handlers;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace AuthServer.Extensions.Authorizations;
+namespace AuthLibrary.Extensions.Authorizations;
 
 public class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirement>
 {
