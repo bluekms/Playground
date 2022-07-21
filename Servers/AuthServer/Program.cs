@@ -1,4 +1,5 @@
 using System.Reflection;
+using AuthLibrary.Extensions;
 using AuthServer.Extensions;
 using AuthServer.Extensions.Authentication;
 using AuthServer.Extensions.Authorizations;
