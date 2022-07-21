@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AuthLibrary.Extensions.Authorizations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthServer.Extensions.Authorizations;
 
