@@ -1,11 +1,10 @@
 using AuthDb;
 using AuthLibrary.Models;
-using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthServer.Handlers.Account;
+namespace AuthLibrary.Handlers;
 
 public sealed record GetAccountBySessionQuery(string Token) : IQuery;
 

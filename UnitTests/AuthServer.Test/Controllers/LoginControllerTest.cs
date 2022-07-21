@@ -1,5 +1,6 @@
 using System;
 using AuthDb;
+using AuthLibrary.Handlers;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;

@@ -1,13 +1,14 @@
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AuthServer.Extensions.Authorizations;
+namespace AuthLibrary.Extensions.Authorizations;
 
 public static class PermissionAuthorizationExtension
 {
     public static void UsePermissionAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
+        services.AddAuthorizationCore(options =>
         {
             options.AddPolicy("AdminApi", policy =>
             {

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthDb;
+using AuthLibrary.Models;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;

@@ -1,4 +1,5 @@
-﻿using AuthServer.Handlers.Account;
+﻿using AuthLibrary.Models;
+using AuthServer.Handlers.Account;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
