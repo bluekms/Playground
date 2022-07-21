@@ -45,9 +45,9 @@ namespace AuthServer.Test.Controllers
                 mapper);
 
             var result = await controller.SignUp(new(accountId, password));
-            var actionResult = Assert.IsType<ActionResult<AccountData>>(result);
-
-            actionResult.Value?.CreatedAt.ShouldBe(timeService.Now);
+            result.Value.ShouldNotBeNull();
+            result.Value?.AccountId.ShouldBe("bluekms1");
+            result.Value?.Role.ShouldBe(UserRoles.User);
         }
     }
 }

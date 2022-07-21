@@ -58,9 +58,9 @@ public class AccountScenarioTest : IDisposable
             mapper);
 
         var resultSignUp = await signUpController.SignUp(new(accountId, password));
-        var actionResultSignUp = Assert.IsType<ActionResult<AccountData>>(resultSignUp);
-        
-        actionResultSignUp.Value?.CreatedAt.ShouldBe(timeService.Now);
+        resultSignUp.Value.ShouldNotBeNull();
+        resultSignUp.Value?.AccountId.ShouldBe(accountId);
+        resultSignUp.Value?.Role.ShouldBe(UserRoles.User);
         
         var loginController = new LoginController(
             new LoginRuleChecker(dbContext),
