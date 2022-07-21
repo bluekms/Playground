@@ -1,4 +1,5 @@
 ﻿using AuthDb;
+using AuthLibrary.Models;
 using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;

@@ -1,4 +1,5 @@
-﻿using AuthServer.Handlers.Maintenance;
+﻿using AuthLibrary.Extensions.Authorizations;
+using AuthServer.Handlers.Maintenance;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;

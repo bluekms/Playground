@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Threading.Tasks;
+using AuthLibrary.Models;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 

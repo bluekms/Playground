@@ -1,3 +1,4 @@
+using AuthLibrary.Extensions.Authorizations;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 

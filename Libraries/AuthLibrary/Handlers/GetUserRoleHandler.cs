@@ -2,7 +2,7 @@ using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using StackExchange.Redis;
 
-namespace AuthServer.Handlers.Session;
+namespace AuthLibrary.Handlers;
 
 public sealed record GetUserRoleQuery(string Token) : IQuery;
 
@@ -26,5 +26,5 @@ public class GetUserRoleHandler : IQueryHandler<GetUserRoleQuery, UserRoles?>
         }
 
         return Enum.Parse<UserRoles>(userRole.ToString());
-    }
+    }   
 }
