@@ -3,7 +3,6 @@ on:
     
 jobs:
   build:
-    name: Build Playground
     runs-on: ubuntu-20.04
     
     steps:
