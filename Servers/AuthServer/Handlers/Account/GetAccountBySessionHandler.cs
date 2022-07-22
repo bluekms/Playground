@@ -9,7 +9,7 @@ namespace AuthServer.Handlers.Account;
 
 public sealed record GetAccountBySessionQuery(string Token) : IQuery;
 
-public class GetAccountBySessionHandler : IQueryHandler<GetAccountBySessionQuery, AccountData?>
+public sealed class GetAccountBySessionHandler : IQueryHandler<GetAccountBySessionQuery, AccountData?>
 {
     private readonly AuthDbContext dbContext;
     private readonly IMapper mapper;

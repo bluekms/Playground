@@ -8,110 +8,109 @@ using AuthServer.Handlers.World;
 using AuthServer.Test.Models;
 using CommonLibrary;
 using CommonLibrary.Models;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Shouldly;
 using StackExchange.Redis;
 using Xunit;
-using IMapper = MapsterMapper.IMapper;
 
-namespace AuthServer.Test.Controllers
+namespace AuthServer.Test.Controllers;
+
+public sealed class LoginControllerTest : IDisposable
 {
-    public class LoginControllerTest : IDisposable
+    private readonly AuthDbFixture authDbFixture;
+    private readonly AuthDbContext dbContext;
+    private readonly ConnectionMultiplexer redisConnection;
+    private readonly IMapper mapper;
+    private readonly ITimeService timeService;
+
+    public LoginControllerTest()
     {
-        private readonly AuthDbFixture authDbFixture;
-        private readonly AuthDbContext dbContext;
-        private readonly ConnectionMultiplexer redisConnection;
-        private readonly IMapper mapper;
-        private readonly ITimeService timeService;
+        authDbFixture = new();
+        dbContext = authDbFixture.CreateContext();
 
-        public LoginControllerTest()
+        var config = InitConfig.Use();
+        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
+
+        mapper = InitMapper.Use();
+        timeService = new ScopedTimeService();
+
+        InitData();
+    }
+
+    public void Dispose()
+    {
+        authDbFixture.Dispose();
+        dbContext.Dispose();
+        redisConnection.Dispose();
+    }
+
+    [Theory]
+    [InlineData("bluekms", "1234")]
+    public async void Login(string accountId, string password)
+    {
+        var controller = new LoginController(
+            new LoginRuleChecker(dbContext),
+            new DeleteSessionHandler(redisConnection.GetDatabase()),
+            new UpdateSessionHandler(dbContext, mapper),
+            new AddSessionHandler(redisConnection.GetDatabase()),
+            new GetServerListHandler(dbContext, timeService, mapper));
+
+        var result = await controller.Login(new(accountId, password));
+        var actionResult = Assert.IsType<ActionResult<LoginController.Result>>(result);
+
+        actionResult.Value?.SessionId.ShouldNotBeNull();
+        actionResult.Value?.Worlds.Count.ShouldBe(2);
+    }
+
+    private void InitData()
+    {
+        dbContext.Accounts.Add(new()
         {
-            authDbFixture = new();
-            dbContext = authDbFixture.CreateContext();
+            Token = string.Empty,
+            AccountId = "bluekms",
+            Password = "1234",
+            CreatedAt = DateTime.Now,
+            Role = UserRoles.Administrator,
+        });
 
-            var config = InitConfig.Use();
-            redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
-
-            mapper = InitMapper.Use();
-            timeService = new ScopedTimeService();
-
-            InitData();
-        }
-
-        public void Dispose()
+        dbContext.Servers.Add(new()
         {
-            authDbFixture.Dispose();
-            dbContext.Dispose();
-            redisConnection.Dispose();
-        }
+            Name = "a",
+            Role = ServerRoles.Auth,
+            Address = string.Empty,
+            ExpireAt = DateTime.Now.AddDays(1),
+            Description = "Unit Test Auth Server"
+        });
 
-        [Theory]
-        [InlineData("bluekms", "1234")]
-        public async void Login(string accountId, string password)
+        dbContext.Servers.Add(new()
         {
-            var controller = new LoginController(
-                new LoginRuleChecker(dbContext),
-                new DeleteSessionHandler(redisConnection.GetDatabase()),
-                new UpdateSessionHandler(dbContext, mapper),
-                new AddSessionHandler(redisConnection.GetDatabase()),
-                new GetServerListHandler(dbContext, timeService, mapper));
+            Name = "b",
+            Role = ServerRoles.Operation,
+            Address = string.Empty,
+            ExpireAt = DateTime.Now.AddDays(1),
+            Description = "Unit Test Op Server"
+        });
 
-            var result = await controller.Login(new(accountId, password));
-            var actionResult = Assert.IsType<ActionResult<LoginController.Result>>(result);
-
-            actionResult.Value?.SessionId.ShouldNotBeNull();
-            actionResult.Value?.Worlds.Count.ShouldBe(2);
-        }
-
-        private void InitData()
+        dbContext.Servers.Add(new()
         {
-            dbContext.Accounts.Add(new()
-            {
-                Token = string.Empty,
-                AccountId = "bluekms",
-                Password = "1234",
-                CreatedAt = DateTime.Now,
-                Role = UserRoles.Administrator,
-            });
+            Name = "c",
+            Role = ServerRoles.World,
+            Address = string.Empty,
+            ExpireAt = DateTime.Now.AddDays(1),
+            Description = "Unit Test World Server 1"
+        });
 
-            dbContext.Servers.Add(new()
-            {
-                Name = "a",
-                Role = ServerRoles.Auth,
-                Address = string.Empty,
-                ExpireAt = DateTime.Now.AddDays(1),
-                Description = "Unit Test Auth Server"
-            });
+        dbContext.Servers.Add(new()
+        {
+            Name = "d",
+            Role = ServerRoles.World,
+            Address = string.Empty,
+            ExpireAt = DateTime.Now.AddDays(1),
+            Description = "Unit Test World Server 2"
+        });
 
-            dbContext.Servers.Add(new()
-            {
-                Name = "b",
-                Role = ServerRoles.Operation,
-                Address = string.Empty,
-                ExpireAt = DateTime.Now.AddDays(1),
-                Description = "Unit Test Op Server"
-            });
-
-            dbContext.Servers.Add(new()
-            {
-                Name = "c",
-                Role = ServerRoles.World,
-                Address = string.Empty,
-                ExpireAt = DateTime.Now.AddDays(1),
-                Description = "Unit Test World Server 1"
-            });
-
-            dbContext.Servers.Add(new()
-            {
-                Name = "d",
-                Role = ServerRoles.World,
-                Address = string.Empty,
-                ExpireAt = DateTime.Now.AddDays(1),
-                Description = "Unit Test World Server 2"
-            });
-
-            dbContext.SaveChanges();
-        }
+        dbContext.SaveChanges();
     }
 }
