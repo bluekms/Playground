@@ -6,9 +6,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["./AuthServer.csproj", "AuthServer/"]
-COPY ["../../Libraries/AuthLibrary/AuthLibrary.csproj", "AuthLibrary/"]
-COPY ["../../Libraries/AuthDb/AuthDb.csproj", "AuthDb/"]
-COPY ["../../Libraries/CommonLibrary/CommonLibrary.csproj", "CommonLibrary/"]
+COPY ["../../Libraries/AuthLibrary/AuthLibrary.csproj", "../../Libraries/AuthLibrary/"]
+COPY ["../../Libraries/AuthDb/AuthDb.csproj", "../../Libraries/AuthDb/"]
+COPY ["../../Libraries/CommonLibrary/CommonLibrary.csproj", "../../Libraries/CommonLibrary/"]
 RUN dotnet restore "Servers/AuthServer/AuthServer.csproj"
 COPY . .
 WORKDIR "/src/AuthServer"
