@@ -5,8 +5,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  SpellCheck:
-    uses: ./.github/workflows/ci-spell.yml
+  Linting:
+    uses: ./.github/workflows/ci-lint.yml
   
   Build:
     uses: ./.github/workflows/ci-build.yml  
