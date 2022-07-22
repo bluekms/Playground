@@ -33,7 +33,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: user/app:latest
+          tags: user/auth_server:latest
+        run: docker build -t auth_server -f Servers/AuthServer/Dockerfile .
           
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v2
