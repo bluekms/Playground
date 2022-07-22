@@ -4,8 +4,13 @@ on:
     inputs:
       DockerHubId:
         name: Docker Hub Id
+        required: true
       Password:
         name: Docker Hub Password
+        required: true
+      Description: 
+        name: Docker Hub Short Description
+        required: false
     
 jobs:
   docker:
@@ -40,5 +45,6 @@ jobs:
         uses: peter-evans/dockerhub-description@v2
         with:
           username: ${{ inputs.DockerHubId }}
-            password: ${{ inputs.Password }}
+          password: ${{ inputs.Password }}
           repository: bluekms/playground-auth-server
+          short-description: '${{ inputs.DockerHubId }}: ${{ inputs.Description }}'
