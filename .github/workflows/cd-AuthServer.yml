@@ -5,9 +5,13 @@ on:
       DockerHubId:
         name: Docker Hub Id
         description: 도커 허브 아이디
+        required: true
+        type: string
       Password:
         name: Docker Hub Password
         description: 도커 허브 암호
+        required: true
+        type: password
     
 jobs:
   docker:
