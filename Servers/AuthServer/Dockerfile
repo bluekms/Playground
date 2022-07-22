@@ -1,0 +1,23 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["Servers/AuthServer/AuthServer.csproj", "AuthServer/"]
+COPY ["Libraries/AuthDb/AuthDb.csproj", "AuthDb/"]
+COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "CommonLibrary/"]
+COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "AuthLibrary/"]
+RUN dotnet restore "Servers/AuthServer/AuthServer.csproj"
+COPY . .
+WORKDIR "/src/AuthServer"
+RUN dotnet build "AuthServer.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "AuthServer.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "AuthServer.dll"]
