@@ -14,7 +14,7 @@ namespace AuthServer.Handlers.Maintenance
         DateTime End,
         string Reason) : ICommand;
 
-    public class AddMaintenanceHandler : ICommandHandler<AddMaintenanceCommand, MaintenanceData>
+    public sealed class AddMaintenanceHandler : ICommandHandler<AddMaintenanceCommand, MaintenanceData>
     {
         private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;

@@ -16,7 +16,7 @@ namespace AuthServer.Handlers.Server
         string Description,
         long ExpireSec) : ICommand;
 
-    public class UpsertServerHandler : ICommandHandler<UpsertServerCommand>
+    public sealed class UpsertServerHandler : ICommandHandler<UpsertServerCommand>
     {
         private readonly AuthDbContext dbContext;
         private readonly ITimeService timeService;
