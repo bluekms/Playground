@@ -5,7 +5,6 @@ using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
 using AuthServer.Handlers.World;
-using AuthServer.Models;
 using AuthServer.Test.Models;
 using CommonLibrary;
 using CommonLibrary.Models;
@@ -18,7 +17,7 @@ using Xunit;
 
 namespace AuthServer.Test.Scenarios;
 
-public class AccountScenarioTest : IDisposable
+public sealed class AccountScenarioTest : IDisposable
 {
     private readonly AuthDbFixture authDbFixture;
     private readonly AuthDbContext dbContext;
