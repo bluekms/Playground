@@ -26,16 +26,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Build and tag:latest push
-        uses: docker/build-push-action@v3
-        with:
-          file: Servers/AuthServer/Dockerfile
-          context: .
-          push: true
-          tags: bluekms/playground-auth-server:latest
-          
       - name: Split Github Sha
-        if: ${{ inputs.UseSpecificTag }}
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           
@@ -47,3 +38,11 @@ jobs:
           context: .
           push: true
           tags: bluekms/playground-auth-server:${{ steps.vars.outputs.sha_short }}
+          
+      - name: Build and tag:latest push
+        uses: docker/build-push-action@v3
+        with:
+          file: Servers/AuthServer/Dockerfile
+          context: .
+          push: true
+          tags: bluekms/playground-auth-server:latest
