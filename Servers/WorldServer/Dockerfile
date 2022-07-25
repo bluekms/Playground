@@ -5,8 +5,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Servers/WorldServer/WorldServer.csproj", "WorldServer/"]
-COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "CommonLibrary/"]
+COPY ["Servers/WorldServer/WorldServer.csproj", "Servers/WorldServer/"]
+COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/AuthDb/"]
+COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
+COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "Libraries/AuthLibrary/"]
 RUN dotnet restore "Servers/WorldServer/WorldServer.csproj"
 COPY . .
 WORKDIR "/src/WorldServer"
