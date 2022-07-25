@@ -2,7 +2,7 @@ on:
   workflow_call:
     
 jobs:
-  format:
+  lint:
     runs-on: ubuntu-latest
     
     steps:

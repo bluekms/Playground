@@ -1,4 +1,4 @@
-name: Deploy Server
+name: Deploy World Server
 on:
   workflow_dispatch:
     inputs:
@@ -29,6 +29,10 @@ jobs:
           password: ${{ inputs.Password }}
           # username: ${{ secrets.DOCKERHUB_USERNAME }}
           # password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Split Github Sha
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -36,4 +40,4 @@ jobs:
           file: Servers/WorldServer/Dockerfile
           context: .
           push: true
-          tags: bluekms/playground-world-server:latest
+          tags: bluekms/playground-world-server:${{ steps.vars.outputs.sha_short }}
