@@ -1,14 +1,7 @@
 name: Deploy OperationServer
 on:
   workflow_dispatch:
-    inputs:
-      DockerHubId:
-        name: Docker Hub Id
-        required: true
-      Password:
-        name: Docker Hub Password
-        required: true
-
+    
 jobs:
   docker:
     runs-on: ubuntu-22.04
