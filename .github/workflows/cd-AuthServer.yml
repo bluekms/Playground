@@ -5,7 +5,7 @@ on:
       UseSpecificTag:
         type: boolean
         default: false
-        description: latest와 함께 추가 tag를 push
+        description: latest와 특정 tag를 같이 업로드
     
 jobs:
   docker:
