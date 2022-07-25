@@ -17,11 +17,14 @@ jobs:
   UnitTest:
     uses: ./.github/workflows/ci-test.yml
     
-  Deploy latest AuthServer:
+  DeployLatestAuthServer:
+    name: Deploy latest AuthServer
     uses: ./.github/workflows/cd-AuthServer.yml
     
-  Deploy latest OperationServer:
+  DeployLatestOperationServer:
+    name: Deploy latest OperationServer
     uses: ./.github/workflows/cd-OperationServer.yml
     
-  Deploy latest WorldServer:
+  DeployLatestWorldServer:
+    name: Deploy latest WorldServer
     uses: ./.github/workflows/cd-WorldServer.yml
