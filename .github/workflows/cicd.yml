@@ -19,12 +19,15 @@ jobs:
     
   DeployLatestAuthServer:
     name: Deploy latest AuthServer
+    secrets: inherit
     uses: ./.github/workflows/cd-AuthServer.yml
     
   DeployLatestOperationServer:
     name: Deploy latest OperationServer
+    secrets: inherit
     uses: ./.github/workflows/cd-OperationServer.yml
     
   DeployLatestWorldServer:
     name: Deploy latest WorldServer
+    secrets: inherit
     uses: ./.github/workflows/cd-WorldServer.yml
