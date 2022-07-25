@@ -4,8 +4,7 @@ on:
     inputs:
       name: UseSpecificTag
       type: boolean
-      default: false
-      description: latest와 함께 sha_short를 추가로 push
+      description: latest와 함께 추가 tag를 push
     
 jobs:
   docker:
