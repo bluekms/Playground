@@ -1,10 +1,11 @@
-name: Deploy AuthServer
+name: Deploy Auth Server
 on:
   workflow_dispatch:
     inputs:
-      name: UseSpecificTag
-      type: boolean
-      description: latest와 함께 추가 tag를 push
+      UseSpecificTag:
+        type: boolean
+        default: false
+        description: latest와 함께 추가 tag를 push
     
 jobs:
   docker:
