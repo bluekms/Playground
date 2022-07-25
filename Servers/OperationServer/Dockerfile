@@ -9,9 +9,9 @@ COPY ["Servers/OperationServer/OperationServer.csproj", "Servers/OperationServer
 COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/AuthDb/"]
 COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
 COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "Libraries/AuthLibrary/"]
-RUN dotnet restore "OperationServer/OperationServer.csproj"
+RUN dotnet restore "Servers/OperationServer/OperationServer.csproj"
 COPY . .
-WORKDIR "/src/OperationServer"
+WORKDIR "/src/Servers/OperationServer"
 RUN dotnet build "OperationServer.csproj" -c Release -o /app/build
 
 FROM build AS publish

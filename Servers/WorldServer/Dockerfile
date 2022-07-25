@@ -11,7 +11,7 @@ COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"
 COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "Libraries/AuthLibrary/"]
 RUN dotnet restore "Servers/WorldServer/WorldServer.csproj"
 COPY . .
-WORKDIR "/src/WorldServer"
+WORKDIR "/src/Servers/WorldServer"
 RUN dotnet build "WorldServer.csproj" -c Release -o /app/build
 
 FROM build AS publish
