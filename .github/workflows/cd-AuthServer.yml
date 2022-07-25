@@ -1,8 +1,6 @@
 name: Deploy Auth Server
 on:
   workflow_call:
-    runs-on: ubuntu-latest
-    
   workflow_dispatch:
     inputs:
       UseSpecificTag:
