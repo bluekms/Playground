@@ -27,7 +27,7 @@ builder.Services.UseHandlers(typeSelector);
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
 // Configure the HTTP request pipeline.
-
+//
 var app = builder.Build();
 app.UseAuthorization();
 app.MapControllers();

@@ -23,7 +23,8 @@ public class AddMaintenanceController : ControllerBase
         this.addMaintenance = addMaintenance;
     }
 
-    [HttpPost, Route("Auth/Maintenance/Add")]
+    [HttpPost]
+    [Route("Auth/Maintenance/Add")]
     public async Task<ActionResult<Returns>> AddMaintenance([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.Start, args.End, args.Reason));

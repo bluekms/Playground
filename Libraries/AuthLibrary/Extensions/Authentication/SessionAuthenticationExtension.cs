@@ -10,5 +10,5 @@ public static class SessionAuthenticationExtension
             .AddAuthentication(SessionAuthenticationSchemeOptions.Name)
             .AddScheme<SessionAuthenticationSchemeOptions, SessionAuthenticationHandler>(
                 SessionAuthenticationSchemeOptions.Name, configureOptions => { });
-    }   
+    }
 }
