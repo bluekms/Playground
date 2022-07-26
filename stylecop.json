@@ -2,9 +2,6 @@
   "settings": {
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace"
-    },
-    "maintainabilityRules": {
-      "topLevelTypes": []
     }
   }
 }
