@@ -51,9 +51,13 @@ namespace CommonLibrary.ServerRegistry
             }
 
             public string Name { get; set; }
+
             public ServerRoles Role { get; set; }
+
             public string Address { get; set; }
+
             public string Description { get; set; }
+
             public long ExpireSec { get; set; }
         }
     }

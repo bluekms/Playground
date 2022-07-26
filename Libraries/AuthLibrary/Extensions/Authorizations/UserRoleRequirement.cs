@@ -12,5 +12,5 @@ public class UserRoleRequirement : IAuthorizationRequirement
         UserRoleList = new(userRoles.Select(x => x.ToString()));
     }
 
-    public List<string> UserRoleList { get; }   
+    public List<string> UserRoleList { get; }
 }

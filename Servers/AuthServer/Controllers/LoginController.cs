@@ -33,7 +33,8 @@ public sealed class LoginController : ControllerBase
         this.getServerList = getServerList;
     }
 
-    [HttpPut, Route("Auth/Login")]
+    [HttpPut]
+    [Route("Auth/Login")]
     public async Task<ActionResult<Result>> Login([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.AccountId, args.Password));
