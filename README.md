@@ -10,6 +10,11 @@ dotnet core 6로 구성된 R&D를 위한 개인 서버군입니다.
 * Docker
 * Protobuf
 
+## 개발 환경 및 CI/CD
+* Lint (Stylecop, globalconfig)
+* Docker Hub
+* Github Action
+
 ## 개발에 사용된 도구
 * Rider
 * Visual studio 2022
