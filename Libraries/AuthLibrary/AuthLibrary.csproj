@@ -6,9 +6,17 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup Label="RequiredPackageReference">
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
     <ItemGroup>
-      <ProjectReference Include="..\AuthDb\AuthDb.csproj" />
-      <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+        <AdditionalFiles Include="..\..\stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +30,11 @@
       <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.3.0-2.final" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0-2.final" />
       <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AuthDb\AuthDb.csproj" />
+        <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
     </ItemGroup>
 
 </Project>
