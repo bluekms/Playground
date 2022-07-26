@@ -8,7 +8,8 @@ using Microsoft.Extensions.Logging;
 
 namespace CommonLibrary.Worker
 {
-    public class WorkService<TWork> : BackgroundService where TWork : IWork
+    public class WorkService<TWork> : BackgroundService
+        where TWork : IWork
     {
         private readonly ILogger<WorkService<TWork>> logger;
         private readonly IWorkServiceOptions<TWork> options;

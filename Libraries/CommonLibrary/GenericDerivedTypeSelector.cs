@@ -53,15 +53,6 @@ public sealed class GenericDerivedTypeSelector
         }
     }
 
-    private IEnumerable<Type> GetActivatableTypes()
-    {
-        return assemblies
-            .SelectMany(assembly => assembly.GetTypes())
-            .Where(x => x.IsClass)
-            .Where(x => !x.IsAbstract)
-            .Where(x => !x.IsGenericType);
-    }
-
     private static IEnumerable<Type> GetDerivingTypes(Type type)
     {
         foreach (var i in type.GetInterfaces())
@@ -73,5 +64,14 @@ public sealed class GenericDerivedTypeSelector
         {
             yield return current;
         }
+    }
+
+    private IEnumerable<Type> GetActivatableTypes()
+    {
+        return assemblies
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(x => x.IsClass)
+            .Where(x => !x.IsAbstract)
+            .Where(x => !x.IsGenericType);
     }
 }

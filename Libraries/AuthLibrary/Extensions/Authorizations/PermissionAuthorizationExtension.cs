@@ -17,7 +17,7 @@ public static class PermissionAuthorizationExtension
                     UserRoles.Administrator,
                 }));
             });
-            
+
             options.AddPolicy("ServiceApi", policy =>
             {
                 policy.Requirements.Add(new UserRoleRequirement(new[]

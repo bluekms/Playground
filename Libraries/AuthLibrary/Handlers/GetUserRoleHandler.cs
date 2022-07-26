@@ -26,5 +26,5 @@ public class GetUserRoleHandler : IQueryHandler<GetUserRoleQuery, UserRoles?>
         }
 
         return Enum.Parse<UserRoles>(userRole.ToString());
-    }   
+    }
 }

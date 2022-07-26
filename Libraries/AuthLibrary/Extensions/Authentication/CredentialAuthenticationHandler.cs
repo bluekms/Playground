@@ -15,7 +15,7 @@ namespace AuthLibrary.Extensions.Authentication;
 public sealed class CredentialAuthenticationHandler : AuthenticationHandler<CredentialAuthenticationSchemeOptions>
 {
     private readonly IQueryHandler<GetServerRoleQuery, ServerRoles> getServerRole;
-    
+
     public CredentialAuthenticationHandler(
         IOptionsMonitor<CredentialAuthenticationSchemeOptions> options,
         ILoggerFactory logger,

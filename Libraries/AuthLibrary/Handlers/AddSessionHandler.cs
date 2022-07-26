@@ -10,7 +10,7 @@ public sealed record AddSessionCommand(
 
 public sealed class AddSessionHandler : ICommandHandler<AddSessionCommand>
 {
-    private static TimeSpan DefaultExpire = new(0, 0, 5, 0);
+    private static readonly TimeSpan DefaultExpire = new(0, 0, 5, 0);
 
     private readonly IDatabase redis;
 

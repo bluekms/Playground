@@ -13,6 +13,7 @@ namespace CommonLibrary.ServerRegistry
         }
 
         public TimeSpan Delay { get; } = TimeSpan.Zero;
+
         public TimeSpan Interval { get; }
     }
 }
