@@ -11,7 +11,8 @@ public sealed class WorldFoo
     [Key]
     public long Seq { get; set; }
 
-    [Column(TypeName = "char"), MaxLength(50)]
+    [Column(TypeName = "char")]
+    [MaxLength(50)]
     public string Data { get; set; } = null!;
 }
 

@@ -60,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\AuthLibrary\AuthLibrary.csproj" />
     <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
   </ItemGroup>
 
