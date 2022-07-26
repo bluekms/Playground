@@ -20,7 +20,8 @@ public class RegisterServerController : ControllerBase
         this.upsertServer = upsertServer;
     }
 
-    [HttpPost, Route("Auth/Server/Register")]
+    [HttpPost]
+    [Route("Auth/Server/Register")]
     [Authorize(AuthenticationSchemes = CredentialAuthenticationSchemeOptions.Name)]
     public async Task<ActionResult> RegisterServer([FromBody] Arguments args)
     {

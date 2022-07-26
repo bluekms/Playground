@@ -10,16 +10,6 @@ namespace AuthDb;
 /// </summary>
 public sealed class Foo
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key]
-    public long Seq { get; set; }
-
-    public string AccountId { get; set; } = null!;
-
-    public string Command { get; set; } = null!;
-
-    public int Value { get; set; }
-
     public enum FooCommand
     {
         Addition,
@@ -29,6 +19,16 @@ public sealed class Foo
         Squared,
         Merge,
     }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key]
+    public long Seq { get; set; }
+
+    public string AccountId { get; set; } = null!;
+
+    public string Command { get; set; } = null!;
+
+    public int Value { get; set; }
 }
 
 internal sealed class FooConfiguration : IEntityTypeConfiguration<Foo>

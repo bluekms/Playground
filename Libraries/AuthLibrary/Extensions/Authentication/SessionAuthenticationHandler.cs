@@ -16,7 +16,7 @@ namespace AuthLibrary.Extensions.Authentication;
 public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
     private const string AuthType = "Bearer";
-    
+
     private readonly IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole;
     private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
     private readonly ICommandHandler<AddSessionCommand> addSessionId;
@@ -99,7 +99,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
             }
 
             await addSessionId.ExecuteAsync(new(accountData.Token, accountData.Role));
-            
+
             userRole = accountData.Role;
         }
 

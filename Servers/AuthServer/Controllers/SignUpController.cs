@@ -25,7 +25,8 @@ public sealed class SignUpController : ControllerBase
         this.mapper = mapper;
     }
 
-    [HttpPost, Route("Auth/SignUp")]
+    [HttpPost]
+    [Route("Auth/SignUp")]
     public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.AccountId));

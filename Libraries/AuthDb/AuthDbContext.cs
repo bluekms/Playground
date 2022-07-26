@@ -11,8 +11,11 @@ namespace AuthDb
         }
 
         public DbSet<Foo> Foos => Set<Foo>();
+
         public DbSet<Account> Accounts => Set<Account>();
+
         public DbSet<Maintenance> Maintenance => Set<Maintenance>();
+
         public DbSet<Server> Servers => Set<Server>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
