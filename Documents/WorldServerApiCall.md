@@ -24,6 +24,8 @@ sequenceDiagram
   WorldServer->>WorldServer: UserRoleClaimHandler
   
   Note over Client, AuthDb: Api Call
+  WorldServer->>WorldDb: Get User Data
+  WorldDb-->>WorldServer: 
   WorldServer->>WorldServer: Foo
   
   WorldServer-->>-Client: Result
