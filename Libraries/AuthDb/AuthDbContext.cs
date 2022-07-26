@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthDb
 {
-    public class AuthDbContext : DbContext
+    public sealed class AuthDbContext : DbContext
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options)
             : base(options)
