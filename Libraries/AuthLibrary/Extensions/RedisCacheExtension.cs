@@ -7,6 +7,7 @@ public static class RedisCacheExtension
 {
     public static void UseRedisCache(this IServiceCollection services, string? connectionString)
     {
+        Console.WriteLine("kkk");
         Console.WriteLine(connectionString);
 
         var redisConnection = ConnectionMultiplexer.Connect(connectionString);
