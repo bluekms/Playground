@@ -11,9 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Host.UseStashbox();
 
-Console.WriteLine(builder.Configuration.GetConnectionString("AuthDb"));
-Console.WriteLine(builder.Configuration.GetConnectionString("RedisCache"));
-
 builder.Services.UseControllers();
 builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
