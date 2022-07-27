@@ -9,8 +9,8 @@ public static class RedisCacheExtension
     {
         Console.WriteLine("Start");
         Console.WriteLine($"kkk : {connectionString ?? "null"}");
-        Console.WriteLine($"appsettings.json : {File.Exists("appsettings.json")}");
-        Console.WriteLine(File.ReadAllText("appsettings.json"));
+        Console.WriteLine($"appsettings.Docker.json : {File.Exists("appsettings.Docker.json")}");
+        Console.WriteLine(File.ReadAllText("appsettings.Docker.json"));
         Console.WriteLine("End");
 
         var redisConnection = ConnectionMultiplexer.Connect(connectionString);
