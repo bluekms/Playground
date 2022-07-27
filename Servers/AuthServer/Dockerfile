@@ -5,6 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+COPY ["Servers/AuthServer/appsettings.Docker.json", "Servers/AuthServer/appsettings.json"]
 COPY ["Servers/AuthServer/AuthServer.csproj", "Servers/AuthServer/"]
 COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/AuthDb/"]
 COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
