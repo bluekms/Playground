@@ -11,7 +11,7 @@ namespace AuthServer.Test.Syntax;
 public sealed class HandlerTypeTest
 {
     private readonly GenericDerivedTypeSelector typeSelector;
-    
+
     public HandlerTypeTest()
     {
         typeSelector = new GenericDerivedTypeSelector(typeof(AuthServerAssemblyEntryPoint).Assembly);
