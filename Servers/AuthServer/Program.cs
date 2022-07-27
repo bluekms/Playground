@@ -6,24 +6,16 @@ using AuthServer.Extensions;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Host.UseStashbox();
 
-builder.Services.UseControllers();
-builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
-
-var list = Directory.GetFiles(@".\");
-foreach (var f in list)
-{
-    Console.WriteLine(f);
-}
-
 Console.WriteLine(builder.Configuration.GetConnectionString("AuthDb"));
 Console.WriteLine(builder.Configuration.GetConnectionString("RedisCache"));
 
+builder.Services.UseControllers();
+builder.Services.UseMySql(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
 builder.Services.UseMapster(Assembly.GetExecutingAssembly());
 builder.Services.UseSessionAuthentication();
