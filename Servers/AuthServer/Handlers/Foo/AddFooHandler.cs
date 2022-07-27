@@ -1,30 +1,28 @@
-using System.Threading.Tasks;
 using AuthDb;
 using CommonLibrary.Handlers;
 
-namespace AuthServer.Handlers.Foo
+namespace AuthServer.Handlers.Foo;
+
+public sealed record AddFooCommand(string AccountId, AuthDb.Foo.FooCommand Cmd, int Value) : ICommand;
+
+public sealed class AddFooHandler : ICommandHandler<AddFooCommand>
 {
-    public sealed record AddFooCommand(string AccountId, AuthDb.Foo.FooCommand Cmd, int Value) : ICommand;
+    private readonly AuthDbContext dbContext;
 
-    public sealed class AddFooHandler : ICommandHandler<AddFooCommand>
+    public AddFooHandler(AuthDbContext dbContext)
     {
-        private readonly AuthDbContext dbContext;
+        this.dbContext = dbContext;
+    }
 
-        public AddFooHandler(AuthDbContext dbContext)
+    public async Task ExecuteAsync(AddFooCommand command)
+    {
+        await dbContext.Foos.AddAsync(new()
         {
-            this.dbContext = dbContext;
-        }
+            AccountId = command.AccountId,
+            Command = command.Cmd.ToString(),
+            Value = command.Value,
+        });
 
-        public async Task ExecuteAsync(AddFooCommand command)
-        {
-            await dbContext.Foos.AddAsync(new()
-            {
-                AccountId = command.AccountId,
-                Command = command.Cmd.ToString(),
-                Value = command.Value,
-            });
-
-            await dbContext.SaveChangesAsync();
-        }
+        await dbContext.SaveChangesAsync();
     }
 }
