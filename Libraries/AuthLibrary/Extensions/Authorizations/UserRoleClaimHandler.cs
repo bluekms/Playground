@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthLibrary.Extensions.Authorizations;
 
-public class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirement>
+public sealed class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirement>
 {
     private readonly IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime;
 
