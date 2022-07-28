@@ -33,7 +33,7 @@ public sealed class LoginController : ControllerBase
         this.getServerList = getServerList;
     }
 
-    [HttpPut]
+    [HttpPost]
     [Route("Auth/Login")]
     public async Task<ActionResult<Result>> Login([FromBody] Arguments args)
     {

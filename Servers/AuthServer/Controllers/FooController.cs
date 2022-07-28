@@ -7,11 +7,8 @@ namespace AuthServer.Controllers;
 [ApiController]
 public sealed class FooController : ControllerBase
 {
-    private readonly ILogger<FooController> logger;
-
-    public FooController(ILogger<FooController> logger)
+    public FooController()
     {
-        this.logger = logger;
     }
 
     [HttpPost]
@@ -25,8 +22,7 @@ public sealed class FooController : ControllerBase
         }
         catch (Exception e)
         {
-            logger.LogError($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
-            return NotFound();
+            return NotFound($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
         }
     }
 

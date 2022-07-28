@@ -14,7 +14,7 @@ public sealed class FooControllerTest
     public async void Foo(string foo)
     {
         var mockLogger = new Mock<ILogger<FooController>>();
-        var controller = new FooController(mockLogger.Object);
+        var controller = new FooController();
 
         var result = await controller.Foo(new(foo));
 
