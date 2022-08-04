@@ -1,23 +1,20 @@
-using System;
+namespace CommonLibrary.Models;
 
-namespace CommonLibrary.Models
+public sealed class ServerRegistryOptions
 {
-    public sealed class ServerRegistryOptions
-    {
-        public const string ConfigurationSection = "ServerRegistry";
+    public const string ConfigurationSection = "ServerRegistry";
 
-        public string AuthServerAddress { get; set; } = default!;
+    public string AuthServerAddress { get; init; } = null!;
 
-        public string Token { get; set; } = default!;
+    public string Token { get; init; } = null!;
 
-        public string Name { get; set; } = default!;
+    public string Name { get; init; } = null!;
 
-        public ServerRoles Role { get; set; }
+    public ServerRoles Role { get; init; }
 
-        public string Address { get; set; } = default!;
+    public string Address { get; init; } = null!;
 
-        public string Description { get; set; } = default!;
+    public string Description { get; init; } = null!;
 
-        public long ExpireSec { get; set; }
-    }
+    public long ExpireSec { get; init; }
 }
