@@ -1,12 +1,13 @@
 using AuthDb;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthLibrary.Handlers;
 
 public sealed record GetServerRoleQuery(string Token) : IQuery;
 
-public class GetServerRoleHandler
+public class GetServerRoleHandler : IQueryHandler<GetServerRoleQuery, ServerRoles>
 {
     private readonly AuthDbContext dbContext;
 
@@ -15,8 +16,11 @@ public class GetServerRoleHandler
         this.dbContext = dbContext;
     }
 
-    public Task<ServerRoles> QueryAsync(GetServerRoleQuery query)
+    public async Task<ServerRoles> QueryAsync(GetServerRoleQuery query)
     {
-        throw new NotImplementedException();
+        return await dbContext.ServerRoles
+            .Where(row => row.Token == query.Token)
+            .Select(row => row.Role)
+            .SingleAsync();
     }
 }
