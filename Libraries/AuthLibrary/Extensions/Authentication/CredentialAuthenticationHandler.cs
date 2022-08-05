@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Handlers;
+using AuthLibrary.Utility;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -14,6 +15,8 @@ namespace AuthLibrary.Extensions.Authentication;
 
 public sealed class CredentialAuthenticationHandler : AuthenticationHandler<CredentialAuthenticationSchemeOptions>
 {
+    private const string AuthType = "Bearer";
+
     private readonly IQueryHandler<GetServerRoleQuery, ServerRoles> getServerRole;
 
     public CredentialAuthenticationHandler(
@@ -29,11 +32,7 @@ public sealed class CredentialAuthenticationHandler : AuthenticationHandler<Cred
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var token = GetCredentialToken();
-        if (string.IsNullOrEmpty(token))
-        {
-            return AuthenticateResult.NoResult();
-        }
+        var token = BearerTokenParser.GetBearerToken(Request);
 
         var claimsIdentity = new ClaimsIdentity(CredentialAuthenticationSchemeOptions.Name);
         claimsIdentity.AddClaim(await CreateServerRoleClaim(token));
@@ -57,7 +56,7 @@ public sealed class CredentialAuthenticationHandler : AuthenticationHandler<Cred
             return string.Empty;
         }
 
-        if (headerValue.Scheme != CredentialAuthenticationSchemeOptions.Name)
+        if (headerValue.Scheme != AuthType)
         {
             return string.Empty;
         }
