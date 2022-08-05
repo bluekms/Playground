@@ -50,15 +50,15 @@ namespace CommonLibrary.ServerRegistry
                 ExpireSec = expireSec;
             }
 
-            public string Name { get; set; }
+            public string Name { get; init; } = null!;
 
-            public ServerRoles Role { get; set; }
+            public ServerRoles Role { get; init; }
 
-            public string Address { get; set; }
+            public string Address { get; init; } = null!;
 
-            public string Description { get; set; }
+            public string Description { get; init; } = null!;
 
-            public long ExpireSec { get; set; }
+            public long ExpireSec { get; init; }
         }
     }
 }

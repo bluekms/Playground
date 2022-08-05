@@ -5,7 +5,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5063;https://localhost:7063",
+      "applicationUrl": "http://localhost:5641;https://localhost:7641",
       "dotnetRunMessages": true
     },
     "WorldServer Shiftup": {
@@ -13,7 +13,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Shiftup"
       },
-      "applicationUrl": "http://localhost:5063;https://localhost:7063",
+      "applicationUrl": "http://localhost:5641;https://localhost:7641",
       "dotnetRunMessages": true
     },
     "Docker": {

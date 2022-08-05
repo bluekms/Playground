@@ -1,7 +1,9 @@
+using AuthLibrary.Extensions.Authentication;
 using AuthServer.Handlers.Maintenance;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthServer.Controllers;
@@ -25,6 +27,7 @@ public class AddMaintenanceController : ControllerBase
 
     [HttpPost]
     [Route("Auth/Maintenance/Add")]
+    [Authorize(AuthenticationSchemes = CredentialAuthenticationSchemeOptions.Name)]
     public async Task<ActionResult<Returns>> AddMaintenance([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.Start, args.End, args.Reason));
