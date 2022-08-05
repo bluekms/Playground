@@ -13,7 +13,7 @@ internal sealed class BearerTokenParser
     {
         if (request == null)
         {
-            throw new AuthenticationException($"{nameof(request) is null}");
+            throw new AuthenticationException($"{nameof(request)} is null");
         }
 
         var authorization = request.Headers[HeaderNames.Authorization];
