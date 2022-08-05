@@ -1,22 +1,19 @@
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Handlers;
 using AuthLibrary.Models;
+using AuthLibrary.Utility;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 
 namespace AuthLibrary.Extensions.Authentication;
 
 public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
-    private const string AuthType = "Bearer";
-
     private readonly IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole;
     private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
     private readonly ICommandHandler<AddSessionCommand> addSessionId;
@@ -38,11 +35,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var token = GetSessionToken();
-        if (string.IsNullOrEmpty(token))
-        {
-            return AuthenticateResult.NoResult();
-        }
+        var token = BearerTokenParser.GetBearerToken(Request);
 
         var claimsIdentity = new ClaimsIdentity(SessionAuthenticationSchemeOptions.Name);
         claimsIdentity.AddClaim(CreateBuildConfigurationClaim());
@@ -52,27 +45,6 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
 
         return AuthenticateResult.Success(authTicket);
-    }
-
-    private string? GetSessionToken()
-    {
-        var authorization = Request.Headers[HeaderNames.Authorization];
-        if (string.IsNullOrEmpty(authorization))
-        {
-            return string.Empty;
-        }
-
-        if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-        {
-            return string.Empty;
-        }
-
-        if (headerValue.Scheme != AuthType)
-        {
-            return string.Empty;
-        }
-
-        return headerValue.Parameter;
     }
 
     private Claim CreateBuildConfigurationClaim()
