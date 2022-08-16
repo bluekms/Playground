@@ -15,6 +15,7 @@ jobs:
     uses: ./.github/workflows/ci-build.yml  
       
   UnitTest:
+    needs: [Linting]
     uses: ./.github/workflows/ci-test.yml
     
   DeployLatestAuthServer:
