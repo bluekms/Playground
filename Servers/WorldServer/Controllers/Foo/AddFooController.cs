@@ -17,7 +17,7 @@ public sealed class AddFooController : ControllerBase
     }
 
     [HttpPost]
-    [Route("World/Foo")]
+    [Route("World/Foo/Add")]
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
     public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args)
     {
