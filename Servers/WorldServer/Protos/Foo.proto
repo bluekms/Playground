@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "World";
+
+service Foo {
+  rpc FooController (FooRequest) returns (FooResult);
+}
+
+message FooRequest {
+  string Data = 1;
+}
+
+message FooResult {
+  string Result = 1;
+}

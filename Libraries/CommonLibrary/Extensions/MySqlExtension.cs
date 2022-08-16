@@ -1,15 +1,15 @@
-using AuthDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
-namespace AuthLibrary.Extensions;
+namespace CommonLibrary.Extensions;
 
-public static class AuthDbExtension
+public static class MySqlExtension
 {
-    public static void UseMySql(this IServiceCollection services, string? connectionString)
+    public static void UseMySql<T>(this IServiceCollection services, string? connectionString)
+        where T : DbContext
     {
-        services.AddDbContextPool<AuthDbContext>(options =>
+        services.AddDbContextPool<T>(options =>
         {
             options.UseMySql(
                 connectionString,

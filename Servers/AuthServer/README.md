@@ -8,7 +8,13 @@ docker run --name AuthServer --network playground-network -e ASPNETCORE_ENVIRONM
 ```
 * name AuthServer : 컨테이너 명
 * network playground-network : Docker 네트워크 명
-* ASPNETCORE_ENVIRONMENT=Docker : dotnet 환경변수 명
-* 5241:80 : http 포트 매핑
-* 7241:443 : http2 포트 매핑
+* e ASPNETCORE_ENVIRONMENT=Docker : dotnet 환경변수 명
+* p 5241:80 : http 포트 매핑
+* p 7241:443 : http2 포트 매핑
 * bluekms/playground-auth-server:latest : docker hub 이미지 명
+
+## Remove AuthServer
+```
+docker container rm AuthServer -f
+docker image rm bluekms/playground-auth-server -f
+```
