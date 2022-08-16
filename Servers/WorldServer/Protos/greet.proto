@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "WorldServer";
 
-package greet;
+// https://docs.microsoft.com/ko-kr/aspnet/core/grpc/?view=aspnetcore-6.0
 
 // The greeting service definition.
 service Greeter {

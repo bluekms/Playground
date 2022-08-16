@@ -10,6 +10,7 @@ namespace CommonLibrary.ServerRegistry
     public class ServerRegistryClient
     {
         private const string RegisterUrl = "Auth/Server/Register";
+        private const string AuthType = "Bearer";
 
         private readonly HttpClient client;
         private readonly ServerRegistryOptions options;
@@ -17,7 +18,7 @@ namespace CommonLibrary.ServerRegistry
         public ServerRegistryClient(HttpClient client, IOptions<ServerRegistryOptions> options)
         {
             client.BaseAddress = new(options.Value.AuthServerAddress);
-            client.DefaultRequestHeaders.Add(HeaderNames.Authorization, $"Credential {options.Value.Token}");
+            client.DefaultRequestHeaders.Add(HeaderNames.Authorization, $"{AuthType} {options.Value.Token}");
             this.client = client;
             this.options = options.Value;
         }
