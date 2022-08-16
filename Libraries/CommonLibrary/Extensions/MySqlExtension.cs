@@ -4,7 +4,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace CommonLibrary.Extensions;
 
-public static class MySqlExtention
+public static class MySqlExtension
 {
     public static void UseMySql<T>(this IServiceCollection services, string? connectionString)
         where T : DbContext
