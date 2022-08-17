@@ -4,7 +4,6 @@ namespace WorldServer.Extensions;
 
 // https://docs.microsoft.com/ko-kr/aspnet/core/grpc/configuration?view=aspnetcore-6.0
 // For macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-
 public static class GrpcExtension
 {
     public static void UseGrpc(this IServiceCollection services)

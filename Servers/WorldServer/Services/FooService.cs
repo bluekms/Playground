@@ -1,26 +1,41 @@
 using AuthLibrary.Extensions.Authentication;
+using CommonLibrary.Handlers;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using World;
+using WorldServer.Handlers.Foo;
 
 namespace WorldServer.Services;
 
 public class FooService : Foo.FooBase
 {
-    private readonly ILogger<FooService> logger;
+    private readonly ICommandHandler<AddFooCommand> addFoo;
+    private readonly IQueryHandler<GetFooQuery, List<string>> getFoo;
 
-    public FooService(ILogger<FooService> logger)
+    public FooService(
+        ICommandHandler<AddFooCommand> addFoo,
+        IQueryHandler<GetFooQuery, List<string>> getFoo)
     {
-        this.logger = logger;
+        this.addFoo = addFoo;
+        this.getFoo = getFoo;
     }
 
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
-    public override Task<FooResult> RequestHandler(FooRequest request, ServerCallContext context)
+    public override async Task<AddFooResult> AddFooHandler(AddFooRequest request, ServerCallContext context)
     {
-        logger.LogInformation($"Data: {request.Data}");
-        return Task.FromResult(new FooResult()
+        await addFoo.ExecuteAsync(new(request.Data));
+
+        return new();
+    }
+
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+    public override async Task<GetFooResult> GetFooHandler(GetFooRequest request, ServerCallContext context)
+    {
+        var list = await getFoo.QueryAsync(new(request.Seq));
+
+        return new()
         {
-            Result = "Ok",
-        });
+            Data = { list },
+        };
     }
 }

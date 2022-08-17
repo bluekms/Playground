@@ -3,13 +3,21 @@ syntax = "proto3";
 option csharp_namespace = "World";
 
 service Foo {
-  rpc RequestHandler (FooRequest) returns (FooResult);
+  rpc AddFooHandler (AddFooRequest) returns (AddFooResult);
+  rpc GetFooHandler (GetFooRequest) returns (GetFooResult);
 }
 
-message FooRequest {
+message AddFooRequest {
   string Data = 1;
 }
 
-message FooResult {
-  string Result = 1;
+message AddFooResult {
+}
+
+message GetFooRequest {
+  int32 Seq = 1;
+}
+
+message GetFooResult {
+  repeated string Data = 1;
 }
