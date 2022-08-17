@@ -1,9 +1,6 @@
 name: CI/CD Root
 
 on:
-  push:
-    branches: [ "main" ]
-    
   pull_request:
     branches: [ "main" ]
 
