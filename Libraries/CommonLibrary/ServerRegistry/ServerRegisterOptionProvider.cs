@@ -12,7 +12,7 @@ namespace CommonLibrary.ServerRegistry
             Interval = TimeSpan.FromSeconds(options.Value.ExpireSec);
         }
 
-        public TimeSpan Delay { get; } = TimeSpan.Zero;
+        public TimeSpan Delay => TimeSpan.Zero;
 
         public TimeSpan Interval { get; }
     }

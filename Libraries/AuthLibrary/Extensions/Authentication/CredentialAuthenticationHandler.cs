@@ -43,27 +43,6 @@ public sealed class CredentialAuthenticationHandler : AuthenticationHandler<Cred
         return AuthenticateResult.Success(authTicket);
     }
 
-    private string? GetCredentialToken()
-    {
-        var authorization = Request.Headers[HeaderNames.Authorization];
-        if (string.IsNullOrEmpty(authorization))
-        {
-            return string.Empty;
-        }
-
-        if (!AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-        {
-            return string.Empty;
-        }
-
-        if (headerValue.Scheme != AuthType)
-        {
-            return string.Empty;
-        }
-
-        return headerValue.Parameter;
-    }
-
     private async Task<Claim> CreateServerRoleClaim(string token)
     {
         var serverRole = await getServerRole.QueryAsync(new(token));
