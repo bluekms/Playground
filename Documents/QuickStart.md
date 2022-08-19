@@ -9,7 +9,6 @@ docker network create playground-network --subnet-172.18.0.0/16
 
 ### mysql 8.0
 ```
-docker pull mysql:8.0
 docker run --name PlaygroundDb --network playground-network --ip 172.18.0.2 -e MYSQL_ROOT_PASSWORD=1234 -d -p 3307:3306 mysql:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 ```
 * 고정 IP를 사용하는 이유는 appsettings.json 의 ConnectionStrings를 위함
@@ -17,7 +16,6 @@ docker run --name PlaygroundDb --network playground-network --ip 172.18.0.2 -e M
 
 ### Redis
 ```
-docker pull redis:6
 docker run --name RedisCache --network playground-network --ip 172.18.0.3 -d -p 6380:6379 redis:6
 ```
 * 고정 IP를 사용하는 이유는 appsettings.json 의 ConnectionStrings를 위함
@@ -25,8 +23,12 @@ docker run --name RedisCache --network playground-network --ip 172.18.0.3 -d -p 
 
 ### AuthServer
 ```
-docker pull bluekms/playground-auth-server
 docker run --name AuthServer --network playground-network -e ASPNETCORE_ENVIRONMENT=Docker -d -p 5241:80 -p 7241:443 bluekms/playground-auth-server
+```
+
+### WorldServer
+```
+docker run --name WorldServer --network playground-network -e ASPNETCORE_ENVIRONMENT=Docker -d -p 5641:80 -p 7641:443 bluekms/playground-world-server
 ```
 
 ## Setup Database
