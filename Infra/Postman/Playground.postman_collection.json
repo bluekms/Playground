@@ -39,6 +39,9 @@
 				},
 				{
 					"name": "Foo",
+					"protocolProfileBehavior": {
+						"strictSSL": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -54,7 +57,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Start\": \"\",\r\n    \"End\": \"\",\r\n    \"Reason\": \"\"\r\n}",
+							"raw": "{\r\n    \"Data\": \"kkk\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -62,11 +65,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{AuthServerUrl}}Auth/Foo",
+							"raw": "{{AuthServerUrl}}/Auth/Foo",
 							"host": [
-								"{{AuthServerUrl}}Auth"
+								"{{AuthServerUrl}}"
 							],
 							"path": [
+								"Auth",
 								"Foo"
 							]
 						}
@@ -83,11 +87,14 @@
 									"pm.test(\"Status code should be 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"    var response = pm.response.json();\r",
-									"    console.log(response);\r",
-									"    console.log(response.sessionId);\r",
-									"    console.log(response.worlds[0].address);\r",
 									"    pm.environment.set(\"SessionId\", response.sessionId);\r",
-									"    pm.environment.set(\"WorldServerUrl\", response.worlds[0].address);\r",
+									"    if(response.worlds.length > 0)\r",
+									"    {\r",
+									"        pm.environment.set(\"WorldServerUrl\", response.worlds[0].address);\r",
+									"        \r",
+									"    }\r",
+									"    console.log(\"SessionId: \" + pm.environment.get(\"SessionId\"));\r",
+									"    console.log(\"WorldServerUrl: \" + pm.environment.get(\"WorldServerUrl\"));\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -279,7 +286,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Seq\": 0\r\n}",
+							"raw": "{\r\n    \"Data\": \"kkk3\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
