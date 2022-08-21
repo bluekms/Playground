@@ -4,7 +4,7 @@
 
 ### docker network
 ```
-docker network create playground-network --subnet-172.18.0.0/16
+docker network create playground-network --subnet 172.18.0.0/16
 ```
 
 ### mysql 8.0
