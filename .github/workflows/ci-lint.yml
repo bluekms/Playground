@@ -1,4 +1,4 @@
-name: (Lint)
+name: _ Lint
 
 on:
   workflow_call:
