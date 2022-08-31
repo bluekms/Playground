@@ -1,32 +1,21 @@
-name: CI/CD Root
+name: Continuous Delivery
 
 on:
-  pull_request:
-    branches: [ "main" ]
+  workflow_call:
 
 jobs:
-  Linting:
-    uses: ./.github/workflows/ci-lint.yml
-  
-  Build:
-    uses: ./.github/workflows/ci-build.yml  
-      
-  UnitTest:
-    needs: [Linting]
-    uses: ./.github/workflows/ci-test.yml
-    
   DeployLatestAuthServer:
     needs: [UnitTest]
     name: Deploy latest AuthServer
     secrets: inherit
     uses: ./.github/workflows/cd-AuthServer.yml
-    
+  
   DeployLatestOperationServer:
     needs: [UnitTest]
     name: Deploy latest OperationServer
     secrets: inherit
     uses: ./.github/workflows/cd-OperationServer.yml
-    
+  
   DeployLatestWorldServer:
     needs: [UnitTest]
     name: Deploy latest WorldServer
