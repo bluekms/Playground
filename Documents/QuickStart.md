@@ -23,7 +23,7 @@ docker run --name RedisCache --network playground-network --ip 172.18.0.3 -d -p 
 
 ### AuthServer
 ```
-docker run --name AuthServer --network playground-network --ip 172.18.0.3 -e ASPNETCORE_ENVIRONMENT=Docker -d -p 5241:80 -p 7241:443 bluekms/playground-auth-server
+docker run --name AuthServer --network playground-network --ip 172.18.0.4 -e ASPNETCORE_ENVIRONMENT=Docker -d -p 5241:80 -p 7241:443 bluekms/playground-auth-server
 ```
 * 고정 IP를 사용하는 이유는 WorldServer\appsettings.Docker.json 의 ServerRegistry를 위함
 
