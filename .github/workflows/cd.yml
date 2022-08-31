@@ -1,23 +1,20 @@
-name: Continuous Delivery
+name: (Continuous Delivery)
 
 on:
   workflow_call:
 
 jobs:
   DeployLatestAuthServer:
-    needs: [UnitTest]
     name: Deploy latest AuthServer
     secrets: inherit
     uses: ./.github/workflows/cd-AuthServer.yml
   
   DeployLatestOperationServer:
-    needs: [UnitTest]
     name: Deploy latest OperationServer
     secrets: inherit
     uses: ./.github/workflows/cd-OperationServer.yml
   
   DeployLatestWorldServer:
-    needs: [UnitTest]
     name: Deploy latest WorldServer
     secrets: inherit
     uses: ./.github/workflows/cd-WorldServer.yml

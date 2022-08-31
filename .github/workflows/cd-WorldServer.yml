@@ -1,4 +1,5 @@
 name: Deploy World Server
+
 on:
   workflow_call:
   workflow_dispatch:
