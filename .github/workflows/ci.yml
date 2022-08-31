@@ -1,8 +1,7 @@
-name: CI Root
+name: Continuous Integration
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_call:
 
 jobs:
   Linting:
