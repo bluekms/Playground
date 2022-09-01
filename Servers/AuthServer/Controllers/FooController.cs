@@ -13,7 +13,6 @@ public sealed class FooController : ControllerBase
 
     [HttpPost]
     [Route("Auth/Foo")]
-    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
     public async Task<ActionResult<string>> Foo([FromBody] ArgumentData args)
     {
         try
