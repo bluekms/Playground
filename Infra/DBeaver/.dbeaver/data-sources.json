@@ -1,0 +1,48 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-182f873db83-4091bec39ac10a3d": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3307",
+				"url": "jdbc:mysql://localhost:3307/",
+				"home": "C:\\Program Files\\MySQL\\MySQL Server 5.7",
+				"type": "dev",
+				"auth-model": "native",
+				"handlers": {
+					"ssh_tunnel": {
+						"type": "TUNNEL",
+						"enabled": true,
+						"save-password": true,
+						"properties": {
+							"host": "13.209.211.72",
+							"port": 22,
+							"authType": "PUBLIC_KEY",
+							"keyPath": "D:\\Workspace\\Aws\\LightsailDefaultKey-ap-northeast-2.pem",
+							"implementation": "jsch",
+							"bypassHostVerification": false,
+							"localHost": "",
+							"remoteHost": ""
+						}
+					}
+				}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"auto-close-transactions": false
+		}
+	}
+}
