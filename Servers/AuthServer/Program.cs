@@ -1,3 +1,4 @@
+using System.Net;
 using System.Reflection;
 using AuthDb;
 using AuthLibrary.Extensions;
@@ -28,6 +29,12 @@ builder.Services.UseCommandDecorator();
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
 builder.Services.UseControllers();
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownProxies.Add(IPAddress.Parse("172.18.0.1"));
+});
 
 // Configure the HTTP request pipeline.
 //
