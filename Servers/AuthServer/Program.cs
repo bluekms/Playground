@@ -13,31 +13,23 @@ using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
-
+builder.Services.UseNginx();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UsePermissionAuthorization();
-
 builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetExecutingAssembly()));
 builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetAssembly(typeof(AssemblyEntry))!));
 builder.Services.UseQueryDecorator();
 builder.Services.UseCommandDecorator();
-
-builder.Services.AddScoped<ITimeService, ScopedTimeService>();
-
 builder.Services.UseControllers();
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    options.KnownProxies.Add(IPAddress.Parse("172.18.0.1"));
-});
+// DI
+builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
 // Configure the HTTP request pipeline.
-//
 var app = builder.Build();
 app.UseForwardedHeaders();
 app.UseAuthorization();
