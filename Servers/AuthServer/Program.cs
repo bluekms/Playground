@@ -8,6 +8,7 @@ using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
@@ -31,6 +32,7 @@ builder.Services.UseControllers();
 // Configure the HTTP request pipeline.
 //
 var app = builder.Build();
+app.UseForwardedHeaders();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
