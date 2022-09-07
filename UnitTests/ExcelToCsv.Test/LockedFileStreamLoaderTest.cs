@@ -4,13 +4,11 @@ namespace ExcelToCsv.Test;
 
 public class LockedFileStreamLoaderTest
 {
-    private const string relativeFileName = @"..\..\..\..\..\..\StaticData\SampleStaticData.xlsx";
     private readonly string excelFileName;
 
     public LockedFileStreamLoaderTest()
     {
-        var solutionPath = Assembly.GetEntryAssembly().GetName().Name;
-        excelFileName = Path.Combine(solutionPath, relativeFileName);
+        excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/SampleStaticData.xlsx");
     }
 
     [Fact]
