@@ -21,11 +21,14 @@ public enum ContainerTypes
 
 public sealed class StaticDataSchema
 {
-    private static string AllTArgets = "__AllTargets";
+    //private static string AllTArgets = "__AllTargets";
     
     public StaticDataSchema(string? source)
     {
         Source = source;
+
+        Name = string.Empty;
+        Targets = null;
     }
     
     public string? Source { get; init; }
@@ -35,7 +38,7 @@ public sealed class StaticDataSchema
     public bool IsKey { get; init; }
     
     // TODO 일단 타겟만 잘 작동하도록
-    public List<string> Targets { get; set; }
+    public List<string>? Targets { get; init; }
 
     public void SetName(string name)
     {

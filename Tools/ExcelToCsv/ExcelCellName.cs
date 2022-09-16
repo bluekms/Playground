@@ -1,12 +1,17 @@
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace ExcelToCsv;
 
 public sealed class CellLocation
 {
-    private static string CellNamePattern = @"\b([A-Z]{1,3})(\d{1,7})\b";
-    private static string MaxColumnName = "XFD";
-    private static int MaxRowNumber = 1048576;
+    private const string CellNamePattern = @"\b([a-zA-Z]{1,3})(\d{1,7})\b";
+    private const string MinColumnName = "A";
+    private const string MaxColumnName = "XFD";
+    private const int MinColumnNumber = 0;
+    private const int MaxColumnNumber = 16384;  // XFD
+    private const int MinRowNumber = 1;
+    private const int MaxRowNumber = 1048576;
 
     public int ColumnNumber { get; init; }
     public int RowNumber { get; init; }
@@ -23,18 +28,33 @@ public sealed class CellLocation
         var matchCollection = reg.Matches(cellName);
         var match = matchCollection[0];
         
-        var col = match.Groups[1].Value;
+        var col = match.Groups[1].Value.ToUpper();
+        if (string.CompareOrdinal(col, MinColumnName) < 0)
+        {
+            throw new ColumnNameOutOfRangeException($"{cellName} must be {col} >= {MinColumnName}.");
+        }
+        
         if (string.CompareOrdinal(col, MaxColumnName) > 0)
         {
-            throw new ArgumentOutOfRangeException($"{cellName} Max column name is {MaxColumnName}.");
+            throw new ColumnNameOutOfRangeException($"{cellName} must be {col} <= {MaxColumnName}.");
         }
 
         ColumnNumber = GetColumnNumber(col);
+        switch (ColumnNumber)
+        {
+            case < MinColumnNumber:
+                throw new ColumnNameOutOfRangeException($"{cellName} must be {ColumnNumber} >= {MinColumnNumber}");
+            case > MaxColumnNumber:
+                throw new ColumnNameOutOfRangeException($"{cellName} must be {ColumnNumber} <= {MaxColumnNumber}");
+        }
 
         RowNumber = int.Parse(match.Groups[2].Value);
-        if (RowNumber > MaxRowNumber)
+        switch (RowNumber)
         {
-            throw new ArgumentOutOfRangeException($"{cellName} Max row name is {MaxRowNumber}.");
+            case < MinRowNumber:
+                throw new RowNameOutOfRangeException($"{cellName} must be {RowNumber} >= {MinRowNumber}");
+            case > MaxRowNumber:
+                throw new RowNameOutOfRangeException($"{cellName} must be {RowNumber} <= {MaxRowNumber}");
         }
     }
     
@@ -49,5 +69,59 @@ public sealed class CellLocation
         }
 
         return number;
+    }
+}
+
+public class ColumnNameOutOfRangeException : ArgumentOutOfRangeException
+{
+    public ColumnNameOutOfRangeException()
+    {
+    }
+
+    protected ColumnNameOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+
+    public ColumnNameOutOfRangeException(string? paramName) : base(paramName)
+    {
+    }
+
+    public ColumnNameOutOfRangeException(string? message, Exception? innerException) : base(message, innerException)
+    {
+    }
+
+    public ColumnNameOutOfRangeException(string? paramName, object? actualValue, string? message) : base(paramName, actualValue, message)
+    {
+    }
+
+    public ColumnNameOutOfRangeException(string? paramName, string? message) : base(paramName, message)
+    {
+    }
+}
+
+public class RowNameOutOfRangeException : ArgumentOutOfRangeException
+{
+    public RowNameOutOfRangeException()
+    {
+    }
+
+    protected RowNameOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
+
+    public RowNameOutOfRangeException(string? paramName) : base(paramName)
+    {
+    }
+
+    public RowNameOutOfRangeException(string? message, Exception? innerException) : base(message, innerException)
+    {
+    }
+
+    public RowNameOutOfRangeException(string? paramName, object? actualValue, string? message) : base(paramName, actualValue, message)
+    {
+    }
+
+    public RowNameOutOfRangeException(string? paramName, string? message) : base(paramName, message)
+    {
     }
 }
