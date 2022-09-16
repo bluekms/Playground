@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Test", "UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthLibrary", "Libraries\AuthLibrary\AuthLibrary.csproj", "{AE4C84D4-A55C-4788-AA28-D202952DF0D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv", "Tools\ExcelToCsv\ExcelToCsv.csproj", "{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv.Test", "UnitTests\ExcelToCsv.Test\ExcelToCsv.Test.csproj", "{FF3D7095-ECE4-4F71-B896-7AEB267CB590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,14 @@ Global
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
