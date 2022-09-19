@@ -18,7 +18,7 @@ public class LockedFileStreamLoaderTest
         Assert.NotNull(loader);
     }
 
-    [Fact]
+    [FactWithoutEnvironmentVariable("CI")]
     public void AlreadyOpenExcelFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
@@ -30,7 +30,7 @@ public class LockedFileStreamLoaderTest
         Assert.True(loader.IsTemp);
     }
 
-    [Fact]
+    [FactWithoutEnvironmentVariable("CI")]
     public void DeleteTempFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
