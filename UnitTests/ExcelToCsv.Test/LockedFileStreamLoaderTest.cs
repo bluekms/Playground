@@ -4,13 +4,11 @@ namespace ExcelToCsv.Test;
 
 public class LockedFileStreamLoaderTest
 {
-    private const string relativeFileName = @"..\..\..\..\..\..\StaticData\SampleStaticData.xlsx";
     private readonly string excelFileName;
 
     public LockedFileStreamLoaderTest()
     {
-        var solutionPath = Assembly.GetEntryAssembly().GetName().Name;
-        excelFileName = Path.Combine(solutionPath, relativeFileName);
+        excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/SampleStaticData.xlsx");
     }
 
     [Fact]
@@ -20,7 +18,7 @@ public class LockedFileStreamLoaderTest
         Assert.NotNull(loader);
     }
 
-    [Fact]
+    [FactWithoutEnvironmentVariable("CI")]
     public void AlreadyOpenExcelFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
@@ -32,7 +30,7 @@ public class LockedFileStreamLoaderTest
         Assert.True(loader.IsTemp);
     }
 
-    [Fact]
+    [FactWithoutEnvironmentVariable("CI")]
     public void DeleteTempFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
