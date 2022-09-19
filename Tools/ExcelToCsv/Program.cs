@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using ExcelToCsv;
 
 var args2 = new List<string>();

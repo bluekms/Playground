@@ -13,7 +13,7 @@ public sealed class LockedFileStreamLoader : IDisposable
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             Stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
         }
-        catch (IOException e) when (e.TargetSite?.Name is "WinIOError" or "CreateFile")
+        catch (IOException)
         {
             TempFileName = Path.GetTempFileName();
             ForceCopyAsync(fileName, TempFileName);
