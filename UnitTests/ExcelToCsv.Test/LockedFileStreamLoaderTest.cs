@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace ExcelToCsv.Test;
 
-public class LockedFileStreamLoaderTest
+public sealed class LockedFileStreamLoaderTest
 {
     private readonly string excelFileName;
 
@@ -33,7 +33,7 @@ public class LockedFileStreamLoaderTest
     [FactWithoutEnvironmentVariable("CI")]
     public void DeleteTempFile()
     {
-        var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
+        File.Open(excelFileName, FileMode.Open, FileAccess.Read);
         var tempFileName = string.Empty;
         using (var loader = new LockedFileStreamLoader(excelFileName))
         {
