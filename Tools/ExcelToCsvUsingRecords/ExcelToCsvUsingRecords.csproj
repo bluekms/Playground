@@ -5,15 +5,15 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>ExcelToCsvFromClass</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CommandLineParser" Version="2.9.1" />
-      <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0-develop00310" />
+      <ProjectReference Include="..\..\Libraries\StaticDataLibrary\StaticDataLibrary.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Libraries\StaticDataLibrary\StaticDataLibrary.csproj" />
+      <PackageReference Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
 
 </Project>

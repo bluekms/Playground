@@ -1,5 +1,5 @@
 namespace AuthLibrary.Models;
 
-public class AssemblyEntry
+public sealed class AssemblyEntry
 {
 }

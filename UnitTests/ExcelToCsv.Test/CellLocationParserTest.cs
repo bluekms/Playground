@@ -1,3 +1,5 @@
+using StaticDataLibrary;
+
 namespace ExcelToCsv.Test;
 
 public sealed class CellLocationParserTest

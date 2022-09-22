@@ -1,5 +1,6 @@
 using System.Text;
 using ExcelDataReader;
+using StaticDataLibrary;
 
 namespace ExcelToCsv;
 
@@ -34,14 +35,14 @@ public class TableLoader
         var sb = new StringBuilder();
         foreach (var schema in columnSchemaList)
         {
-            Console.WriteLine($" - {schema}");
+            sb.AppendLine($" - {schema}");
         }
 
         sb.AppendLine();
         
         foreach (var row in rowList)
         {
-            Console.WriteLine(string.Join(',', row));
+            sb.AppendJoin(',', row);
         }
         return sb.ToString();
     }
@@ -87,7 +88,7 @@ public class TableLoader
     
     private void ReadHeader(IExcelDataReader reader, int startColumn)
     {
-        for (int i = startColumn; i < reader.FieldCount; ++i)
+        for (var i = startColumn; i < reader.FieldCount; ++i)
         {
             columnSchemaList.Add(new ColumnSchema(i - startColumn, reader.GetString(i)));
         }
