@@ -4,7 +4,7 @@ namespace ExcelToCsv;
 
 public sealed class LockedFileStreamLoader : IDisposable
 {
-    public string? TempFileName { get; init; }
+    public string? TempFileName { get; }
 
     public LockedFileStreamLoader(string fileName)
     {

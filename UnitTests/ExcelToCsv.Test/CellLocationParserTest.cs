@@ -1,6 +1,6 @@
 namespace ExcelToCsv.Test;
 
-public class CellLocationTest
+public sealed class CellLocationParserTest
 {
     [Theory]
     [InlineData("a1")]
@@ -10,11 +10,12 @@ public class CellLocationTest
     [InlineData("XFD1048576")]
     public void NormalCellNameTest(string cellName)
     {
-        var cellLocation = new CellLocation(cellName);
+        var cellLocation = new CellLocationParser(cellName);
         Assert.NotNull(cellLocation);
     }
 
     [Theory]
+    [InlineData("")]
     [InlineData("ㄱ1")]
     [InlineData("a-100")]
     [InlineData("A!1")]
@@ -24,7 +25,7 @@ public class CellLocationTest
     [InlineData("XFD1048576789")]
     public void InvalidCellNameTest(string cellName)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new CellLocation(cellName));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new CellLocationParser(cellName));
     }
     
     [Theory]
@@ -32,7 +33,7 @@ public class CellLocationTest
     [InlineData("ZZZ1048576")]
     public void InvalidColumnNameTest(string cellName)
     {
-        Assert.Throws<ColumnNameOutOfRangeException>(() => new CellLocation(cellName));
+        Assert.Throws<ColumnNameOutOfRangeException>(() => new CellLocationParser(cellName));
     }
     
     [Theory]
@@ -40,6 +41,6 @@ public class CellLocationTest
     [InlineData("xfd1048577")]
     public void InvalidRowNumberTest(string cellName)
     {
-        Assert.Throws<RowNameOutOfRangeException>(() => new CellLocation(cellName));
+        Assert.Throws<RowNameOutOfRangeException>(() => new CellLocationParser(cellName));
     }
 }

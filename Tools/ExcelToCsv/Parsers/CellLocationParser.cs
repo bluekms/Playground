@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace ExcelToCsv;
 
-public sealed class CellLocation
+public sealed class CellLocationParser
 {
-    private const string CellNamePattern = @"\b([a-zA-Z]{1,3})(\d{1,7})\b";
+    private const string CellNamePattern = @"^([a-zA-Z]{1,3})(\d{1,7})\b";
     private const string MinColumnName = "A";
     private const string MaxColumnName = "XFD";
     private const int MinColumnNumber = 0;
@@ -13,10 +13,10 @@ public sealed class CellLocation
     private const int MinRowNumber = 1;
     private const int MaxRowNumber = 1048576;
 
-    public int ColumnNumber { get; init; }
-    public int RowNumber { get; init; }
+    public int ColumnNumber { get; }
+    public int RowNumber { get; }
     
-    public CellLocation(string cellName)
+    public CellLocationParser(string cellName)
     {
         var reg = new Regex(CellNamePattern);
 

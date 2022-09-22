@@ -1,20 +1,17 @@
 using CommandLine;
 using ExcelToCsv;
 
-var args2 = new List<string>();
-args2.Add("-f");
-args2.Add(@"D:\Workspace\gitProject\Playground\StaticData\SampleStaticData.xlsx");
-args2.Add("-o");
-args2.Add(@"D:\Workspace\gitProject\Playground\StaticData\Output");
+const string command = "-f D:\\Workspace\\gitProject\\Playground\\StaticData\\SampleStaticData.xlsx -o D:\\Workspace\\gitProject\\Playground\\StaticData\\Output";
 
-Parser.Default.ParseArguments<ProgramOptions>(args2)
+Parser.Default.ParseArguments<ProgramOptions>(command.Split(' '))
     .WithParsed(RunOptions)
     .WithNotParsed(HandleParseError);
 
-static void RunOptions(ProgramOptions options)
+static async void RunOptions(ProgramOptions options)
 {
     var processor = new ExcelConverter();
-    processor.ReadFileStream(options.FileName);
+    processor.LoadExcelFile(options.FileName, options.SheetName);
+    await processor.PrintCsvFilesAsync(options.OutputPath, options.Target);
 }
 
 static void HandleParseError(IEnumerable<Error> errors)
