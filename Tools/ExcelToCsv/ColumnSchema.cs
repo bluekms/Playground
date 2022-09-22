@@ -5,9 +5,9 @@ namespace ExcelToCsv;
 
 public sealed class ColumnSchema
 {
-    public ColumnSchema(int columIndex, string? sourceSchema)
+    public ColumnSchema(int columnIndex, string? sourceSchema)
     {
-        ColumIndex = columIndex;
+        ColumnIndex = columnIndex;
 
         if (sourceSchema != null)
         {
@@ -15,7 +15,7 @@ public sealed class ColumnSchema
         }
     }
 
-    public int ColumIndex { get; }
+    public int ColumnIndex { get; }
     public string? SourceSchema { get; private set; }
     public SchemaData? SchemaData { get; private set; }
     public string? SourceName { get; private set; }

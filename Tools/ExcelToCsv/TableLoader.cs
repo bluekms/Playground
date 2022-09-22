@@ -67,7 +67,7 @@ public class TableLoader
         var targetIndexList = columnSchemaList
             .Where(x => x.SchemaData!.OutputTargets.Contains(SchemaData.TargetAll)
                         || x.SchemaData!.OutputTargets.Contains(target))
-            .Select(x => x.ColumIndex)
+            .Select(x => x.ColumnIndex)
             .ToList();
 
         var result = new List<List<string?>>(rowList.Count);
