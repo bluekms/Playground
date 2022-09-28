@@ -1,11 +1,14 @@
-namespace DefaultNamespace;
+using Microsoft.EntityFrameworkCore;
+using StaticDataLibrary.DbContext.Tables;
+
+namespace StaticDataLibrary.DbContext;
 
 // https://learn.microsoft.com/ko-kr/ef/core/get-started/overview/first-app?tabs=netcore-cli
-public sealed class StaticDataContext : DbContext
+public sealed class StaticDataContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    private const DbFileName = "StaticData.db";
+    private const string DbFileName = "StaticData.db";
     
-    public DbSet<TestRecord> TestRecords { get; set; }
+    public DbSet<TargetTestRecord> TargetTestRecords { get; set; }
     
     public string DbPath { get; }
 

@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <PackageReference Include="ExcelDataReader" Version="3.7.0-develop00310" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.6" />
     </ItemGroup>
 
     <ItemGroup>
