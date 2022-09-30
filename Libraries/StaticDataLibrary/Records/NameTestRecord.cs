@@ -1,14 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.Records;
 
 [SheetName("이름 매핑 테스트")]
-public sealed record NameMappingTestRecord
+public sealed class NameTestRecord
 {
-    public int Id { get; init; }
-    
-    public int Value1 { get; set; }
+    [Key]
+    public int Id { get; set; }
     
     [ColumnName("값2")]
     public int Value2 { get; set; }
+    
+    public int Value3 { get; set; }
 }
