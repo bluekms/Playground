@@ -1,20 +1,18 @@
-using System.Threading.Tasks;
 using CommonLibrary.Worker;
 
-namespace CommonLibrary.ServerRegistry
+namespace CommonLibrary.ServerRegistry;
+
+public sealed class ServerRegister : IWork
 {
-    public sealed class ServerRegister : IWork
+    private readonly ServerRegistryClient client;
+
+    public ServerRegister(ServerRegistryClient client)
     {
-        private readonly ServerRegistryClient client;
+        this.client = client;
+    }
 
-        public ServerRegister(ServerRegistryClient client)
-        {
-            this.client = client;
-        }
-
-        public async Task RunAsync()
-        {
-            await client.RegisterServerAsync();
-        }
+    public async Task RunAsync()
+    {
+        await client.RegisterServerAsync();
     }
 }

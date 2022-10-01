@@ -16,4 +16,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.6" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+    </ItemGroup>
+
 </Project>

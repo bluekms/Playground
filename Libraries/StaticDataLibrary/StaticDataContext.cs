@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using StaticDataLibrary.Record;
+using StaticDataLibrary.Records;
 
-namespace WorldServer;
+namespace StaticDataLibrary;
 
-// https://learn.microsoft.com/ko-kr/ef/core/get-started/overview/first-app?tabs=netcore-cli
-public sealed class StaticDataContext : DbContext
+public class StaticDataContext : DbContext
 {
     private const string DbFileName = "StaticData.db";
 
@@ -12,7 +11,7 @@ public sealed class StaticDataContext : DbContext
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, "DbFileName");
+        DbPath = Path.Join(path, DbFileName);
     }
 
     public string DbPath { get; } = null!;
