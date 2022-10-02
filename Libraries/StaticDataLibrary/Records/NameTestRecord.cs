@@ -7,10 +7,13 @@ namespace StaticDataLibrary.Records;
 public sealed class NameTestRecord
 {
     [Key]
+    [Order]
     public int Id { get; set; }
     
     [ColumnName("값2")]
+    [Order]
     public int Value2 { get; set; }
     
+    [Order]
     public int Value3 { get; set; }
 }
