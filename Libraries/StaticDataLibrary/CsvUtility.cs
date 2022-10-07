@@ -18,21 +18,4 @@ public sealed class CsvUtility
 
         return csv;
     }
-
-    public static string? ToNormal(string? csv)
-    {
-        if (csv == null)
-        {
-            return null;
-        }
-
-        var str = csv;
-
-        if (str.Contains(','))
-        {
-            str = str.Substring(1, str.Length - 2);
-        }
-
-        return str;
-    }
 }
