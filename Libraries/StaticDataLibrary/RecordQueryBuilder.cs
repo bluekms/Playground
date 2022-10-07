@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Text;
-using StaticDataLibrary.Attributes;
+using CsvHelper.Configuration.Attributes;
 
 namespace StaticDataLibrary;
 
@@ -38,10 +38,10 @@ public sealed class RecordQueryBuilder
     {
         return t.GetProperties()
             .Where(x => x.CanWrite)
-            .Where(x => Attribute.IsDefined(x, typeof(OrderAttribute)))
-            .OrderBy(x => ((OrderAttribute) x
-                .GetCustomAttributes(typeof(OrderAttribute), false)
-                .Single()).Order)
+            .Where(x => Attribute.IsDefined(x, typeof(IndexAttribute)))
+            .OrderBy(x => ((IndexAttribute) x
+                .GetCustomAttributes(typeof(IndexAttribute), false)
+                .Single()).Index)
             .ToList();
     }
 }

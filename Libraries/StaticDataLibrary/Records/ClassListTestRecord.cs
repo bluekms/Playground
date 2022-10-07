@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using StaticDataLibrary.Attributes;
+using CsvHelper.Configuration.Attributes;
 using StaticDataLibrary.Commons;
 
 namespace StaticDataLibrary.Records;
@@ -7,30 +7,30 @@ namespace StaticDataLibrary.Records;
 public class ClassListTestRecord
 {
     [Key]
-    [Order]
+    [Index(0)]
     public string StudentId { get; set; } = null!;
     
-    [Order]
+    [Index(1)]
     public string Name { get; set; } = null!;
     
-    [Order]
+    [Index(2)]
     public string? Subject1 { get; set; }
     
-    [Order]
+    [Index(3)]
     public Grades? Grade1 { get; set; }
     
-    [Order]
+    [Index(4)]
     public string? Subject2 { get; set; }
     
-    [Order]
+    [Index(5)]
     public Grades? Grade2 { get; set; }
     
-    [Order]
+    [Index(6)]
     public string? Subject3 { get; set; }
     
-    [Order]
+    [Index(7)]
     public Grades? Grade3 { get; set; }
     
-    [Order]
+    [Index(8)]
     public string? Note { get; set; }
 }

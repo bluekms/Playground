@@ -1,17 +1,17 @@
 using System.ComponentModel.DataAnnotations;
-using StaticDataLibrary.Attributes;
+using CsvHelper.Configuration.Attributes;
 
 namespace StaticDataLibrary.Records;
 
 public sealed class TargetTestRecord
 {
     [Key]
-    [Order]
+    [Index(0)]
     public int Id { get; set; }
     
-    [Order]
+    [Index(1)]
     public int Value1 { get; set; }
     
-    [Order]
+    [Index(2)]
     public int Value3 { get; set; }
 }

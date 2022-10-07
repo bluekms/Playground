@@ -32,7 +32,7 @@ public static class StaticDataExtension
                 throw new FileNotFoundException(fileName);
             }
 
-            var dataList = await RecordParser.GetDataList(recordInfo, fileName);
+            var dataList = RecordParser.GetDataList(recordInfo, fileName);
             
             await RecordDataInserter.InsertAsync(recordInfo.DbSetName, recordInfo.RecordType, dataList, connection, transaction!);
         }

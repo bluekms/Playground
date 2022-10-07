@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CsvHelper.Configuration.Attributes;
 using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.Records;
@@ -7,13 +8,13 @@ namespace StaticDataLibrary.Records;
 public class NameTestRecord
 {
     [Key]
-    [Order]
+    [Index(0)]
     public int Id { get; set; }
     
-    [ColumnName("값2")]
-    [Order]
+    [Name("값2")]
+    [Index(1)]
     public int Value2 { get; set; }
     
-    [Order]
+    [Index(2)]
     public int Value3 { get; set; }
 }

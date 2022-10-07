@@ -20,9 +20,9 @@ public class StaticDataContext : DbContext
 
     //public DbSet<NameTestRecord> NameTestTable { get; set; } = null!;
 
-    //public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
+    public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
 
-    public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
+    //public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
 
     //public DbSet<ComplexTestRecord> ComplexTestTable { get; set; } = null!;
 

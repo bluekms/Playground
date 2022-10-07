@@ -1,36 +1,21 @@
 using System.Collections;
+using System.Globalization;
 using System.Text;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace StaticDataLibrary;
 
 public static class RecordParser
 {
-    public static async Task<IList> GetDataList(RecordInfo recordInfo, string fileName)
+    public static IList GetDataList(RecordInfo recordInfo, string fileName)
     {
-        var list = CreateList(recordInfo.RecordType);
-
         using var reader = new StreamReader(fileName, Encoding.UTF8);
-        while (!reader.EndOfStream)
+        using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            var csvLine = await reader.ReadLineAsync();
-            if (string.IsNullOrWhiteSpace(csvLine))
-            {
-                break;
-            }
+            HasHeaderRecord = false,
+        });
 
-            var record = RecordMapper.Map(recordInfo.RecordType, csvLine);
-            list.Add(record);
-        }
-
-        return list;
-    }
-    
-    private static IList CreateList(Type t)
-    {
-        var values = Array.CreateInstance(t, 0);
-        var genericListType = typeof(List<>);
-        var concreteListType = genericListType.MakeGenericType(t);
-        
-        return (Activator.CreateInstance(concreteListType, values) as IList)!;
+        return csv.GetRecords(recordInfo.RecordType).ToList();
     }
 }
