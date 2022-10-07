@@ -28,7 +28,7 @@ public sealed class RecordQueryBuilder
                 sb.Append($"{parameter});");
             }
 
-            parameters.Add(parameter);
+            parameters.Add(property.Name);
         }
         
         return sb.ToString();

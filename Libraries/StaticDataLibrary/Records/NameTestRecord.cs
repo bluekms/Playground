@@ -4,7 +4,7 @@ using StaticDataLibrary.Attributes;
 namespace StaticDataLibrary.Records;
 
 [SheetName("이름 매핑 테스트")]
-public sealed class NameTestRecord
+public class NameTestRecord
 {
     [Key]
     [Order]
