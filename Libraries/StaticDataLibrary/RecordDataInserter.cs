@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Data.Common;
 using Microsoft.Data.Sqlite;
 
 namespace StaticDataLibrary;
@@ -18,8 +17,7 @@ public static class RecordDataInserter
             {
                 var value = data.GetType()
                     .GetProperty(name)!
-                    .GetValue(data, null)!
-                    .ToString();
+                    .GetValue(data, null) ?? DBNull.Value;
 
                 command.Parameters.Add(new($"@{name}", value));
             }

@@ -22,7 +22,20 @@ public sealed class RecordMapper
         var instance = Activator.CreateInstance(t);
         for (int i = 0; i < properties.Count; ++i)
         {
-            var value = Convert.ChangeType(values[i], properties[i].PropertyType);
+            var isNullable = properties[i].PropertyType.IsGenericType &&
+                             properties[i].PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+            if (isNullable && string.IsNullOrWhiteSpace(values[i]))
+            {
+                properties[i].SetValue(instance, null, null);
+                continue;
+            }
+
+            var realType = isNullable
+                ? Nullable.GetUnderlyingType(properties[i].PropertyType)
+                : properties[i].PropertyType;
+            
+            var value = Convert.ChangeType(values[i], realType!);
             properties[i].SetValue(instance, value, null);
         }
 

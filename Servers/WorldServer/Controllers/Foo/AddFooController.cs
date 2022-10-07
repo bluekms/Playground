@@ -29,9 +29,9 @@ public sealed class AddFooController : ControllerBase
     {
         await addFoo.ExecuteAsync(new(args.Data));
 
-        var data = await staticData.NameTestTable.SingleAsync(x => x.Id == 104);
+        var data = await staticData.ArrayTestTable.SingleAsync(x => x.Id == 103);
 
-        return $"Ok: {data.Value3}";
+        return $"Ok: {data.Info}";
     }
 
     public sealed record ArgumentData(string Data);
