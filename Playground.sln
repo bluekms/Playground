@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv", "Tools\ExcelTo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv.Test", "UnitTests\ExcelToCsv.Test\ExcelToCsv.Test.csproj", "{FF3D7095-ECE4-4F71-B896-7AEB267CB590}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticDataLibrary", "Libraries\StaticDataLibrary\StaticDataLibrary.csproj", "{16001A73-C971-46EF-A46D-CDDF464567E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

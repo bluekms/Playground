@@ -1,4 +1,3 @@
-using System.Net;
 using System.Reflection;
 using AuthDb;
 using AuthLibrary.Extensions;
@@ -9,7 +8,6 @@ using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;
-using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
