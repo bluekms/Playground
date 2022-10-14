@@ -25,18 +25,18 @@ public static class StaticDataExtension
         await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
         
         var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var recordInfoList = RecordFinder.Find<StaticDataContext>();
-        foreach (var recordInfo in recordInfoList)
+        var tableInfoList = TableFinder.Find<StaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
         {
-            var fileName = Path.Combine(path, StaticDataPath, $"{recordInfo.SheetName}{Extension}");
+            var fileName = Path.Combine(path, StaticDataPath, $"{tableInfo.SheetName}{Extension}");
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException(fileName);
             }
 
-            var dataList = await RecordParser.GetDataList(recordInfo, fileName);
+            var dataList = await RecordParser.GetDataList(tableInfo, fileName);
             
-            await RecordDataInserter.InsertAsync(recordInfo.DbSetName, recordInfo.RecordType, dataList, connection, transaction!);
+            await RecordDataInserter.InsertAsync(tableInfo.RecordType, tableInfo.DbSetName, dataList, connection, transaction!);
         }
 
         await transaction!.CommitAsync();

@@ -13,7 +13,7 @@ public static class RecordMapper
             return null;
         }
 
-        var properties = GetProperties(t);
+        var properties = OrderedPropertySelector.GetList(t);
         var values = CsvLineParser(csvLine);
         if (properties.Count != values.Count)
         {
@@ -23,16 +23,13 @@ public static class RecordMapper
         var instance = Activator.CreateInstance(t);
         for (int i = 0; i < properties.Count; ++i)
         {
-            var isNullable = properties[i].PropertyType.IsGenericType &&
-                             properties[i].PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
-
-            if (isNullable && string.IsNullOrWhiteSpace(values[i]))
+            if (properties[i].IsNullable() && string.IsNullOrWhiteSpace(values[i]))
             {
                 properties[i].SetValue(instance, null, null);
                 continue;
             }
 
-            var realType = isNullable
+            var realType = properties[i].IsNullable()
                 ? Nullable.GetUnderlyingType(properties[i].PropertyType)
                 : properties[i].PropertyType;
             
@@ -46,17 +43,6 @@ public static class RecordMapper
         return instance;
     }
     
-    private static List<PropertyInfo> GetProperties(Type t)
-    {
-        return t.GetProperties()
-            .Where(x => x.CanWrite)
-            .Where(x => Attribute.IsDefined(x, typeof(OrderAttribute)))
-            .OrderBy(x => ((OrderAttribute) x
-                .GetCustomAttributes(typeof(OrderAttribute), false)
-                .Single()).Order)
-            .ToList();
-    }
-
     private static List<string> CsvLineParser(string csvLine)
     {
         var values = csvLine.Split(',');

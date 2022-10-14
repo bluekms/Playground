@@ -3,7 +3,7 @@ using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.RecordLibrary;
 
-public sealed class RecordInfo
+public sealed class TableInfo
 {
     public const string TypeNameSuffix = "Record";
     public const string DbSetNameSuffix = "Table";
@@ -12,7 +12,7 @@ public sealed class RecordInfo
     public string SheetName { get; }
     public string DbSetName { get; }
     
-    public RecordInfo(PropertyInfo pi)
+    public TableInfo(PropertyInfo pi)
     {
         RecordType = pi.PropertyType.GetGenericArguments().First();
         SheetName = RecordType.Name.Replace(TypeNameSuffix, string.Empty);
