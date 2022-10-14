@@ -10,6 +10,7 @@ public sealed class TargetTestRecord
     public int Id { get; set; }
     
     [Order]
+    [Range(0, 10)]
     public int Value1 { get; set; }
     
     [Order]

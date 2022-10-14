@@ -11,7 +11,7 @@ public sealed class LockedFileStreamLoaderTest
         excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/SampleStaticData.xlsx");
     }
 
-    [Fact]
+    [FactWithoutEnvironmentVariable("CI")]
     public void ExcelFileOpen()
     {
         var loader = new LockedFileStreamLoader(excelFileName);

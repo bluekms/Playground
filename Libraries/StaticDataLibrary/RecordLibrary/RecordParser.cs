@@ -5,9 +5,9 @@ namespace StaticDataLibrary.RecordLibrary;
 
 public static class RecordParser
 {
-    public static async Task<IList> GetDataList(RecordInfo recordInfo, string fileName)
+    public static async Task<IList> GetDataList(TableInfo tableInfo, string fileName)
     {
-        var list = CreateList(recordInfo.RecordType);
+        var list = CreateList(tableInfo.RecordType);
 
         using var reader = new StreamReader(fileName, Encoding.UTF8);
         while (!reader.EndOfStream)
@@ -18,7 +18,7 @@ public static class RecordParser
                 break;
             }
 
-            var record = RecordMapper.Map(recordInfo.RecordType, csvLine);
+            var record = RecordMapper.Map(tableInfo.RecordType, csvLine);
             list.Add(record);
         }
 

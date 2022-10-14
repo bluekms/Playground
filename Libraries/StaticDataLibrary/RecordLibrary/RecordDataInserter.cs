@@ -5,7 +5,7 @@ namespace StaticDataLibrary.RecordLibrary;
 
 public static class RecordDataInserter
 {
-    public static async Task InsertAsync(string tableName, Type recordType, IList dataList, SqliteConnection connection, SqliteTransaction transaction)
+    public static async Task InsertAsync(Type recordType, string tableName, IList dataList, SqliteConnection connection, SqliteTransaction transaction)
     {
         var query = RecordQueryBuilder.InsertQuery(recordType, tableName, out var parameters);
         
