@@ -5,7 +5,7 @@ namespace StaticDataLibrary.Test;
 public sealed class RecordLibraryTest
 {
     private const int TestTableCount = 5;
-    private const string TestStaticDataPath = @"..\..\..\..\..\StaticData\__TestStaticData";
+    private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData";
 
     [Fact]
     public void TableCountTest()

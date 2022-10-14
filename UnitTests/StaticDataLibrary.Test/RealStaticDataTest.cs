@@ -3,7 +3,7 @@ namespace StaticDataLibrary.Test;
 public sealed class RealStaticDataTest
 {
     // TODO 경로 수정
-    private const string RealStaticDataPath = @"..\..\..\..\..\StaticData\__TestStaticData";
+    private const string RealStaticDataPath = @"../../../../../StaticData/__TestStaticData";
 
     [Fact]
     public void RequiredAttributeTest()
