@@ -12,7 +12,7 @@ public sealed class RecordLibraryTest
     {
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
         Assert.True(tableInfoList.Count == TestTableCount, 
-            $"Check ths suffix. {TableInfo.DbSetNameSuffix}");
+            $"Check the suffix. {TableInfo.DbSetNameSuffix}");
     }
 
     [Fact]
