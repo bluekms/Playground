@@ -49,8 +49,8 @@ public sealed class TableInfo
             }
             else
             {
-                var columName = (columnNameAttribute as ColumnNameAttribute)!.Name;
-                columnNameList.Add(columName);
+                var columnName = (columnNameAttribute as ColumnNameAttribute)!.Name;
+                columnNameList.Add(columnName);
             }
         }
 
