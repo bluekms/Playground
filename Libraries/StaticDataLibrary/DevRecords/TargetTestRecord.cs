@@ -10,9 +10,9 @@ public sealed class TargetTestRecord
     public int Id { get; set; }
     
     [Order]
-    [Range(0, 10)]
-    public int Value1 { get; set; }
+    [Range(0, 20)]
+    public int Value3 { get; set; }
     
     [Order]
-    public int Value3 { get; set; }
+    public int Value1 { get; set; }
 }
