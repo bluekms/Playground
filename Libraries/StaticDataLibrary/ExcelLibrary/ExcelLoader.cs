@@ -47,7 +47,7 @@ public sealed class ExcelLoader
             }
             
             sw.Stop();
-            Console.WriteLine($"{excelFileName}.{sheet.Name} load complete. Elapsed: {sw.Elapsed}.");
+            Console.WriteLine($"Load Complete:\t{excelFileName}.{sheet.Name} ({sw.Elapsed.TotalMilliseconds} ms)");
             
             SheetList.Add(sheet);
             
@@ -63,7 +63,7 @@ public sealed class ExcelLoader
         {
             var cellLocation = new CellLocationParser(a1);
             
-            for (int i = 0; i < cellLocation.RowNumber - 2; ++i)
+            for (var i = 0; i < cellLocation.RowNumber - 2; ++i)
             {
                 reader.Read();
             }

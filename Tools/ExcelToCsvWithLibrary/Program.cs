@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using CommandLine;
 using ExcelToCsvWithFile;
 using StaticDataLibrary.DevRecords;
@@ -36,6 +37,15 @@ static void RunOptions(ProgramOptions options)
         var list = new List<string>(xlsFiles.Length + xlsxFiles.Length);
         list.AddRange(xlsFiles);
         list.AddRange(xlsxFiles);
+        
+        var skipList = list
+            .Where(x => Path.GetFileName(x)[0] == '_')
+            .ToList();
+
+        foreach (var excel in skipList)
+        {
+            Console.WriteLine($"Skip: {excel}");
+        }
 
         var targetList = list
             .Where(x => Path.GetFileName(x)[0] != '_')
@@ -62,14 +72,22 @@ static void RunExcelToCsv(string outputPath, string excelFileName, string? sheet
     try
     {
         var loader = new ExcelLoader(excelFileName, sheetName);
+        Console.WriteLine($"Load Success:\t{excelFileName}");
     
+        var sw = new Stopwatch();
         foreach (var sheet in loader.SheetList)
         {
+            sw.Reset();
+            sw.Start();
+            
             var tableInfo = TableFinder.Find<StaticDataContext>(sheet.Name);
             var csvLines = sheet.ToCsvLineList(tableInfo.ColumnNameList);
             var fileName = Path.Combine(outputPath, $"{tableInfo.SheetName}.csv");
         
             File.WriteAllLines(fileName, csvLines, Encoding.UTF8);
+
+            sw.Stop();
+            Console.WriteLine($"Write Complete:\t{Path.GetFileNameWithoutExtension(excelFileName)}.{sheet.Name} ({sw.Elapsed.TotalMilliseconds} ms)");
         }
     }
     catch (Exception e)
