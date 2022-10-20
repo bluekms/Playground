@@ -1,8 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using StaticDataLibrary.Attributes;
 using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Test;
 
-public sealed class RecordLibraryTest
+public sealed class RecordLibraryTest : IStaticDataContextTester
 {
     private const int TestTableCount = 5;
     private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
@@ -18,21 +23,132 @@ public sealed class RecordLibraryTest
     [Fact]
     public void RequiredAttributeTest()
     {
-        StaticDataContextTester<TestStaticDataContext>.RequiredAttributeTest();
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            PropertyAttributeFinder.Single<KeyAttribute>(tableInfo);
+
+            var propertyCount = tableInfo.RecordType.GetProperties().Length;
+            var orderCount = PropertyAttributeFinder.Count<OrderAttribute>(tableInfo);
+            Assert.True(orderCount == propertyCount, "Record의 모든 컬럼에 [Order] Attribute가 필요합니다.");
+        }
     }
 
     [Fact]
-    public async Task LoadCsvTest()
+    public async Task LoadCsvToRecordTestAsync()
     {
-        await StaticDataContextTester<TestStaticDataContext>.LoadCsvTest(TestStaticDataPath);
+        var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+        
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            var fileName = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                TestStaticDataPath,
+                $"{tableInfo.SheetName}.csv");
+
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
+            Assert.NotEmpty(dataList);
+
+            var tableName = dataList[0]?.GetType().Name ?? string.Empty;
+            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.TypeNameSuffix), 
+                $"The suffix is different. {tableName}, {TableInfo.TypeNameSuffix}");
+        }
     }
 
     [Fact]
-    public async Task RangeAttributeTest()
+    public async Task RangeAttributeTestAsync()
     {
-        await StaticDataContextTester<TestStaticDataContext>.RangeAttributeTest(TestStaticDataPath);
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            var fileName = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                TestStaticDataPath,
+                $"{tableInfo.SheetName}.csv");
+            
+            var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
+            
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
+            foreach (var data in dataList)
+            {
+                foreach (var propertyInfo in properties)
+                {
+                    var attribute = PropertyAttributeFinder.Find<RangeAttribute>(tableInfo, propertyInfo.Name);
+                    if (attribute == null)
+                    {
+                        continue;
+                    }
+
+                    var value = data.GetType()
+                        .GetProperty(propertyInfo.Name)!
+                        .GetValue(data, null) ?? null;
+
+                    if (value == null)
+                    {
+                        if (propertyInfo.IsNullable())
+                        {
+                            continue;    
+                        }
+                        else
+                        {
+                            throw new ArgumentNullException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}] is not Nullable. but value is null");
+                        }
+                    }
+                    
+                    if (!attribute.IsValid(value))
+                    {
+                        throw new ValidationException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}]({value}) must be between {attribute.Minimum} and {attribute.Maximum}");
+                    }
+                } // for propertyInfo
+            } // for data
+        } // for table
     }
-    
+
+    [EvnConditionalFact<string>("GITHUB_EVENT_NAME", "pull_request")]
+    public async Task InsertSqliteTestAsync()
+    {
+        var connection = new SqliteConnection("DataSource=:memory:");
+        var options = new DbContextOptionsBuilder<TestStaticDataContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        await using var context = new TestStaticDataContext(options);
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+        await connection.OpenAsync();
+
+        await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
+
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            var fileName = Path.Combine(TestStaticDataPath, $"{tableInfo.SheetName}.csv");
+            if (!File.Exists(fileName))
+            {
+                throw new FileNotFoundException(fileName);
+            }
+            
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
+
+            await RecordDataInserter.InsertAsync(tableInfo.RecordType, tableInfo.DbSetName, dataList, connection, transaction!);
+        }
+        
+        await transaction!.CommitAsync();
+        
+        var targetCount = await context.TargetTestTable.CountAsync();
+        var nameCount = await context.NameTestTable.CountAsync();
+        var arrayCount = await context.ArrayTestTable.CountAsync();
+        var classCount = await context.ClassListTestTable.CountAsync();
+        var complexCount = await context.ComplexTestTable.CountAsync();
+        
+        Assert.Equal(5, targetCount);
+        Assert.Equal(5, nameCount);
+        Assert.Equal(5, arrayCount);
+        Assert.Equal(3, classCount);
+        Assert.Equal(2, complexCount);
+    }
+
     [Theory]
     [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,19,9);")]
     [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,19);")]
@@ -53,7 +169,7 @@ public sealed class RecordLibraryTest
         var query = RecordQueryBuilder.InsertQuery(tableInfoList.RecordType, tableInfoList.DbSetName, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
-        var dataList = await RecordParser.GetDataList(tableInfoList, fileName);
+        var dataList = await RecordParser.GetDataListAsync(tableInfoList, fileName);
         var lastData = dataList[^1]!;
         
         var propertiesCount = lastData.GetType().GetProperties().Length;
@@ -72,4 +188,6 @@ public sealed class RecordLibraryTest
         Assert.Equal(dataList.Count, rowCount);
         Assert.Equal(expected, query);
     }
+    
+    
 }

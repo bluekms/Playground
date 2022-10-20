@@ -1,3 +1,4 @@
+using StaticDataLibrary.Attributes;
 using StaticDataLibrary.ExcelLibrary;
 
 namespace ExcelToCsv.Test;
@@ -11,14 +12,14 @@ public sealed class LockedFileStreamLoaderTest
         excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/__TestStaticData/__TestStaticData.xlsx");
     }
 
-    [FactWithoutEnvironmentVariable("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void ExcelFileOpen()
     {
         var loader = new LockedFileStreamLoader(excelFileName);
         Assert.NotNull(loader);
     }
 
-    [FactWithoutEnvironmentVariable("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void AlreadyOpenExcelFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
@@ -30,7 +31,7 @@ public sealed class LockedFileStreamLoaderTest
         Assert.True(loader.IsTemp);
     }
 
-    [FactWithoutEnvironmentVariable("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void DeleteTempFile()
     {
         File.Open(excelFileName, FileMode.Open, FileAccess.Read);

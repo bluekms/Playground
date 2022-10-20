@@ -5,7 +5,7 @@ namespace StaticDataLibrary.RecordLibrary;
 
 public static class RecordParser
 {
-    public static async Task<IList> GetDataList(TableInfo tableInfo, string fileName)
+    public static async Task<IList> GetDataListAsync(TableInfo tableInfo, string fileName)
     {
         var list = CreateList(tableInfo.RecordType);
 
