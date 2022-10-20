@@ -105,7 +105,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         } // for table
     }
 
-    [Fact]
+    [EvnConditionalFact<string>("GITHUB_EVENT_NAME", "pull_request")]
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");

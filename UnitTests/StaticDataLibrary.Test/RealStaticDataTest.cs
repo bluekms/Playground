@@ -97,7 +97,7 @@ public sealed class RealStaticDataTest : IStaticDataContextTester
         } // for table
     }
 
-    [Fact]
+    [EvnConditionalFact<string>("GITHUB_EVENT_NAME", "push")]
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
