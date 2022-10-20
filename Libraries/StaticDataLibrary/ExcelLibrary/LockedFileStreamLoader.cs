@@ -1,8 +1,8 @@
 using System.Diagnostics;
 
-namespace ExcelToCsv;
+namespace StaticDataLibrary.ExcelLibrary;
 
-public sealed class LockedFileStreamLoader : IDisposable
+public class LockedFileStreamLoader : IDisposable
 {
     public string? TempFileName { get; }
 

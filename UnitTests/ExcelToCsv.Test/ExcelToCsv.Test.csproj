@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Tools\ExcelToCsv\ExcelToCsv.csproj" />
+      <ProjectReference Include="..\..\Libraries\StaticDataLibrary\StaticDataLibrary.csproj" />
     </ItemGroup>
 
 </Project>

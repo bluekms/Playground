@@ -1,9 +1,9 @@
 namespace StaticDataLibrary.Attributes;
 
 [AttributeUsage(System.AttributeTargets.Class)]
-public class SheetName : Attribute
+public class SheetNameAttribute : Attribute
 {
-    public SheetName(string name)
+    public SheetNameAttribute(string name)
     {
         Name = name;
     }

@@ -1,4 +1,4 @@
-using System.Reflection;
+using StaticDataLibrary.ExcelLibrary;
 
 namespace ExcelToCsv.Test;
 
@@ -8,7 +8,7 @@ public sealed class LockedFileStreamLoaderTest
 
     public LockedFileStreamLoaderTest()
     {
-        excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/SampleStaticData.xlsx");
+        excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/__TestStaticData/__TestStaticData.xlsx");
     }
 
     [FactWithoutEnvironmentVariable("CI")]

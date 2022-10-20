@@ -11,6 +11,8 @@ public sealed class TableInfo
     public Type RecordType { get; }
     public string SheetName { get; }
     public string DbSetName { get; }
+
+    public IList<string> ColumnNameList { get; private set; } = null!;
     
     public TableInfo(PropertyInfo pi)
     {
@@ -20,11 +22,38 @@ public sealed class TableInfo
         
         var sheetNameAttribute = RecordType
             .GetCustomAttributes()
-            .SingleOrDefault(x => x.GetType() == typeof(SheetName));
+            .SingleOrDefault(x => x.GetType() == typeof(SheetNameAttribute));
             
         if(sheetNameAttribute != null)
         {
-            SheetName = (sheetNameAttribute as SheetName)!.Name;
+            SheetName = (sheetNameAttribute as SheetNameAttribute)!.Name;
         }
+
+        SetColumnNameList();
+    }
+
+    private void SetColumnNameList()
+    {
+        var propertyList = OrderedPropertySelector.GetList(RecordType).ToList();
+        var columnNameList = new List<string>(propertyList.Count);
+        
+        foreach (var property in propertyList)
+        {
+            var columnNameAttribute = property
+                .GetCustomAttributes()
+                .SingleOrDefault(x => x.GetType() == typeof(ColumnNameAttribute));
+
+            if (columnNameAttribute == null)
+            {
+                columnNameList.Add(property.Name);
+            }
+            else
+            {
+                var columnName = (columnNameAttribute as ColumnNameAttribute)!.Name;
+                columnNameList.Add(columnName);
+            }
+        }
+
+        ColumnNameList = columnNameList.AsReadOnly();
     }
 }

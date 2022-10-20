@@ -3,7 +3,6 @@ using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StaticDataLibrary;
 using StaticDataLibrary.DevDataObjects;
 using StaticDataLibrary.DevRecords;
 using WorldServer.Handlers.Foo;
