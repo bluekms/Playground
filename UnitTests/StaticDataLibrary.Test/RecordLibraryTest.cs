@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
 using StaticDataLibrary.RecordLibrary;
 
@@ -45,7 +47,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
                 TestStaticDataPath,
                 $"{tableInfo.SheetName}.csv");
 
-            var dataList = await RecordParser.GetDataList(tableInfo, fileName);
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
             Assert.NotEmpty(dataList);
 
             var tableName = dataList[0]?.GetType().Name ?? string.Empty;
@@ -67,7 +69,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             
             var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
             
-            var dataList = await RecordParser.GetDataList(tableInfo, fileName);
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
             foreach (var data in dataList)
             {
                 foreach (var propertyInfo in properties)
@@ -102,7 +104,51 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             } // for data
         } // for table
     }
-    
+
+    [Fact]
+    public async Task InsertSqliteTestAsync()
+    {
+        var connection = new SqliteConnection("DataSource=:memory:");
+        var options = new DbContextOptionsBuilder<TestStaticDataContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        await using var context = new TestStaticDataContext(options);
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+        await connection.OpenAsync();
+
+        await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
+
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            var fileName = Path.Combine(TestStaticDataPath, $"{tableInfo.SheetName}.csv");
+            if (!File.Exists(fileName))
+            {
+                throw new FileNotFoundException(fileName);
+            }
+            
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
+
+            await RecordDataInserter.InsertAsync(tableInfo.RecordType, tableInfo.DbSetName, dataList, connection, transaction!);
+        }
+        
+        await transaction!.CommitAsync();
+        
+        var targetCount = await context.TargetTestTable.CountAsync();
+        var nameCount = await context.NameTestTable.CountAsync();
+        var arrayCount = await context.ArrayTestTable.CountAsync();
+        var classCount = await context.ClassListTestTable.CountAsync();
+        var complexCount = await context.ComplexTestTable.CountAsync();
+        
+        Assert.Equal(5, targetCount);
+        Assert.Equal(5, nameCount);
+        Assert.Equal(5, arrayCount);
+        Assert.Equal(3, classCount);
+        Assert.Equal(2, complexCount);
+    }
+
     [Theory]
     [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,19,9);")]
     [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,19);")]
@@ -123,7 +169,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var query = RecordQueryBuilder.InsertQuery(tableInfoList.RecordType, tableInfoList.DbSetName, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
-        var dataList = await RecordParser.GetDataList(tableInfoList, fileName);
+        var dataList = await RecordParser.GetDataListAsync(tableInfoList, fileName);
         var lastData = dataList[^1]!;
         
         var propertiesCount = lastData.GetType().GetProperties().Length;
