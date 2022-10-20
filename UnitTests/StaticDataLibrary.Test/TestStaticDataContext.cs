@@ -7,7 +7,8 @@ public class TestStaticDataContext : DbContext
 {
     private const string DbFileName = "StaticData.db";
 
-    protected TestStaticDataContext()
+    public TestStaticDataContext(DbContextOptions<TestStaticDataContext> options)
+        : base(options)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
@@ -23,8 +24,8 @@ public class TestStaticDataContext : DbContext
     public DbSet<ComplexTestRecord> ComplexTestTable { get; set; } = null!;
     
     // RecordInfo.DbSetNameSuffix 에 맞지 않음
-    public DbSet<ComplexTestRecord> ComplexTestRecords { get; set; } = null!;
-    public DbSet<ComplexTestRecord> ComplexTestList { get; set; } = null!;
+    public DbSet<BadTestData> ComplexTestRecords { get; set; } = null!;
+    public DbSet<BadTestData> ComplexTestList { get; set; } = null!;
     
     // RecordInfo.TypeNameSuffix 에 맞지 않음
     public DbSet<BadTestData> BadTestTable { get; set; } = null!;

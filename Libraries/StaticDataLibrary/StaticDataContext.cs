@@ -6,7 +6,8 @@ public class StaticDataContext : DbContext
 {
     private const string DbFileName = "StaticData.db";
 
-    public StaticDataContext()
+    public StaticDataContext(DbContextOptions<StaticDataContext> options) 
+        : base(options)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
