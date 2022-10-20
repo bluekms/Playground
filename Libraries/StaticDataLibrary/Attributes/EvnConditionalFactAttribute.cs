@@ -2,14 +2,16 @@ using Xunit;
 
 namespace StaticDataLibrary.Attributes;
 
-public sealed class EvnConditionalFactAttribute : FactAttribute
+public sealed class EvnConditionalFactAttribute<T> : FactAttribute
 {
-    public EvnConditionalFactAttribute(string environmentVariable)
+    public EvnConditionalFactAttribute(string evn, T runCondition)
     {
-        var evn = Environment.GetEnvironmentVariable(environmentVariable);
-        if (evn != null)
+        var value = Environment.GetEnvironmentVariable(evn);
+        if (string.IsNullOrWhiteSpace(value) || Equals(runCondition, value))
         {
-            Skip = $"Skip. Without {environmentVariable}";
+            return;
         }
+        
+        Skip = $"Skip. {evn}({value}) is not {runCondition}";
     }
 }

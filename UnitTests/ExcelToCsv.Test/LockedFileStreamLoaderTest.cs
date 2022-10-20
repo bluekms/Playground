@@ -12,14 +12,14 @@ public sealed class LockedFileStreamLoaderTest
         excelFileName = Path.Join(AppContext.BaseDirectory, @"../../../../..", @"StaticData/__TestStaticData/__TestStaticData.xlsx");
     }
 
-    [EvnConditionalFact("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void ExcelFileOpen()
     {
         var loader = new LockedFileStreamLoader(excelFileName);
         Assert.NotNull(loader);
     }
 
-    [EvnConditionalFact("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void AlreadyOpenExcelFile()
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
@@ -31,7 +31,7 @@ public sealed class LockedFileStreamLoaderTest
         Assert.True(loader.IsTemp);
     }
 
-    [EvnConditionalFact("CI")]
+    [EvnConditionalFact<bool>("CI", false)]
     public void DeleteTempFile()
     {
         File.Open(excelFileName, FileMode.Open, FileAccess.Read);
