@@ -24,4 +24,17 @@ public static class TableFinder
         
         return list;
     }
+    
+    public static TableInfo Find<T>(string sheetName) where T : DbContext
+    {
+        var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+        
+        return typeof(T)
+            .GetProperties()
+            .Where(x => compareInfo.IsSuffix(x.Name, TableInfo.DbSetNameSuffix))
+            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.TypeNameSuffix))
+            .Where(x => new TableInfo(x).SheetName == sheetName)
+            .Select(x => new TableInfo(x))
+            .First();
+    }
 }

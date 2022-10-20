@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace ExcelToCsv;
+namespace StaticDataLibrary.ExcelLibrary;
 
 public sealed class ContainerNameParser
 {

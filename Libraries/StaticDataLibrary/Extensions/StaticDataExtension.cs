@@ -9,7 +9,6 @@ namespace StaticDataLibrary.Extensions;
 public static class StaticDataExtension
 {
     private static string StaticDataPath = "StaticData";
-    private const string Extension = ".csv";
     
     public static async void UseStaticData(this IServiceCollection services)
     {
@@ -28,7 +27,7 @@ public static class StaticDataExtension
         var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
-            var fileName = Path.Combine(path, StaticDataPath, $"{tableInfo.SheetName}{Extension}");
+            var fileName = Path.Combine(path, StaticDataPath, $"{tableInfo.SheetName}.csv");
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException(fileName);

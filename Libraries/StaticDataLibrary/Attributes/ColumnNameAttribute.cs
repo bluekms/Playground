@@ -1,9 +1,9 @@
 namespace StaticDataLibrary.Attributes;
 
 [AttributeUsage(System.AttributeTargets.Property)]
-public class ColumnName : Attribute
+public class ColumnNameAttribute : Attribute
 {
-    public ColumnName(string name)
+    public ColumnNameAttribute(string name)
     {
         Name = name;
     }

@@ -5,7 +5,7 @@ namespace StaticDataLibrary.Test;
 public sealed class RecordLibraryTest
 {
     private const int TestTableCount = 5;
-    private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData";
+    private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
 
     [Fact]
     public void TableCountTest()
@@ -34,11 +34,11 @@ public sealed class RecordLibraryTest
     }
     
     [Theory]
-    [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,9,9);")]
-    [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,10);")]
+    [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,19,9);")]
+    [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,19);")]
     [InlineData("ArrayTestTable", 5, "INSERT INTO ArrayTestTable VALUES (104,9,10,19,90,,);")]
     [InlineData("ClassListTestTable", 3, "INSERT INTO ClassListTestTable VALUES (20220003,CCC,영어,D,,,,,\"국어, 수학 미응시\");")]
-    [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,,,,,,,,,담임 미정);")]
+    [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,ZZZ,국어,A,영어,A,수학,A,참 잘했어요.,담임 미정);")]
     public async void RecordQueryBuilderTest(string dbSetName, int rowCount, string expected)
     {
         var tableInfoList = TableFinder
@@ -69,7 +69,7 @@ public sealed class RecordLibraryTest
             query = query.Replace($"@{name}", value.ToString());
         }
         
-        Assert.Equal(rowCount, dataList.Count);
-        Assert.Equal(query, expected);
+        Assert.Equal(dataList.Count, rowCount);
+        Assert.Equal(expected, query);
     }
 }

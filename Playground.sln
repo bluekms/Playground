@@ -23,13 +23,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Test", "UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthLibrary", "Libraries\AuthLibrary\AuthLibrary.csproj", "{AE4C84D4-A55C-4788-AA28-D202952DF0D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv", "Tools\ExcelToCsv\ExcelToCsv.csproj", "{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsv.Test", "UnitTests\ExcelToCsv.Test\ExcelToCsv.Test.csproj", "{FF3D7095-ECE4-4F71-B896-7AEB267CB590}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticDataLibrary", "Libraries\StaticDataLibrary\StaticDataLibrary.csproj", "{16001A73-C971-46EF-A46D-CDDF464567E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticDataLibrary.Test", "UnitTests\StaticDataLibrary.Test\StaticDataLibrary.Test.csproj", "{5F111CCE-621B-4D67-AD4A-4B602A3EAD19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsvWithLibrary", "Tools\ExcelToCsvWithLibrary\ExcelToCsvWithLibrary.csproj", "{3DDCFC08-DA4C-4C9E-8DE8-DABC349E33C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsvWithFile", "Tools\ExcelToCsvWithFile\ExcelToCsvWithFile.csproj", "{B3164F68-7F4A-427E-8ACC-1355C7828002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +67,6 @@ Global
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE4C84D4-A55C-4788-AA28-D202952DF0D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD4780B6-B6C9-4E3C-97C3-9156ED17A033}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF3D7095-ECE4-4F71-B896-7AEB267CB590}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,6 +75,14 @@ Global
 		{5F111CCE-621B-4D67-AD4A-4B602A3EAD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F111CCE-621B-4D67-AD4A-4B602A3EAD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F111CCE-621B-4D67-AD4A-4B602A3EAD19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DDCFC08-DA4C-4C9E-8DE8-DABC349E33C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DDCFC08-DA4C-4C9E-8DE8-DABC349E33C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DDCFC08-DA4C-4C9E-8DE8-DABC349E33C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DDCFC08-DA4C-4C9E-8DE8-DABC349E33C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

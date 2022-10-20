@@ -15,6 +15,6 @@ public class NameTestRecord
     public int Value2 { get; set; }
     
     [Order]
-    [Range(0, 11)]
+    [Range(0, 20)]
     public int Value3 { get; set; }
 }

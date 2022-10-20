@@ -1,3 +1,5 @@
+using StaticDataLibrary.ExcelLibrary;
+
 namespace ExcelToCsv.Test;
 
 public sealed class CsvUtilityTest
@@ -8,7 +10,7 @@ public sealed class CsvUtilityTest
     [InlineData("이번 행동이 끝난 후, 당신은 원하는 \"행동 카드\"를 1에 놓을 수 있음.", "\"이번 행동이 끝난 후, 당신은 원하는 \"행동 카드\"를 1에 놓을 수 있음.\"")]
     public void ToCsvTest(string normalStr, string csvStr)
     {
-        Assert.Equal(csvStr, CsvUtility.ToCsv(normalStr));
+        Assert.Equal(csvStr, QuotationMarks.Wrapped(normalStr));
     }
 
     [Theory]
@@ -17,6 +19,6 @@ public sealed class CsvUtilityTest
     [InlineData("이번 행동이 끝난 후, 당신은 원하는 \"행동 카드\"를 1에 놓을 수 있음.", "\"이번 행동이 끝난 후, 당신은 원하는 \"행동 카드\"를 1에 놓을 수 있음.\"")]
     public void ToNormalTest(string normalStr, string csvStr)
     {
-        Assert.Equal(normalStr, CsvUtility.ToNormal(csvStr));
+        Assert.Equal(normalStr, QuotationMarks.Unwrapped(csvStr));
     }
 }
