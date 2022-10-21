@@ -3,6 +3,7 @@ using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StaticDataLibrary;
 using StaticDataLibrary.DevDataObjects;
 using StaticDataLibrary.DevRecords;
 using WorldServer.Handlers.Foo;
@@ -32,12 +33,9 @@ public sealed class AddFooController : ControllerBase
 
         var id = int.Parse(args.Data);
 
-        var record = await staticData.ArrayTestTable.SingleAsync(x => x.Id == id);
+        var record = await staticData.TypeTestTable.SingleAsync(x => x.Id == 1001);
 
-        // 기본 생성자 방식
-        var data = new ArrayTest(record);
-
-        return $"Ok: {data}";
+        return $"Ok: {record.Id}";
     }
 
     public sealed record ArgumentData(string Data);

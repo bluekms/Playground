@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using StaticDataLibrary.DevRecords;
 
-namespace StaticDataLibrary.DevRecords;
+namespace StaticDataLibrary;
 
 public class StaticDataContext : DbContext
 {
@@ -16,7 +17,7 @@ public class StaticDataContext : DbContext
 
     public string DbPath { get; } = null!;
 
-    public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
+    public DbSet<TypeTestRecord> TypeTestTable { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {

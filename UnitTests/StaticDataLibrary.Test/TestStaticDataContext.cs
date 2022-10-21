@@ -6,7 +6,9 @@ namespace StaticDataLibrary.Test;
 
 public class TestStaticDataContext : DbContext
 {
-    private const string DbFileName = "StaticData.db";
+    public const int TestTableCount = 6;
+    
+    private const string DbFileName = "TestStaticData.db";
 
     public TestStaticDataContext(DbContextOptions<TestStaticDataContext> options)
         : base(options)
@@ -18,8 +20,10 @@ public class TestStaticDataContext : DbContext
     
     public string DbPath { get; } = null!;
 
+    public DbSet<TypeTestRecord> TypeTestTable { get; set; } = null!;
     public DbSet<TargetTestRecord> TargetTestTable { get; set; } = null!;
     public DbSet<NameTestRecord> NameTestTable { get; set; } = null!;
+    public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
     public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
     public DbSet<ComplexTestRecord> ComplexTestTable { get; set; } = null!;
     

@@ -9,14 +9,13 @@ namespace StaticDataLibrary.Test;
 
 public sealed class RecordLibraryTest : IStaticDataContextTester
 {
-    private const int TestTableCount = 4;
     private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
 
     [Fact]
     public void TableCountTest()
     {
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
-        Assert.True(tableInfoList.Count == TestTableCount, 
+        Assert.True(tableInfoList.Count == TestStaticDataContext.TestTableCount, 
             $"Check the suffix. {TableInfo.DbSetNameSuffix}");
     }
 
@@ -138,11 +137,13 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         
         var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
+        var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
         var complexCount = await context.ComplexTestTable.CountAsync();
         
         Assert.Equal(5, targetCount);
         Assert.Equal(5, nameCount);
+        Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
         Assert.Equal(2, complexCount);
     }

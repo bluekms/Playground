@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using StaticDataLibrary.Attributes;
 
-namespace StaticDataLibrary.DevRecords;
+namespace StaticDataLibrary.DevRecords.TestRecords;
 
 public class ArrayTestRecord
 {
