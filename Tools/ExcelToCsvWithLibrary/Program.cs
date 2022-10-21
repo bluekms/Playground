@@ -2,6 +2,7 @@
 using System.Text;
 using CommandLine;
 using ExcelToCsvWithFile;
+using StaticDataLibrary;
 using StaticDataLibrary.DevRecords;
 using StaticDataLibrary.ExcelLibrary;
 using StaticDataLibrary.RecordLibrary;
@@ -80,14 +81,22 @@ static void RunExcelToCsv(string outputPath, string excelFileName, string? sheet
             sw.Reset();
             sw.Start();
             
+            var excelSheetName = $"{Path.GetFileNameWithoutExtension(excelFileName)}.{sheet.Name}";
+            
             var tableInfo = TableFinder.Find<StaticDataContext>(sheet.Name);
+            if (tableInfo == null)
+            {
+                Console.WriteLine($"Skip:\t{excelSheetName}");
+                continue;
+            }
+            
             var csvLines = sheet.ToCsvLineList(tableInfo.ColumnNameList);
             var fileName = Path.Combine(outputPath, $"{tableInfo.SheetName}.csv");
         
             File.WriteAllLines(fileName, csvLines, Encoding.UTF8);
 
             sw.Stop();
-            Console.WriteLine($"Write Complete:\t{Path.GetFileNameWithoutExtension(excelFileName)}.{sheet.Name} ({sw.Elapsed.TotalMilliseconds} ms)");
+            Console.WriteLine($"Write Complete:\t{excelSheetName} ({sw.Elapsed.TotalMilliseconds} ms)");
         }
     }
     catch (Exception e)
