@@ -8,7 +8,7 @@ using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Test;
 
-public sealed class RealStaticDataTest : IStaticDataContextTester
+public sealed class StaticDataTest : IStaticDataContextTester
 {
     // TODO 경로 수정
     private const string RealStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
