@@ -97,7 +97,7 @@ public sealed class RealStaticDataTest : IStaticDataContextTester
         } // for table
     }
 
-    [EvnConditionalFact<string>("GITHUB_EVENT_NAME", "push")]
+    [Fact]
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
@@ -127,17 +127,5 @@ public sealed class RealStaticDataTest : IStaticDataContextTester
         }
         
         await transaction!.CommitAsync();
-
-        var targetCount = await context.TargetTestTable.CountAsync();
-        var nameCount = await context.NameTestTable.CountAsync();
-        var arrayCount = await context.ArrayTestTable.CountAsync();
-        var classCount = await context.ClassListTestTable.CountAsync();
-        var complexCount = await context.ComplexTestTable.CountAsync();
-        
-        Assert.Equal(5, targetCount);
-        Assert.Equal(5, nameCount);
-        Assert.Equal(5, arrayCount);
-        Assert.Equal(3, classCount);
-        Assert.Equal(2, complexCount);
     }
 }

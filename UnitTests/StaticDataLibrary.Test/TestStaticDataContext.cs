@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.DevRecords;
+using StaticDataLibrary.DevRecords.TestRecords;
 
 namespace StaticDataLibrary.Test;
 
@@ -19,7 +20,6 @@ public class TestStaticDataContext : DbContext
 
     public DbSet<TargetTestRecord> TargetTestTable { get; set; } = null!;
     public DbSet<NameTestRecord> NameTestTable { get; set; } = null!;
-    public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
     public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
     public DbSet<ComplexTestRecord> ComplexTestTable { get; set; } = null!;
     
