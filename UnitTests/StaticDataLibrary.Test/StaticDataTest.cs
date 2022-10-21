@@ -27,6 +27,16 @@ public sealed class StaticDataTest : IStaticDataContextTester
         }
     }
 
+    [Fact]
+    public void MustUseSealedClass()
+    {
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            Assert.True(tableInfo.RecordType.IsSealed, $"{tableInfo.RecordType.Name} must be sealed");
+        }
+    }
+
     public async Task LoadCsvToRecordTestAsync()
     {
         var compareInfo = CultureInfo.InvariantCulture.CompareInfo;

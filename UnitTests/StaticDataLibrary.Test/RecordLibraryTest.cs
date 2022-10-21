@@ -21,6 +21,16 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     }
 
     [Fact]
+    public void MustUseSealedClass()
+    {
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            Assert.True(tableInfo.RecordType.IsSealed, $"{tableInfo.RecordType.Name} must be sealed");
+        }
+    }
+
+    [Fact]
     public void RequiredAttributeTest()
     {
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
