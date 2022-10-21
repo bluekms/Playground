@@ -23,19 +23,32 @@ public static class RecordMapper
         var instance = Activator.CreateInstance(t);
         for (int i = 0; i < properties.Count; ++i)
         {
-            if (properties[i].IsNullable() && string.IsNullOrWhiteSpace(values[i]))
-            {
-                properties[i].SetValue(instance, null, null);
-                continue;
-            }
-
-            var realType = properties[i].IsNullable()
-                ? Nullable.GetUnderlyingType(properties[i].PropertyType)
-                : properties[i].PropertyType;
+            var realType = GetRealType(properties[i]);
             
-            var value = realType!.IsEnum 
-                ? Enum.Parse(realType, values[i])
-                : Convert.ChangeType(values[i], realType!);
+            if (string.IsNullOrWhiteSpace(values[i]))
+            {
+                if (properties[i].IsNullable())
+                {
+                    properties[i].SetValue(instance, null, null);
+                    continue;
+                }
+                else
+                {
+                    throw new Exception($"{t.Name}.{properties[i].Name} must have a value");
+                }
+            }
+            
+            object value;
+            try
+            {
+                value = realType!.IsEnum 
+                    ? Enum.Parse(realType, values[i])
+                    : Convert.ChangeType(values[i], realType!);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{t.Name}.{properties[i].Name} value({values[i]}) is not {realType!.Name}", e);
+            }
             
             properties[i].SetValue(instance, value, null);
         }
@@ -104,5 +117,17 @@ public static class RecordMapper
         }
 
         return false;
+    }
+
+    private static Type GetRealType(PropertyInfo propertyInfo)
+    {
+        if (propertyInfo.PropertyType == typeof(string))
+        {
+            return propertyInfo.PropertyType;
+        }
+
+        return propertyInfo.IsNullable()
+            ? Nullable.GetUnderlyingType(propertyInfo.PropertyType)!
+            : propertyInfo.PropertyType;
     }
 }

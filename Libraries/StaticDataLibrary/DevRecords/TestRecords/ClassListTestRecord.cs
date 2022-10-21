@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using StaticDataLibrary.Attributes;
 using StaticDataLibrary.DevCommons;
 
-namespace StaticDataLibrary.DevRecords;
+namespace StaticDataLibrary.DevRecords.TestRecords;
 
 public class ClassListTestRecord
 {

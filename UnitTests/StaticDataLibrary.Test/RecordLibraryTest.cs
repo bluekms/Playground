@@ -9,7 +9,7 @@ namespace StaticDataLibrary.Test;
 
 public sealed class RecordLibraryTest : IStaticDataContextTester
 {
-    private const int TestTableCount = 5;
+    private const int TestTableCount = 4;
     private const string TestStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
 
     [Fact]
@@ -92,20 +92,20 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
                         }
                         else
                         {
-                            throw new ArgumentNullException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}] is not Nullable. but value is null");
+                            throw new ArgumentNullException($"{tableInfo.RecordType.Name}.{propertyInfo.Name} is not Nullable. but value is null");
                         }
                     }
                     
                     if (!attribute.IsValid(value))
                     {
-                        throw new ValidationException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}]({value}) must be between {attribute.Minimum} and {attribute.Maximum}");
+                        throw new ValidationException($"{tableInfo.RecordType.Name}.{propertyInfo.Name}({value}) must be between {attribute.Minimum} and {attribute.Maximum}");
                     }
                 } // for propertyInfo
             } // for data
         } // for table
     }
 
-    [EvnConditionalFact<string>("GITHUB_EVENT_NAME", "pull_request")]
+    [Fact]
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
@@ -138,13 +138,11 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         
         var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
-        var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
         var complexCount = await context.ComplexTestTable.CountAsync();
         
         Assert.Equal(5, targetCount);
         Assert.Equal(5, nameCount);
-        Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
         Assert.Equal(2, complexCount);
     }
@@ -152,7 +150,6 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     [Theory]
     [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,19,9);")]
     [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,19);")]
-    [InlineData("ArrayTestTable", 5, "INSERT INTO ArrayTestTable VALUES (104,9,10,19,90,,);")]
     [InlineData("ClassListTestTable", 3, "INSERT INTO ClassListTestTable VALUES (20220003,CCC,영어,D,,,,,\"국어, 수학 미응시\");")]
     [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,ZZZ,국어,A,영어,A,수학,A,참 잘했어요.,담임 미정);")]
     public async void RecordQueryBuilderTest(string dbSetName, int rowCount, string expected)
