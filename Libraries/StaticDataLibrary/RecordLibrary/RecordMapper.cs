@@ -1,6 +1,6 @@
+using System.ComponentModel;
 using System.Reflection;
 using System.Text;
-using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.RecordLibrary;
 
@@ -37,13 +37,19 @@ public static class RecordMapper
                     throw new Exception($"{t.Name}.{properties[i].Name} must have a value");
                 }
             }
-            
+
             object value;
             try
             {
-                value = realType!.IsEnum 
-                    ? Enum.Parse(realType, values[i])
-                    : Convert.ChangeType(values[i], realType!);
+                if (realType!.IsEnum)
+                {
+                    value = Enum.Parse(realType, values[i]);
+                }
+                else
+                {
+                    var converter = TypeDescriptor.GetConverter(realType);
+                    value = converter.ConvertFrom(values[i])!;
+                }
             }
             catch (Exception e)
             {

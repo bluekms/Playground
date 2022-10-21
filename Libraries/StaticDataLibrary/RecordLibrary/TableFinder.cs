@@ -25,7 +25,7 @@ public static class TableFinder
         return list;
     }
     
-    public static TableInfo Find<T>(string sheetName) where T : DbContext
+    public static TableInfo? Find<T>(string sheetName) where T : DbContext
     {
         var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
         
@@ -35,6 +35,6 @@ public static class TableFinder
             .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.TypeNameSuffix))
             .Where(x => new TableInfo(x).SheetName == sheetName)
             .Select(x => new TableInfo(x))
-            .First();
+            .FirstOrDefault();
     }
 }
