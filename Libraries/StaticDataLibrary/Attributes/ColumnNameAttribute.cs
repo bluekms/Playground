@@ -1,7 +1,7 @@
 namespace StaticDataLibrary.Attributes;
 
 [AttributeUsage(System.AttributeTargets.Property)]
-public class ColumnNameAttribute : Attribute
+public sealed class ColumnNameAttribute : Attribute
 {
     public ColumnNameAttribute(string name)
     {

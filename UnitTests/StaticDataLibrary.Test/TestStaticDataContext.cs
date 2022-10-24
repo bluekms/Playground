@@ -6,7 +6,7 @@ namespace StaticDataLibrary.Test;
 
 public class TestStaticDataContext : DbContext
 {
-    public const int TestTableCount = 6;
+    public const int TestTableCount = 8;
     
     private const string DbFileName = "TestStaticData.db";
 
@@ -26,6 +26,8 @@ public class TestStaticDataContext : DbContext
     public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;
     public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
     public DbSet<ComplexTestRecord> ComplexTestTable { get; set; } = null!;
+    public DbSet<GroupedItemTestRecord> GroupedItemTestTable { get; set; } = null!;
+    public DbSet<GroupTestRecord> GroupTestTable { get; set; } = null!;
     
     // RecordInfo.DbSetNameSuffix 에 맞지 않음
     public DbSet<BadTestData> ComplexTestRecords { get; set; } = null!;
