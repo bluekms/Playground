@@ -4,11 +4,11 @@ namespace StaticDataLibrary.RecordLibrary;
 
 public static class RecordQueryBuilder
 {
-    public static string InsertQuery(Type t, string tableName, out List<string> parameters)
+    public static string InsertQuery(TableInfo tableInfo, out List<string> parameters)
     {
-        var sb = new StringBuilder($"INSERT INTO {tableName} VALUES (");
+        var sb = new StringBuilder($"INSERT INTO {tableInfo.DbSetName} VALUES (");
         
-        var properties = OrderedPropertySelector.GetList(t);
+        var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
         
         parameters = new(properties.Count);
         

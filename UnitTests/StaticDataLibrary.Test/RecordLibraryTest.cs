@@ -164,7 +164,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             TestStaticDataPath,
             $"{tableInfo.SheetName}.csv");
         
-        var query = RecordQueryBuilder.InsertQuery(tableInfo.RecordType, tableInfo.DbSetName, out var parameters);
+        var query = RecordQueryBuilder.InsertQuery(tableInfo, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
         var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
