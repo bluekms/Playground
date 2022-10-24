@@ -122,9 +122,14 @@ public sealed class StaticDataTest : IStaticDataContextTester
             
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
 
-            await RecordDataInserter.InsertAsync(tableInfo, dataList, connection, transaction!);
+            await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
         }
         
         await transaction!.CommitAsync();
+    }
+
+    public Task ForeignTableTestAsync()
+    {
+        throw new NotImplementedException();
     }
 }

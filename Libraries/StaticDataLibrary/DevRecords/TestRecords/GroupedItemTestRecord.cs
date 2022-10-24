@@ -13,7 +13,7 @@ public sealed class GroupedItemTestRecord
     
     [ForeignKey("GroupTestTable")]
     [Order]
-    public string GroupId { get; set; } = null!;
+    public int GroupId { get; set; }
     
     [Order]
     public int Value { get; set; }
