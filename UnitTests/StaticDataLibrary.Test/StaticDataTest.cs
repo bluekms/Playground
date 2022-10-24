@@ -3,14 +3,13 @@ using System.Globalization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
-using StaticDataLibrary.DevRecords;
 using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Test;
 
 public sealed class StaticDataTest : IStaticDataContextTester
 {
-    // TODO 경로 수정
+    // TODO 실제 개발에 사용할 때는 경로 수정
     private const string RealStaticDataPath = @"../../../../../StaticData/__TestStaticData/Output";
 
     [Fact]
@@ -123,7 +122,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
             
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
 
-            await RecordDataInserter.InsertAsync(tableInfo.RecordType, tableInfo.DbSetName, dataList, connection, transaction!);
+            await RecordDataInserter.InsertAsync(tableInfo, dataList, connection, transaction!);
         }
         
         await transaction!.CommitAsync();

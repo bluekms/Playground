@@ -155,19 +155,19 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,ZZZ,국어,A,영어,A,수학,A,참 잘했어요.,담임 미정);")]
     public async void RecordQueryBuilderTest(string dbSetName, int rowCount, string expected)
     {
-        var tableInfoList = TableFinder
+        var tableInfo = TableFinder
             .Find<TestStaticDataContext>()
             .Single(x => x.DbSetName == dbSetName);
         
         var fileName = Path.Combine(
             Directory.GetCurrentDirectory(),
             TestStaticDataPath,
-            $"{tableInfoList.SheetName}.csv");
+            $"{tableInfo.SheetName}.csv");
         
-        var query = RecordQueryBuilder.InsertQuery(tableInfoList.RecordType, tableInfoList.DbSetName, out var parameters);
+        var query = RecordQueryBuilder.InsertQuery(tableInfo.RecordType, tableInfo.DbSetName, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
-        var dataList = await RecordParser.GetDataListAsync(tableInfoList, fileName);
+        var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
         var lastData = dataList[^1]!;
         
         var propertiesCount = lastData.GetType().GetProperties().Length;
