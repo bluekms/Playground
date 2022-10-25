@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
@@ -108,44 +109,57 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
-        var options = new DbContextOptionsBuilder<TestStaticDataContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        await using var context = new TestStaticDataContext(options);
-        await context.Database.EnsureDeletedAsync();
-        await context.Database.EnsureCreatedAsync();
-        await connection.OpenAsync();
-
-        await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
-
-        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
-        foreach (var tableInfo in tableInfoList)
-        {
-            var fileName = Path.Combine(TestStaticDataPath, $"{tableInfo.SheetName}.csv");
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException(fileName);
-            }
-            
-            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
-
-            await RecordDataInserter.InsertAsync(tableInfo.RecordType, tableInfo.DbSetName, dataList, connection, transaction!);
-        }
-        
-        await transaction!.CommitAsync();
+        await using var context = await InitializeStaticData(connection);
         
         var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
         var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
         var complexCount = await context.ComplexTestTable.CountAsync();
+        var groupItemCount = await context.GroupedItemTestTable.CountAsync();
+        var groupCount = await context.GroupTestTable.CountAsync();
         
         Assert.Equal(5, targetCount);
         Assert.Equal(5, nameCount);
         Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
         Assert.Equal(2, complexCount);
+        Assert.Equal(5, groupItemCount);
+        Assert.Equal(2, groupCount);
+    }
+    
+    [Fact]
+    public async Task ForeignTableTestAsync()
+    {
+        var connection = new SqliteConnection("DataSource=:memory:");
+        await using var context = await InitializeStaticData(connection);
+        
+        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            Assert.NotNull(tableInfo.ForeignInfoList);
+
+            if (tableInfo.ForeignInfoList == null)
+            {
+                throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
+            }
+
+            foreach (var foreignInfo in tableInfo.ForeignInfoList)
+            {
+                var resultList = await RecordSqlExecutor.CheckForeignKey(connection, tableInfo, foreignInfo);
+
+                var sb = new StringBuilder();
+                if (resultList.Count > 0)
+                {
+                    foreach (var result in resultList)
+                    {
+                        sb.AppendLine(result.ToString());
+                    }
+                }
+
+                Assert.True(resultList.Count == 0, sb.ToString());
+            }
+        }
     }
 
     [Theory]
@@ -155,19 +169,19 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,ZZZ,국어,A,영어,A,수학,A,참 잘했어요.,담임 미정);")]
     public async void RecordQueryBuilderTest(string dbSetName, int rowCount, string expected)
     {
-        var tableInfoList = TableFinder
+        var tableInfo = TableFinder
             .Find<TestStaticDataContext>()
             .Single(x => x.DbSetName == dbSetName);
         
         var fileName = Path.Combine(
             Directory.GetCurrentDirectory(),
             TestStaticDataPath,
-            $"{tableInfoList.SheetName}.csv");
+            $"{tableInfo.SheetName}.csv");
         
-        var query = RecordQueryBuilder.InsertQuery(tableInfoList.RecordType, tableInfoList.DbSetName, out var parameters);
+        var query = RecordQueryBuilder.InsertQuery(tableInfo, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
-        var dataList = await RecordParser.GetDataListAsync(tableInfoList, fileName);
+        var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
         var lastData = dataList[^1]!;
         
         var propertiesCount = lastData.GetType().GetProperties().Length;
@@ -186,6 +200,44 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         Assert.Equal(dataList.Count, rowCount);
         Assert.Equal(expected, query);
     }
-    
-    
+
+    private async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection)
+    {
+        var options = new DbContextOptionsBuilder<TestStaticDataContext>()
+            .UseSqlite(connection)
+            .Options;
+
+        var context = new TestStaticDataContext(options);
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+        await connection.OpenAsync();
+
+        await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
+
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            var fileName = Path.Combine(TestStaticDataPath, $"{tableInfo.SheetName}.csv");
+            if (!File.Exists(fileName))
+            {
+                throw new FileNotFoundException(fileName);
+            }
+            
+            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
+
+            await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
+        }
+        
+        await transaction!.CommitAsync();
+
+        return context;
+    }
+}
+
+public class TestPriorityAttribute : Attribute
+{
+    public TestPriorityAttribute(int i)
+    {
+        throw new NotImplementedException();
+    }
 }
