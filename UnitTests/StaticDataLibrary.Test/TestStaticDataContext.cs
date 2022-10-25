@@ -8,14 +8,12 @@ public class TestStaticDataContext : DbContext
 {
     public const int TestTableCount = 8;
     
-    private const string DbFileName = "TestStaticData.db";
-
-    public TestStaticDataContext(DbContextOptions<TestStaticDataContext> options)
+    public TestStaticDataContext(DbContextOptions<TestStaticDataContext> options, string dbFileName)
         : base(options)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, DbFileName);
+        DbPath = Path.Join(path, dbFileName);
     }
     
     public string DbPath { get; } = null!;

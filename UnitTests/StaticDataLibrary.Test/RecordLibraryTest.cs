@@ -109,7 +109,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
-        await using var context = await InitializeStaticData(connection);
+        await using var context = await InitializeStaticData(connection, "InsertTest.db");
         
         var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
@@ -132,7 +132,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     public async Task ForeignTableTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
-        await using var context = await InitializeStaticData(connection);
+        await using var context = await InitializeStaticData(connection, "ForeignTest.db");
         
         var tableInfoList = TableFinder.FindAllTablesWithForeignKey<TestStaticDataContext>();
         foreach (var tableInfo in tableInfoList)
@@ -201,13 +201,13 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         Assert.Equal(expected, query);
     }
 
-    private async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection)
+    private async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
     {
         var options = new DbContextOptionsBuilder<TestStaticDataContext>()
             .UseSqlite(connection)
             .Options;
 
-        var context = new TestStaticDataContext(options);
+        var context = new TestStaticDataContext(options, dbFileName);
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
         await connection.OpenAsync();
@@ -231,13 +231,5 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         await transaction!.CommitAsync();
 
         return context;
-    }
-}
-
-public class TestPriorityAttribute : Attribute
-{
-    public TestPriorityAttribute(int i)
-    {
-        throw new NotImplementedException();
     }
 }
