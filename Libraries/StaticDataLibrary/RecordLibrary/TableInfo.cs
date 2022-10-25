@@ -5,7 +5,7 @@ namespace StaticDataLibrary.RecordLibrary;
 
 public sealed class TableInfo
 {
-    public const string TypeNameSuffix = "Record";
+    public const string RecordTypeNameSuffix = "Record";
     public const string DbSetNameSuffix = "Table";
 
     public sealed record ForeignInfo(
@@ -19,11 +19,11 @@ public sealed class TableInfo
     public string DbSetName { get; }
     public IList<string> ColumnNameList { get; private set; } = null!;
     public IList<ForeignInfo>? ForeignInfoList { get; private set; }
-    
+
     public TableInfo(PropertyInfo pi)
     {
         RecordType = pi.PropertyType.GetGenericArguments().First();
-        SheetName = RecordType.Name.Replace(TypeNameSuffix, string.Empty);
+        SheetName = RecordType.Name.Replace(RecordTypeNameSuffix, string.Empty);
         DbSetName = $"{SheetName}{DbSetNameSuffix}";
         
         var sheetNameAttribute = RecordType

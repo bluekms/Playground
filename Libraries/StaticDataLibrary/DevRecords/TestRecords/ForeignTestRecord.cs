@@ -11,14 +11,14 @@ public sealed class ForeignTestRecord
     [Order]
     public int Id { get; set; }
     
-    [ForeignKey("TargetTestTable", "Id")]
+    [ForeignKey(nameof(TargetTestRecord), nameof(TargetTestRecord.Id))]
     [Order]
     public int TargetTestId { get; set; }
 
     [Order]
     public string Value { get; set; } = null!;
     
-    [ForeignKey("ClassListTestTable", "StudentId")]
+    [ForeignKey(nameof(ClassListTestRecord), nameof(ClassListTestRecord.StudentId))]
     [Order]
     public string? StudentId { get; set; }
     

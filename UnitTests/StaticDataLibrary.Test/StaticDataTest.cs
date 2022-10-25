@@ -53,8 +53,8 @@ public sealed class StaticDataTest : IStaticDataContextTester
             Assert.NotEmpty(dataList);
 
             var tableName = dataList[0]?.GetType().Name ?? string.Empty;
-            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.TypeNameSuffix), 
-                $"The suffix is different. {tableName}, {TableInfo.TypeNameSuffix}");
+            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix), 
+                $"The suffix is different. {tableName}, {TableInfo.RecordTypeNameSuffix}");
         }
     }
 

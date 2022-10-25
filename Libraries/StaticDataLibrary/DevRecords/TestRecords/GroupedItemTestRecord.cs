@@ -11,7 +11,7 @@ public sealed class GroupedItemTestRecord
     [Order]
     public string Id { get; set; } = null!;
     
-    [ForeignKey("GroupTestTable", "GroupId")]
+    [ForeignKey(nameof(GroupTestRecord), nameof(GroupTestRecord.GroupId))]
     [Order]
     public string GroupId { get; set; } = null!;
     
