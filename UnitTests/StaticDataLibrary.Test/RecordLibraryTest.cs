@@ -139,6 +139,11 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         {
             Assert.NotNull(tableInfo.ForeignInfoList);
 
+            if (tableInfo.ForeignInfoList == null)
+            {
+                throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
+            }
+
             foreach (var foreignInfo in tableInfo.ForeignInfoList)
             {
                 var resultList = await RecordSqlExecutor.CheckForeignKey(connection, tableInfo, foreignInfo);

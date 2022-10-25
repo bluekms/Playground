@@ -5,7 +5,7 @@ namespace StaticDataLibrary.Attributes;
 [AttributeUsage(System.AttributeTargets.Property)]
 public class ForeignKeyAttribute : Attribute
 {
-    public ForeignKeyAttribute(string dbSetName, [CallerMemberName] string columnName = null)
+    public ForeignKeyAttribute(string dbSetName, [CallerMemberName] string columnName = "")
     {
         DbSetName = dbSetName;
         ColumnName = columnName;

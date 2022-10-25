@@ -34,6 +34,11 @@ public static class RecordQueryBuilder
 
     public static List<string> SelectForeignKeyListQuery(TableInfo tableInfo)
     {
+        if (tableInfo.ForeignInfoList == null)
+        {
+            throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
+        }
+        
         var list = new List<string>(tableInfo.ForeignInfoList.Count);
         foreach (var foreignInfo in tableInfo.ForeignInfoList)
         {

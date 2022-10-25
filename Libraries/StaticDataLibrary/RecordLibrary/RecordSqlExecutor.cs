@@ -27,11 +27,11 @@ public static class RecordSqlExecutor
         }
     }
 
-    public sealed record NotExistsForeignKeyResult(string ForeignTableName, string ColumnName, string expected)
+    public sealed record NotExistsForeignKeyResult(string ForeignTableName, string ColumnName, string? expected)
     {
         public override string ToString()
         {
-            return $"{ForeignTableName}.{ColumnName}에 {expected} 값이 없습니다.";
+            return $"{ForeignTableName}.{ColumnName}에 '{expected}' 값이 없습니다.";
         }
     }
 
@@ -61,7 +61,7 @@ public static class RecordSqlExecutor
                 var count = readerResult.GetInt32(0);
                 if (count <= 0)
                 {
-                    list.Add(new(foreignInfo.ForeignTableName, foreignInfo.ColumnName, expected.ToString()));
+                    list.Add(new(foreignInfo.ForeignTableName, foreignInfo.ColumnName, expected?.ToString()));
                 }
             }
         }
