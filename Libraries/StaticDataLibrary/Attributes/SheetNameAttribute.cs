@@ -1,7 +1,7 @@
 namespace StaticDataLibrary.Attributes;
 
 [AttributeUsage(System.AttributeTargets.Class)]
-public class SheetNameAttribute : Attribute
+public sealed class SheetNameAttribute : Attribute
 {
     public SheetNameAttribute(string name)
     {
