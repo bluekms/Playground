@@ -31,7 +31,7 @@ public static class RecordSqlExecutor
     {
         public override string ToString()
         {
-            return $"{ForeignTableName}.{ColumnName}에 '{expected}' 값이 없습니다.";
+            return $"'{expected}'는 {ForeignTableName}.{ColumnName} 에 존재하지 않습니다.";
         }
     }
 
@@ -40,29 +40,49 @@ public static class RecordSqlExecutor
         var sqlExpected = RecordQueryBuilder.SelectForeignKeyListQuery(tableInfo, foreignInfo);
                 
         await using var cmdExpected = new SqliteCommand(sqlExpected, connection);
-        await using var readerExpected = await cmdExpected.ExecuteReaderAsync();
-                
+
         var expectedList = new List<object>();
-        while (await readerExpected.ReadAsync())
+        try
         {
-            var id = readerExpected.GetValue(0);
-            expectedList.Add(id);
+            await using var readerExpected = await cmdExpected.ExecuteReaderAsync();
+            while (await readerExpected.ReadAsync())
+            {
+                var id = readerExpected.GetValue(0);
+                expectedList.Add(id);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new InvalidOperationException($"{foreignInfo.ForeignTableName}.{foreignInfo.ForeignColumnName} sql: {sqlExpected}", e);
         }
         
         var list = new List<NotExistsForeignKeyResult>();
         foreach (var expected in expectedList)
         {
+            if (expected is DBNull)
+            {
+                continue;
+            }
+            
             var sqlResult = RecordQueryBuilder.SelectCountQuery(foreignInfo, expected);
                     
             await using var cmdResult = new SqliteCommand(sqlResult, connection);
-            await using var readerResult = await cmdResult.ExecuteReaderAsync();
-            while (await readerResult.ReadAsync())
+
+            try
             {
-                var count = readerResult.GetInt32(0);
-                if (count <= 0)
+                await using var readerResult = await cmdResult.ExecuteReaderAsync();
+                while (await readerResult.ReadAsync())
                 {
-                    list.Add(new(foreignInfo.ForeignTableName, foreignInfo.ColumnName, expected?.ToString()));
+                    var count = readerResult.GetInt32(0);
+                    if (count <= 0)
+                    {
+                        list.Add(new(foreignInfo.ForeignTableName, foreignInfo.ForeignColumnName, expected?.ToString()));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"{e.Message}.\n{foreignInfo.ForeignTableName}.{foreignInfo.ForeignColumnName} sql: {sqlResult}", e);
             }
         }
 

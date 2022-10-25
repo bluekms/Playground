@@ -10,5 +10,5 @@ public sealed class GroupTestRecord
     public int Id { get; set; }
     
     [Order]
-    public int GroupId { get; set; }
+    public string GroupId { get; set; } = null!;
 }

@@ -4,7 +4,7 @@ using StaticDataLibrary.DevCommons;
 
 namespace StaticDataLibrary.DevRecords.TestRecords;
 
-public class ClassListTestRecord
+public sealed class ClassListTestRecord
 {
     [Key]
     [Order]
