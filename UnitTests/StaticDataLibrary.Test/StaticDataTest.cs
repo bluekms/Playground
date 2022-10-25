@@ -30,7 +30,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
     [Fact]
     public void MustUseSealedClass()
     {
-        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
             Assert.True(tableInfo.RecordType.IsSealed, $"{tableInfo.RecordType.Name} must be sealed");
@@ -120,7 +120,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "RealForeignTest.db");
         
-        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<TestStaticDataContext>();
+        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
             Assert.NotNull(tableInfo.ForeignInfoList);
@@ -139,7 +139,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
                 {
                     foreach (var result in resultList)
                     {
-                        sb.AppendLine(result.ToString());
+                        sb.AppendLine($"{foreignInfo.CurrentTableName}.{foreignInfo.CurrentColumnName} 에서 사용된 {result.ToString()}");
                     }
                 }
 

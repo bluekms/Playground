@@ -8,7 +8,11 @@ public sealed class TableInfo
     public const string TypeNameSuffix = "Record";
     public const string DbSetNameSuffix = "Table";
 
-    public sealed record ForeignInfo(string ColumnName, string ForeignTableName);
+    public sealed record ForeignInfo(
+        string CurrentTableName,
+        string CurrentColumnName,
+        string ForeignTableName,
+        string ForeignColumnName);
     
     public Type RecordType { get; }
     public string SheetName { get; }
@@ -42,13 +46,18 @@ public sealed class TableInfo
         
         foreach (var property in propertyList)
         {
-            var columnName = ExtractColumnName(property);
-            columnNameList.Add(columnName);
-
-            var dbSetName = ExtractForeignDbSetName(property);
-            if (!string.IsNullOrWhiteSpace(dbSetName))
+            if (TryExtractColumnName(property, out var columnName))
             {
-                foreignDbSetNameList.Add(new(property.Name, dbSetName));    
+                columnNameList.Add(columnName);    
+            }
+
+            if (TryExtractForeignDbSetName(property, out var foreignDbSetName, out var foreignColumnName))
+            {
+                foreignDbSetNameList.Add(new(
+                    DbSetName,
+                    property.Name,
+                    foreignDbSetName,
+                    foreignColumnName));
             }
         }
 
@@ -59,25 +68,41 @@ public sealed class TableInfo
             : foreignDbSetNameList.AsReadOnly();
     }
 
-    private static string ExtractColumnName(PropertyInfo property)
+    private static bool TryExtractColumnName(PropertyInfo property, out string columnName)
     {
+        columnName = string.Empty;
+        
         var columnNameAttribute = property
             .GetCustomAttributes()
             .SingleOrDefault(x => x is ColumnNameAttribute);
 
-        return columnNameAttribute == null
-            ? property.Name
-            : (columnNameAttribute as ColumnNameAttribute)!.Name;
+        if (columnNameAttribute == null)
+        {
+            return false;
+        }
+
+        columnName = (columnNameAttribute as ColumnNameAttribute)!.Name;
+        return true;
     }
 
-    private static string? ExtractForeignDbSetName(PropertyInfo property)
+    private static bool TryExtractForeignDbSetName(PropertyInfo property, out string foreignDbSetName, out string foreignColumnName)
     {
+        foreignDbSetName = string.Empty;
+        foreignColumnName = string.Empty;
+        
         var foreignKeyAttribute = property
             .GetCustomAttributes()
             .SingleOrDefault(x => x is ForeignKeyAttribute);
+        
+        if (foreignKeyAttribute == null)
+        {
+            return false;
+        }
+        
+        var foreignKey = (ForeignKeyAttribute)foreignKeyAttribute!;
 
-        return foreignKeyAttribute == null
-            ? null
-            : (foreignKeyAttribute as ForeignKeyAttribute)!.DbSetName;
+        foreignDbSetName = foreignKey.DbSetName;
+        foreignColumnName = foreignKey.ColumnName;
+        return true;
     }
 }

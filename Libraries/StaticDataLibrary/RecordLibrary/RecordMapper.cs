@@ -34,7 +34,7 @@ public static class RecordMapper
                 }
                 else
                 {
-                    throw new Exception($"{t.Name}.{properties[i].Name} must have a value");
+                    throw new Exception($"{t.Name}.{properties[i].Name} 반드시 값이 있어야 합니다.");
                 }
             }
 

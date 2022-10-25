@@ -5,7 +5,7 @@ using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.DevRecords.TestRecords;
 
-public class ForeignTestRecord
+public sealed class ForeignTestRecord
 {
     [Key]
     [Order]
@@ -18,7 +18,7 @@ public class ForeignTestRecord
     [Order]
     public string Value { get; set; } = null!;
     
-    [ForeignKey("ClassListTestTable")]
+    [ForeignKey("ClassListTestTable", "StudentId")]
     [Order]
     public string? StudentId { get; set; }
     
