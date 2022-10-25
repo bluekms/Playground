@@ -9,6 +9,7 @@ public sealed class MultiForeignTestRecord
     [Order]
     public int Id { get; set; }
     
+    [ForeignKey("ForeignTestTable", "Id")]
     [Order]
     public int TargetId { get; set; }
     

@@ -17,8 +17,10 @@ public class StaticDataContext : DbContext
     public string DbPath { get; } = null!;
 
     public DbSet<TypeTestRecord> TypeTestTable { get; set; } = null!;
-    public DbSet<GroupTestRecord> GroupTestTable { get; set; } = null!;
-    public DbSet<GroupedItemTestRecord> GroupedItemTestTable { get; set; } = null!;
+    public DbSet<TargetTestRecord> TargetTestTable { get; set; } = null!;
+    public DbSet<ClassListTestRecord> ClassListTestTable { get; set; } = null!;
+    public DbSet<ForeignTestRecord> ForeignTestTable { get; set; } = null!;
+    public DbSet<MultiForeignTestRecord> MultiForeignTestTable { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {

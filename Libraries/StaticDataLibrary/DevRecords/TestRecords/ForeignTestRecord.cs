@@ -11,14 +11,16 @@ public class ForeignTestRecord
     [Order]
     public int Id { get; set; }
     
+    [ForeignKey("TargetTestTable", "Id")]
     [Order]
     public int TargetTestId { get; set; }
-    
+
     [Order]
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
     
+    [ForeignKey("ClassListTestTable")]
     [Order]
-    public string StudentId { get; set; }
+    public string? StudentId { get; set; }
     
     [Order]
     [ColumnName("비고")]
