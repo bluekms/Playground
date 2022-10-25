@@ -6,14 +6,12 @@ namespace StaticDataLibrary;
 
 public class StaticDataContext : DbContext
 {
-    private const string DbFileName = "StaticData.db";
-
-    public StaticDataContext(DbContextOptions<StaticDataContext> options) 
+    public StaticDataContext(DbContextOptions<StaticDataContext> options, string dbFileName) 
         : base(options)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, DbFileName);
+        DbPath = Path.Join(path, dbFileName);
     }
 
     public string DbPath { get; } = null!;

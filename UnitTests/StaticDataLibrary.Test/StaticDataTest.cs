@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
@@ -100,11 +101,50 @@ public sealed class StaticDataTest : IStaticDataContextTester
     public async Task InsertSqliteTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
+        await using var context = await InitializeStaticData(connection, "RealInsertTest.db");
+    }
+
+    [Fact]
+    public async Task ForeignTableTestAsync()
+    {
+        var connection = new SqliteConnection("DataSource=:memory:");
+        await using var context = await InitializeStaticData(connection, "RealForeignTest.db");
+        
+        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            Assert.NotNull(tableInfo.ForeignInfoList);
+
+            if (tableInfo.ForeignInfoList == null)
+            {
+                throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
+            }
+
+            foreach (var foreignInfo in tableInfo.ForeignInfoList)
+            {
+                var resultList = await RecordSqlExecutor.CheckForeignKey(connection, tableInfo, foreignInfo);
+
+                var sb = new StringBuilder();
+                if (resultList.Count > 0)
+                {
+                    foreach (var result in resultList)
+                    {
+                        sb.AppendLine(result.ToString());
+                    }
+                }
+
+                Assert.True(resultList.Count == 0, sb.ToString());
+            }
+        }
+    }
+    
+    private async Task<StaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
+    {
         var options = new DbContextOptionsBuilder<StaticDataContext>()
             .UseSqlite(connection)
             .Options;
 
-        await using var context = new StaticDataContext(options);
+        var context = new StaticDataContext(options, dbFileName);
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
         await connection.OpenAsync();
@@ -126,10 +166,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
         }
         
         await transaction!.CommitAsync();
-    }
 
-    public Task ForeignTableTestAsync()
-    {
-        throw new NotImplementedException();
+        return context;
     }
 }
