@@ -42,7 +42,7 @@ public sealed class ExcelLoader
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{excelFileName}.{reader.Name} load failure. Elapsed: {sw.Elapsed}. Message: {e.Message}. InnerMessage: {e?.InnerException?.Message ?? "null"}");
+                Console.WriteLine($"Load Failure:\t{excelFileName}.{reader.Name}. {e.Message}");
                 continue;
             }
             
@@ -58,6 +58,10 @@ public sealed class ExcelLoader
     {
         reader.Read();
         var a1 = reader.GetString(0);
+        if (string.IsNullOrWhiteSpace(a1))
+        {
+            throw new FormatException("각 시트의 a1에는 반드시 데이터 해더의 셀 이름이 있어야 합니다. (ex. B5)");
+        }
 
         try
         {
