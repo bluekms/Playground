@@ -7,5 +7,5 @@ public interface IStaticDataContextTester
     public Task LoadCsvToRecordTestAsync();
     public Task RangeAttributeTestAsync();
     public Task InsertSqliteTestAsync();
-    public Task ForeignTableTestAsync();
+    public Task ForeignTableCheckTestAsync();
 }

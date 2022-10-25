@@ -115,7 +115,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
     }
 
     [Fact]
-    public async Task ForeignTableTestAsync()
+    public async Task ForeignTableCheckTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "RealForeignTest.db");

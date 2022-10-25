@@ -82,7 +82,7 @@ public static class RecordSqlExecutor
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException($"{foreignInfo.ForeignTableName}.{foreignInfo.ForeignColumnName} sql: {sqlResult}", e);
+                throw new InvalidOperationException($"{e.Message}.\n{foreignInfo.ForeignTableName}.{foreignInfo.ForeignColumnName} sql: {sqlResult}", e);
             }
         }
 
