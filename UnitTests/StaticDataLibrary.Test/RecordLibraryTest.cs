@@ -21,6 +21,16 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     }
 
     [Fact]
+    public void MustUseSealedClass()
+    {
+        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+        foreach (var tableInfo in tableInfoList)
+        {
+            Assert.True(tableInfo.RecordType.IsSealed, $"{tableInfo.RecordType.Name} must be sealed");
+        }
+    }
+
+    [Fact]
     public void RequiredAttributeTest()
     {
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
@@ -51,8 +61,8 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             Assert.NotEmpty(dataList);
 
             var tableName = dataList[0]?.GetType().Name ?? string.Empty;
-            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.TypeNameSuffix), 
-                $"The suffix is different. {tableName}, {TableInfo.TypeNameSuffix}");
+            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix), 
+                $"The suffix is different. {tableName}, {TableInfo.RecordTypeNameSuffix}");
         }
     }
 
@@ -111,7 +121,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "InsertTest.db");
         
-        var targetCount = await context.TargetTestTable.CountAsync();
+        //var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
         var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
@@ -119,7 +129,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var groupItemCount = await context.GroupedItemTestTable.CountAsync();
         var groupCount = await context.GroupTestTable.CountAsync();
         
-        Assert.Equal(5, targetCount);
+        //Assert.Equal(5, targetCount);
         Assert.Equal(5, nameCount);
         Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
@@ -129,7 +139,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     }
     
     [Fact]
-    public async Task ForeignTableTestAsync()
+    public async Task ForeignTableCheckTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "ForeignTest.db");
@@ -163,11 +173,9 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     }
 
     [Theory]
-    [InlineData("TargetTestTable", 5, "INSERT INTO TargetTestTable VALUES (104,19,9);")]
-    [InlineData("NameTestTable", 5, "INSERT INTO NameTestTable VALUES (104,10,19);")]
     [InlineData("ClassListTestTable", 3, "INSERT INTO ClassListTestTable VALUES (20220003,CCC,영어,D,,,,,\"국어, 수학 미응시\");")]
     [InlineData("ComplexTestTable", 2, "INSERT INTO ComplexTestTable VALUES (1학년2반,20220201,XXX,국어,C,영어,C,수학,C,,20220202,YYY,국어,A,수학,A,,,영어 미응시,20220203,ZZZ,국어,A,영어,A,수학,A,참 잘했어요.,담임 미정);")]
-    public async void RecordQueryBuilderTest(string dbSetName, int rowCount, string expected)
+    public async void InsertQueryBuilderTest(string dbSetName, int rowCount, string expected)
     {
         var tableInfo = TableFinder
             .Find<TestStaticDataContext>()
@@ -201,6 +209,8 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         Assert.Equal(expected, query);
     }
 
+    // TODO 쿼리빌더 다른 쿼리들도 테스트
+    
     private async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
     {
         var options = new DbContextOptionsBuilder<TestStaticDataContext>()

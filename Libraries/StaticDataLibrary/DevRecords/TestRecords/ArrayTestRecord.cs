@@ -3,7 +3,7 @@ using StaticDataLibrary.Attributes;
 
 namespace StaticDataLibrary.DevRecords.TestRecords;
 
-public class ArrayTestRecord
+public sealed class ArrayTestRecord
 {
     [Key]
     [Order]

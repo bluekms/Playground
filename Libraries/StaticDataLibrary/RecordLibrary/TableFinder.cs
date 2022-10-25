@@ -12,7 +12,7 @@ public static class TableFinder
         var recordPropertyInfoList = typeof(T)
             .GetProperties()
             .Where(x => compareInfo.IsSuffix(x.Name, TableInfo.DbSetNameSuffix))
-            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.TypeNameSuffix))
+            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.RecordTypeNameSuffix))
             .ToList();
         
         var list = new List<TableInfo>(recordPropertyInfoList.Count);
@@ -31,7 +31,7 @@ public static class TableFinder
         return typeof(T)
             .GetProperties()
             .Where(x => compareInfo.IsSuffix(x.Name, TableInfo.DbSetNameSuffix))
-            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.TypeNameSuffix))
+            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.RecordTypeNameSuffix))
             .Where(x => new TableInfo(x).SheetName == sheetName)
             .Select(x => new TableInfo(x))
             .FirstOrDefault();
@@ -44,7 +44,7 @@ public static class TableFinder
         var recordPropertyInfoList = typeof(T)
             .GetProperties()
             .Where(x => compareInfo.IsSuffix(x.Name, TableInfo.DbSetNameSuffix))
-            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.TypeNameSuffix))
+            .Where(x => compareInfo.IsSuffix(x.PropertyType.GetGenericArguments().First().Name, TableInfo.RecordTypeNameSuffix))
             .ToList();
         
         var list = new List<TableInfo>(recordPropertyInfoList.Count);

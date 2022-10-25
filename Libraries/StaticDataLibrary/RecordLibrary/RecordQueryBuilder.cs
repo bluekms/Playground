@@ -42,7 +42,7 @@ public static class RecordQueryBuilder
         var list = new List<string>(tableInfo.ForeignInfoList.Count);
         foreach (var foreignInfo in tableInfo.ForeignInfoList)
         {
-            list.Add($"SELECT {foreignInfo.ColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.ColumnName};");
+            list.Add($"SELECT {foreignInfo.ForeignColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.CurrentColumnName};");
         }
 
         return list;
@@ -50,11 +50,11 @@ public static class RecordQueryBuilder
     
     public static string SelectForeignKeyListQuery(TableInfo tableInfo, TableInfo.ForeignInfo foreignInfo)
     {
-        return $"SELECT {foreignInfo.ColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.ColumnName};";
+        return $"SELECT {foreignInfo.CurrentColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.CurrentColumnName};";
     }
 
     public static string SelectCountQuery(TableInfo.ForeignInfo foreignInfo, object expected)
     {
-        return $"SELECT COUNT(1) FROM {foreignInfo.ForeignTableName} WHERE {foreignInfo.ColumnName} = '{expected}'";
+        return $"SELECT COUNT(1) FROM {foreignInfo.ForeignTableName} WHERE {foreignInfo.ForeignColumnName} = '{expected}'";
     }
 }
