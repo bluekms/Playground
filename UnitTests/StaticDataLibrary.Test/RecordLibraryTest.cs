@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
 using StaticDataLibrary.RecordLibrary;
+using StaticDataLibrary.ValidationLibrary;
 
 namespace StaticDataLibrary.Test;
 
@@ -69,50 +70,12 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     [Fact]
     public async Task RangeAttributeTestAsync()
     {
-        var tableInfoList = TableFinder.Find<TestStaticDataContext>();
-        foreach (var tableInfo in tableInfoList)
-        {
-            var fileName = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                TestStaticDataPath,
-                $"{tableInfo.SheetName}.csv");
-            
-            var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
-            
-            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
-            foreach (var data in dataList)
-            {
-                foreach (var propertyInfo in properties)
-                {
-                    var attribute = PropertyAttributeFinder.Find<RangeAttribute>(tableInfo, propertyInfo.Name);
-                    if (attribute == null)
-                    {
-                        continue;
-                    }
+        await RangeChecker.CheckAsync<TestStaticDataContext>(TestStaticDataPath);
+    }
 
-                    var value = data.GetType()
-                        .GetProperty(propertyInfo.Name)!
-                        .GetValue(data, null) ?? null;
-
-                    if (value == null)
-                    {
-                        if (propertyInfo.IsNullable())
-                        {
-                            continue;    
-                        }
-                        else
-                        {
-                            throw new ArgumentNullException($"{tableInfo.RecordType.Name}.{propertyInfo.Name} is not Nullable. but value is null");
-                        }
-                    }
-                    
-                    if (!attribute.IsValid(value))
-                    {
-                        throw new ValidationException($"{tableInfo.RecordType.Name}.{propertyInfo.Name}({value}) must be between {attribute.Minimum} and {attribute.Maximum}");
-                    }
-                } // for propertyInfo
-            } // for data
-        } // for table
+    public async Task RegexAttributeTestAsync()
+    {
+        await RegexChecker.CheckAsync<TestStaticDataContext>(TestStaticDataPath);
     }
 
     [Fact]
@@ -121,7 +84,6 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "InsertTest.db");
         
-        //var targetCount = await context.TargetTestTable.CountAsync();
         var nameCount = await context.NameTestTable.CountAsync();
         var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
@@ -129,7 +91,6 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var groupItemCount = await context.GroupedItemTestTable.CountAsync();
         var groupCount = await context.GroupTestTable.CountAsync();
         
-        //Assert.Equal(5, targetCount);
         Assert.Equal(5, nameCount);
         Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
@@ -144,32 +105,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "ForeignTest.db");
         
-        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<TestStaticDataContext>();
-        foreach (var tableInfo in tableInfoList)
-        {
-            Assert.NotNull(tableInfo.ForeignInfoList);
-
-            if (tableInfo.ForeignInfoList == null)
-            {
-                throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
-            }
-
-            foreach (var foreignInfo in tableInfo.ForeignInfoList)
-            {
-                var resultList = await RecordSqlExecutor.CheckForeignKey(connection, tableInfo, foreignInfo);
-
-                var sb = new StringBuilder();
-                if (resultList.Count > 0)
-                {
-                    foreach (var result in resultList)
-                    {
-                        sb.AppendLine(result.ToString());
-                    }
-                }
-
-                Assert.True(resultList.Count == 0, sb.ToString());
-            }
-        }
+        await ForeignChecker.CheckAsync<TestStaticDataContext>(connection);
     }
 
     [Theory]
