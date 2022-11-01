@@ -6,7 +6,7 @@ namespace StaticDataLibrary.Test;
 
 public class TestStaticDataContext : DbContext
 {
-    public const int TestTableCount = 10;
+    public const int TestTableCount = 9;
     
     public TestStaticDataContext(DbContextOptions<TestStaticDataContext> options, string dbFileName)
         : base(options)
@@ -18,7 +18,6 @@ public class TestStaticDataContext : DbContext
     
     public string DbPath { get; } = null!;
 
-    public DbSet<TypeTestRecord> TypeTestTable { get; set; } = null!;
     public DbSet<TargetTestRecord> TargetTestTable { get; set; } = null!;
     public DbSet<NameTestRecord> NameTestTable { get; set; } = null!;
     public DbSet<ArrayTestRecord> ArrayTestTable { get; set; } = null!;

@@ -32,22 +32,6 @@ public static class RecordQueryBuilder
         return sb.ToString();
     }
 
-    public static List<string> SelectForeignKeyListQuery(TableInfo tableInfo)
-    {
-        if (tableInfo.ForeignInfoList == null)
-        {
-            throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
-        }
-        
-        var list = new List<string>(tableInfo.ForeignInfoList.Count);
-        foreach (var foreignInfo in tableInfo.ForeignInfoList)
-        {
-            list.Add($"SELECT {foreignInfo.ForeignColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.CurrentColumnName};");
-        }
-
-        return list;
-    }
-    
     public static string SelectForeignKeyListQuery(TableInfo tableInfo, TableInfo.ForeignInfo foreignInfo)
     {
         return $"SELECT {foreignInfo.CurrentColumnName} FROM {tableInfo.DbSetName} GROUP BY {foreignInfo.CurrentColumnName};";

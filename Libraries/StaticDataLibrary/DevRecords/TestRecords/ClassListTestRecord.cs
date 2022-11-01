@@ -8,6 +8,8 @@ public sealed class ClassListTestRecord
 {
     [Key]
     [Order]
+    //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
+    [RegularExpression(@"^202200\d\d$")]
     public string StudentId { get; set; } = null!;
     
     [Order]

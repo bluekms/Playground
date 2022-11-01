@@ -6,6 +6,7 @@ public interface IStaticDataContextTester
     public void MustUseSealedClass();
     public Task LoadCsvToRecordTestAsync();
     public Task RangeAttributeTestAsync();
+    public Task RegexAttributeTestAsync();
     public Task InsertSqliteTestAsync();
     public Task ForeignTableCheckTestAsync();
 }

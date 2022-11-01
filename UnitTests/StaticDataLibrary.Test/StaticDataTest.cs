@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary.Attributes;
 using StaticDataLibrary.RecordLibrary;
+using StaticDataLibrary.ValidationLibrary;
 
 namespace StaticDataLibrary.Test;
 
@@ -61,50 +61,12 @@ public sealed class StaticDataTest : IStaticDataContextTester
     [Fact]
     public async Task RangeAttributeTestAsync()
     {
-        var tableInfoList = TableFinder.Find<StaticDataContext>();
-        foreach (var tableInfo in tableInfoList)
-        {
-            var fileName = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                RealStaticDataPath,
-                $"{tableInfo.SheetName}.csv");
-            
-            var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
-            
-            var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
-            foreach (var data in dataList)
-            {
-                foreach (var propertyInfo in properties)
-                {
-                    var attribute = PropertyAttributeFinder.Find<RangeAttribute>(tableInfo, propertyInfo.Name);
-                    if (attribute == null)
-                    {
-                        continue;
-                    }
+        await RangeChecker.CheckAsync<StaticDataContext>(RealStaticDataPath);
+    }
 
-                    var value = data.GetType()
-                        .GetProperty(propertyInfo.Name)!
-                        .GetValue(data, null) ?? null;
-
-                    if (value == null)
-                    {
-                        if (propertyInfo.IsNullable())
-                        {
-                            continue;    
-                        }
-                        else
-                        {
-                            throw new ArgumentNullException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}] is not Nullable. but value is null");
-                        }
-                    }
-                    
-                    if (!attribute.IsValid(value))
-                    {
-                        throw new ValidationException($"[{tableInfo.RecordType.Name}].[{propertyInfo.Name}]({value}) must be between {attribute.Minimum} and {attribute.Maximum}");
-                    }
-                } // for propertyInfo
-            } // for data
-        } // for table
+    public async Task RegexAttributeTestAsync()
+    {
+        await RegexChecker.CheckAsync<StaticDataContext>(RealStaticDataPath);
     }
 
     [Fact]
@@ -119,33 +81,8 @@ public sealed class StaticDataTest : IStaticDataContextTester
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "RealForeignTest.db");
-        
-        var tableInfoList = TableFinder.FindAllTablesWithForeignKey<StaticDataContext>();
-        foreach (var tableInfo in tableInfoList)
-        {
-            Assert.NotNull(tableInfo.ForeignInfoList);
 
-            if (tableInfo.ForeignInfoList == null)
-            {
-                throw new ArgumentNullException(nameof(tableInfo.ForeignInfoList));
-            }
-
-            foreach (var foreignInfo in tableInfo.ForeignInfoList)
-            {
-                var resultList = await RecordSqlExecutor.CheckForeignKey(connection, tableInfo, foreignInfo);
-
-                var sb = new StringBuilder();
-                if (resultList.Count > 0)
-                {
-                    foreach (var result in resultList)
-                    {
-                        sb.AppendLine($"{foreignInfo.CurrentTableName}.{foreignInfo.CurrentColumnName} 에서 사용된 {result.ToString()}");
-                    }
-                }
-
-                Assert.True(resultList.Count == 0, sb.ToString());
-            }
-        }
+        await ForeignChecker.CheckAsync<StaticDataContext>(connection);
     }
     
     private async Task<StaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
