@@ -8,7 +8,7 @@ namespace StaticDataLibrary.ValidationLibrary;
 
 public static class ForeignChecker
 {
-    public static async Task CheckAsync<T>(SqliteConnection connection) where T : DbContext
+    public static async Task CheckAsync<T>(SqliteConnection connection, StringBuilder? errors = null) where T : DbContext
     {
         var tableInfoList = TableFinder.FindAllTablesWithForeignKey<T>();
         foreach (var tableInfo in tableInfoList)
@@ -32,7 +32,14 @@ public static class ForeignChecker
                     sb.AppendLine($"{foreignInfo.CurrentTableName}.{foreignInfo.CurrentColumnName} 에서 사용된 {result.ToString()}");
                 }
 
-                throw new DataException(sb.ToString());
+                if (errors is null)
+                {
+                    throw new DataException(sb.ToString());    
+                }
+                else
+                {
+                    errors.AppendLine(sb.ToString());
+                }
             }
         }
     }

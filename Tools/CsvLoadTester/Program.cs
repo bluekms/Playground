@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Text;
 using CommandLine;
 using CsvLoadTester;
 using Microsoft.Data.Sqlite;
@@ -15,40 +16,43 @@ Parser.Default.ParseArguments<ProgramOptions>(args)
 
 static async Task RunOptionsAsync(ProgramOptions programOptions)
 {
-    var connection = new SqliteConnection("DataSource=:memory:");
-    
     var sw = new Stopwatch();
     sw.Start();
     
     try
     {
-        await RangeChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory);
-        await RegexChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory);
-
-        await using var context = await InitializeStaticData(connection, "StaticData.db", programOptions.CsvDirectory);
-        await ForeignChecker.CheckAsync<TestStaticDataContext>(connection);
+        var connection = new SqliteConnection("DataSource=:memory:");
+        var options = new DbContextOptionsBuilder<TestStaticDataContext>().UseSqlite(connection).Options;
+        var context = new TestStaticDataContext(options, "StaticData.db");
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+        await connection.OpenAsync();
+        await InitializeStaticData(context, connection, programOptions.CsvDirectory);
+        
+        var errors = new StringBuilder();
+        await RangeChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
+        await RegexChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
+        await ForeignChecker.CheckAsync<TestStaticDataContext>(connection, errors);
+        if (errors.Length > 0)
+        {
+            throw new ValidationException(errors.ToString());
+        }
     }
     catch (Exception e)
     {
         Console.WriteLine(e);
         throw;
     }
+
+    sw.Stop();
+    Console.WriteLine($"Csv Read Test Success. {sw.Elapsed.TotalMilliseconds}ms");
 }
 
-static async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName, string csvFilePath)
+static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath) where T : DbContext
 {
-    var options = new DbContextOptionsBuilder<TestStaticDataContext>()
-        .UseSqlite(connection)
-        .Options;
-
-    var context = new TestStaticDataContext(options, dbFileName);
-    await context.Database.EnsureDeletedAsync();
-    await context.Database.EnsureCreatedAsync();
-    await connection.OpenAsync();
-
     await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
 
-    var tableInfoList = TableFinder.Find<TestStaticDataContext>();
+    var tableInfoList = TableFinder.Find<T>();
     foreach (var tableInfo in tableInfoList)
     {
         var fileName = Path.Combine(csvFilePath, $"{tableInfo.SheetName}.csv");
@@ -63,6 +67,4 @@ static async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection c
     }
         
     await transaction!.CommitAsync();
-
-    return context;
 }
