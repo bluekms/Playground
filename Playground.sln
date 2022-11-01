@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsvWithLibrary", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToCsvWithFile", "Tools\ExcelToCsvWithFile\ExcelToCsvWithFile.csproj", "{B3164F68-7F4A-427E-8ACC-1355C7828002}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvLoadTester", "Tools\CsvLoadTester\CsvLoadTester.csproj", "{A51586E1-ABF0-4D12-98D1-6982ECB0CADE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3164F68-7F4A-427E-8ACC-1355C7828002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51586E1-ABF0-4D12-98D1-6982ECB0CADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51586E1-ABF0-4D12-98D1-6982ECB0CADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51586E1-ABF0-4D12-98D1-6982ECB0CADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51586E1-ABF0-4D12-98D1-6982ECB0CADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
