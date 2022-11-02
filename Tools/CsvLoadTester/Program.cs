@@ -16,11 +16,14 @@ Parser.Default.ParseArguments<ProgramOptions>(args)
 
 static async Task RunOptionsAsync(ProgramOptions programOptions)
 {
-    var sw = new Stopwatch();
-    sw.Start();
+    var swTotal = new Stopwatch();
+    swTotal.Start();
     
     try
     {
+        var sw = new Stopwatch();
+        sw.Start();
+        Console.WriteLine("InitializeStaticData ...");
         var connection = new SqliteConnection("DataSource=:memory:");
         var options = new DbContextOptionsBuilder<TestStaticDataContext>().UseSqlite(connection).Options;
         var context = new TestStaticDataContext(options, "StaticData.db");
@@ -28,11 +31,32 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         await context.Database.EnsureCreatedAsync();
         await connection.OpenAsync();
         await InitializeStaticData(context, connection, programOptions.CsvDirectory);
+        sw.Stop();
+        Console.WriteLine($"InitializeStaticData Fin: {sw.Elapsed.TotalMilliseconds}ms");
         
         var errors = new StringBuilder();
+        
+        sw.Reset();
+        sw.Start();
+        Console.WriteLine("Range Check ...");
         await RangeChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
+        sw.Stop();
+        Console.WriteLine($"Range Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
+        
+        sw.Reset();
+        sw.Start();
+        Console.WriteLine("Regex Check ...");
         await RegexChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
+        sw.Stop();
+        Console.WriteLine($"Regex Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
+        
+        sw.Reset();
+        sw.Start();
+        Console.WriteLine("Foreign Check ...");
         await ForeignChecker.CheckAsync<TestStaticDataContext>(connection, errors);
+        sw.Stop();
+        Console.WriteLine($"Regex Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
+        
         if (errors.Length > 0)
         {
             throw new ValidationException(errors.ToString());
@@ -41,11 +65,13 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
     catch (Exception e)
     {
         Console.WriteLine(e);
+        swTotal.Stop();
+        Console.WriteLine($"Csv Read Test Failure. {swTotal.Elapsed.TotalMilliseconds}ms");
         throw;
     }
 
-    sw.Stop();
-    Console.WriteLine($"Csv Read Test Success. {sw.Elapsed.TotalMilliseconds}ms");
+    swTotal.Stop();
+    Console.WriteLine($"Csv Read Test Success. {swTotal.Elapsed.TotalMilliseconds}ms");
 }
 
 static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath) where T : DbContext
