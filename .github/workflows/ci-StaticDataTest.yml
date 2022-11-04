@@ -30,4 +30,12 @@ jobs:
           cd ./StaticData/Converter
           echo 'StaticData/Converter'
           ls -al
+          ./ExcelToCsvWithLibrary -t -d ../__TestStaticData -o ../__TestStaticData/Output
+          echo 'fin'
+          
+      - name: Run Converter2
+        run: |
+          cd ./StaticData/Converter
+          ls -al
+          ./ExcelToCsvWithLibrary -t -d ../__TestStaticData -o ../__TestStaticData/Output
           echo 'fin'
