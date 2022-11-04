@@ -15,4 +15,4 @@ jobs:
         run: dotnet format style
 
       - name: Check spelling
-        uses: crate-ci/typos@master
+        uses: crate-ci/typos@v1.12.12
