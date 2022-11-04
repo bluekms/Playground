@@ -65,13 +65,11 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
     catch (Exception e)
     {
         Console.WriteLine(e);
-        swTotal.Stop();
-        Console.WriteLine($"Csv Read Test Failure. {swTotal.Elapsed.TotalMilliseconds}ms");
         throw;
     }
 
     swTotal.Stop();
-    Console.WriteLine($"Csv Read Test Success. {swTotal.Elapsed.TotalMilliseconds}ms");
+    Console.WriteLine($"Fin:\t{swTotal.Elapsed.TotalMilliseconds}ms");
 }
 
 static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath) where T : DbContext
