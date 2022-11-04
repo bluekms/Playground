@@ -1,16 +1,76 @@
+using System.Text;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using StaticDataLibrary.DevRecords;
+using StaticDataLibrary.AwsS3Library;
 using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Extensions;
 
 public static class StaticDataExtension
 {
-    private static string StaticDataPath = "StaticData";
+    public static async void UseStaticData(this IServiceCollection services, string name, string version = "latest")
+    {
+        var folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var staticDataPath = Path.Combine(folder, "StaticData");
+        var di = new DirectoryInfo(staticDataPath);
+        if (!di.Exists)
+        {
+            di.Create();
+        }
+        
+        var fileName = $"{name}-{version}.tar.gz";
+        var tarFileName = Path.Combine(staticDataPath, fileName);
+        var unpackPath = Path.Combine(staticDataPath, version);
+
+        RemoveOldFiles(tarFileName, unpackPath);
+        await DownloadStaticData(staticDataPath, fileName);
+        UnpackStaticDataFile(tarFileName, unpackPath);
+        await InitializeSqlite(services, unpackPath);
+    }
+
+    private static void RemoveOldFiles(string tarFile, string staticDataPath)
+    {
+        File.Delete(tarFile);
+
+        var di = new DirectoryInfo(staticDataPath);
+        foreach (var file in di.GetFiles())
+        {
+            file.Delete();
+        }
+        
+        di.Delete();
+    }
+
+    private static async Task DownloadStaticData(string path, string fileName)
+    {
+        // TODO goto appsettings
+        var s3Services = new Aws3Services(
+            "",
+            "",
+            "");
+        var staticData = await s3Services.GetStaticDataAsync("", fileName);
+        
+        var localFileName = Path.Combine(path, fileName);
+        await File.WriteAllBytesAsync(localFileName, staticData);
+    }
     
-    public static async void UseStaticData(this IServiceCollection services)
+    private static void UnpackStaticDataFile(string tarFile, string staticDataPath)
+    {
+        var stream = File.OpenRead(tarFile);
+        var gzStream = new GZipInputStream(stream);
+        var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
+        
+        tarArchive.ExtractContents(staticDataPath);
+        
+        tarArchive.Close();
+        gzStream.Close();
+        stream.Close();
+    }
+
+    private static async Task InitializeSqlite(this IServiceCollection services, string staticDataPath)
     {
         services.AddEntityFrameworkSqlite().AddDbContext<StaticDataContext>();
         
@@ -23,11 +83,10 @@ public static class StaticDataExtension
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
         
-        var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
-            var fileName = Path.Combine(path, StaticDataPath, $"{tableInfo.SheetName}.csv");
+            var fileName = Path.Combine(staticDataPath, $"{tableInfo.SheetName}.csv");
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException(fileName);
