@@ -1,14 +1,13 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using StaticDataLibrary.DevRecords;
 using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Extensions;
 
 public static class StaticDataExtension
 {
-    private static string StaticDataPath = "StaticData";
+    private static string StaticDataPath = "StaticData2";
     
     public static async void UseStaticData(this IServiceCollection services)
     {
