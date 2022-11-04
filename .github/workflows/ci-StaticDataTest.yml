@@ -19,23 +19,12 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
         
-      - name: Build and Run Converter
+      - name: Build Converter
         run: |
           cd ./Tools/ExcelToCsvWithLibrary
           dotnet publish --no-restore --configuration Release --output ../../StaticData/Converter
-          cd ..
-          cd ..
-          echo 'after cd .. cd ..'
-          ls -al
-          cd ./StaticData/Converter
-          echo 'StaticData/Converter'
-          ls -al
-          ./ExcelToCsvWithLibrary -t -d ../__TestStaticData -o ../__TestStaticData/Output
-          echo 'fin'
           
-      - name: Run Converter2
+      - name: Run Converter
         run: |
           cd ./StaticData/Converter
-          ls -al
           ./ExcelToCsvWithLibrary -t -d ../__TestStaticData -o ../__TestStaticData/Output
-          echo 'fin'
