@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Libraries\StaticDataLibrary\StaticDataLibrary.csproj" />
+      <ProjectReference Include="..\..\UnitTests\StaticDataLibrary.Test\StaticDataLibrary.Test.csproj" />
     </ItemGroup>
 
 </Project>

@@ -15,4 +15,7 @@ public sealed class ProgramOptions
 
     [Option('o', "output", Required = true, HelpText = "csv 파일 출력 경로")]
     public string OutputPath { get; set; } = null!;
+
+    [Option('t', "test", Required = false, HelpText = "TestStaticDataContext")]
+    public bool UseTestContext { get; set; } = false;
 }
