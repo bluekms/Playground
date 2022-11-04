@@ -26,6 +26,9 @@ static void RunOptions(ProgramOptions options)
         di.Create();
     }
 
+    var sw = new Stopwatch();
+    sw.Start();
+    
     if (!string.IsNullOrWhiteSpace(options.ExcelFile))
     {
         RunExcelToCsv(options.UseTestContext, options.OutputPath, options.ExcelFile, options.SheetName);
@@ -57,6 +60,9 @@ static void RunOptions(ProgramOptions options)
             RunExcelToCsv(options.UseTestContext, options.OutputPath, excel);
         }
     }
+    
+    sw.Stop();
+    Console.WriteLine($"Fin:\t{sw.Elapsed.TotalMilliseconds}ms");
 }
 
 static void HandleParseError(IEnumerable<Error> errors)

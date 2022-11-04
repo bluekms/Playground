@@ -28,3 +28,13 @@ jobs:
         run: |
           cd ./StaticData/Converter
           ./ExcelToCsvWithLibrary -t -d ../__TestStaticData -o ../__TestStaticData/Output
+          
+      - name: Build Tester
+        run: |
+          cd ./Tools/CsvLoadTester
+          dotnet publish --no-restore --configuration Release --output ../../StaticData/Tester
+          
+      - name: Run Tester
+        run: |
+          cd ./StaticData/Tester
+          ./CsvLoadTester -t -d ../__TestStaticData/Output
