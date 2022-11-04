@@ -1,3 +1,4 @@
+using System.Text;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using Microsoft.Data.Sqlite;
@@ -14,14 +15,33 @@ public static class StaticDataExtension
     {
         var folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var staticDataPath = Path.Combine(folder, "StaticData");
-        var fileName = $"{name}-{version}.tar.gz";
-        await DownloadStaticData(staticDataPath, fileName);
-
-        var targzFileName = Path.Combine(staticDataPath, fileName);
-        var unpackPath = Path.Combine(staticDataPath, version);
-        UnpackStaticDataFile(targzFileName, unpackPath);
+        var di = new DirectoryInfo(staticDataPath);
+        if (!di.Exists)
+        {
+            di.Create();
+        }
         
+        var fileName = $"{name}-{version}.tar.gz";
+        var tarFileName = Path.Combine(staticDataPath, fileName);
+        var unpackPath = Path.Combine(staticDataPath, version);
+
+        RemoveOldFiles(tarFileName, unpackPath);
+        await DownloadStaticData(staticDataPath, fileName);
+        UnpackStaticDataFile(tarFileName, unpackPath);
         await InitializeSqlite(services, unpackPath);
+    }
+
+    private static void RemoveOldFiles(string tarFile, string staticDataPath)
+    {
+        File.Delete(tarFile);
+
+        var di = new DirectoryInfo(staticDataPath);
+        foreach (var file in di.GetFiles())
+        {
+            file.Delete();
+        }
+        
+        di.Delete();
     }
 
     private static async Task DownloadStaticData(string path, string fileName)
@@ -35,6 +55,19 @@ public static class StaticDataExtension
         
         var localFileName = Path.Combine(path, fileName);
         await File.WriteAllBytesAsync(localFileName, staticData);
+    }
+    
+    private static void UnpackStaticDataFile(string tarFile, string staticDataPath)
+    {
+        var stream = File.OpenRead(tarFile);
+        var gzStream = new GZipInputStream(stream);
+        var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
+        
+        tarArchive.ExtractContents(staticDataPath);
+        
+        tarArchive.Close();
+        gzStream.Close();
+        stream.Close();
     }
 
     private static async Task InitializeSqlite(this IServiceCollection services, string staticDataPath)
@@ -65,18 +98,5 @@ public static class StaticDataExtension
         }
 
         await transaction!.CommitAsync();
-    }
-    
-    private static void UnpackStaticDataFile(string targetFile, string staticDataPath)
-    {
-        var stream = File.OpenRead(targetFile);
-        var gzStream = new GZipInputStream(stream);
-        var tarArchive = TarArchive.CreateInputTarArchive(gzStream);
-        
-        tarArchive.ExtractContents(staticDataPath);
-        
-        tarArchive.Close();
-        gzStream.Close();
-        stream.Close();
     }
 }
