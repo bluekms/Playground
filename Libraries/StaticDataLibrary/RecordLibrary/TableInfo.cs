@@ -76,12 +76,10 @@ public sealed class TableInfo
             .GetCustomAttributes()
             .SingleOrDefault(x => x is ColumnNameAttribute);
 
-        if (columnNameAttribute == null)
-        {
-            return false;
-        }
-
-        columnName = (columnNameAttribute as ColumnNameAttribute)!.Name;
+        columnName = columnNameAttribute == null
+            ? property.Name
+            : (columnNameAttribute as ColumnNameAttribute)!.Name;
+        
         return true;
     }
 

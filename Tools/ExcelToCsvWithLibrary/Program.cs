@@ -5,6 +5,7 @@ using ExcelToCsvWithFile;
 using StaticDataLibrary;
 using StaticDataLibrary.ExcelLibrary;
 using StaticDataLibrary.RecordLibrary;
+using StaticDataLibrary.Test;
 
 Parser.Default.ParseArguments<ProgramOptions>(args)
     .WithParsed(RunOptions)
@@ -27,7 +28,7 @@ static void RunOptions(ProgramOptions options)
 
     if (!string.IsNullOrWhiteSpace(options.ExcelFile))
     {
-        RunExcelToCsv(options.OutputPath, options.ExcelFile, options.SheetName);
+        RunExcelToCsv(options.UseTestContext, options.OutputPath, options.ExcelFile, options.SheetName);
     }
     else
     {
@@ -53,7 +54,7 @@ static void RunOptions(ProgramOptions options)
 
         foreach (var excel in targetList)
         {
-            RunExcelToCsv(options.OutputPath, excel);
+            RunExcelToCsv(options.UseTestContext, options.OutputPath, excel);
         }
     }
 }
@@ -67,7 +68,7 @@ static void HandleParseError(IEnumerable<Error> errors)
     }
 }
 
-static void RunExcelToCsv(string outputPath, string excelFileName, string? sheetName = null)
+static void RunExcelToCsv(bool useTestContext, string outputPath, string excelFileName, string? sheetName = null)
 {
     try
     {
@@ -81,8 +82,11 @@ static void RunExcelToCsv(string outputPath, string excelFileName, string? sheet
             sw.Start();
             
             var excelSheetName = $"{Path.GetFileNameWithoutExtension(excelFileName)}.{sheet.Name}";
+
+            var tableInfo = useTestContext
+                ? TableFinder.Find<TestStaticDataContext>(sheet.Name)
+                : TableFinder.Find<StaticDataContext>(sheet.Name);
             
-            var tableInfo = TableFinder.Find<StaticDataContext>(sheet.Name);
             if (tableInfo == null)
             {
                 Console.WriteLine($"Skip:\t{excelSheetName}");
