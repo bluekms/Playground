@@ -1,3 +1,4 @@
+using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Handlers;
 using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
@@ -6,6 +7,7 @@ using AuthServer.Handlers.World;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthServer.Controllers;
@@ -35,6 +37,7 @@ public sealed class LoginController : ControllerBase
 
     [HttpPost]
     [Route("Auth/Login")]
+    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
     public async Task<ActionResult<Result>> Login([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.AccountId, args.Password));

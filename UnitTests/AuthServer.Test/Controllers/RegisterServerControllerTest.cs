@@ -27,7 +27,7 @@ public sealed class RegisterServerControllerTest : IDisposable
         dbContext = authDbFixture.CreateContext();
 
         var config = InitConfig.Use();
-        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
+        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache")!);
 
         timeService = new ScopedTimeService();
         mapper = InitMapper.Use();

@@ -31,7 +31,7 @@ public sealed class LoginControllerTest : IDisposable
         dbContext = authDbFixture.CreateContext();
 
         var config = InitConfig.Use();
-        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache"));
+        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache")!);
 
         mapper = InitMapper.Use();
         timeService = new ScopedTimeService();
