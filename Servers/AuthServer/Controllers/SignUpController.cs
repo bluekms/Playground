@@ -1,9 +1,11 @@
-﻿using AuthLibrary.Models;
+﻿using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
 using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthServer.Controllers;
@@ -27,6 +29,7 @@ public sealed class SignUpController : ControllerBase
 
     [HttpPost]
     [Route("Auth/SignUp")]
+    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
     public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args)
     {
         await rule.CheckAsync(new(args.AccountId));

@@ -19,7 +19,7 @@ builder.Services.UseNginx();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString("WorldDb"));
 builder.Services.UseStaticData("StaticData");
-builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache"));
+builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache")!);
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();

@@ -26,9 +26,9 @@ public sealed class AuthDbFixture : IDisposable
             .UseSqlite(connection)
             .Options;
 
-        var result = new AuthDbContext(options);
-        result.Database.EnsureCreated();
+        var context = new AuthDbContext(options);
+        context.Database.EnsureCreated();
 
-        return result;
+        return context;
     }
 }
