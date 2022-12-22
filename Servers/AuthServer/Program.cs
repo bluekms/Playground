@@ -17,6 +17,7 @@ builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisC
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
+builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
 builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetExecutingAssembly()));
 builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetAssembly(typeof(AssemblyEntry))!));
