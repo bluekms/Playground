@@ -2,7 +2,7 @@
 dotnet core 6로 구성된 R&D를 위한 개인 서버군입니다.
 
 ## 사용된 기술
-* dotnet core 6
+* dotnet core 7
 * EF Core (Pomelo)
 * Serilog
 * Mysqal 8
