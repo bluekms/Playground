@@ -37,6 +37,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
         }
     }
 
+    [Fact]
     public async Task LoadCsvToRecordTestAsync()
     {
         var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
@@ -64,6 +65,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
         await RangeChecker.CheckAsync<StaticDataContext>(RealStaticDataPath);
     }
 
+    [Fact]
     public async Task RegexAttributeTestAsync()
     {
         await RegexChecker.CheckAsync<StaticDataContext>(RealStaticDataPath);

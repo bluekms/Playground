@@ -73,6 +73,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         await RangeChecker.CheckAsync<TestStaticDataContext>(TestStaticDataPath);
     }
 
+    [Fact]
     public async Task RegexAttributeTestAsync()
     {
         await RegexChecker.CheckAsync<TestStaticDataContext>(TestStaticDataPath);
