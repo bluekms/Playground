@@ -4,7 +4,7 @@ namespace AuthLibrary.Extensions.Authentication;
 
 public static class OpenAuthenticationExtension
 {
-    public static void UseOpenAuthentication(this IServiceCollection services)
+    public static void UseOepnAuthentication(this IServiceCollection services)
     {
         services
             .AddAuthentication(OpenAuthenticationSchemeOptions.Name)
