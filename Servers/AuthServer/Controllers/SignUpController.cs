@@ -1,7 +1,6 @@
 ﻿using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
-using AuthServer.Models;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
@@ -32,7 +31,7 @@ public sealed class SignUpController : ControllerBase
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
     public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args)
     {
-        await rule.CheckAsync(new(args.AccountId));
+        await rule.CheckAsync(new(args.AccountId, args.Password));
 
         var accountData = await addAccount.ExecuteAsync(new(
             args.AccountId,
