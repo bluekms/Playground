@@ -1,10 +1,10 @@
 ﻿using AuthDb;
 using AuthLibrary.Models;
-using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace AuthServer.Handlers.Account;
 
@@ -15,6 +15,8 @@ public sealed record AddAccountCommand(
 
 public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 {
+    private const string Salt = "Playground.bluekms";
+
     private readonly AuthDbContext dbContext;
     private readonly IMapper mapper;
     private readonly ITimeService time;
@@ -31,10 +33,15 @@ public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, Accou
 
     public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
     {
+        var passwordHasher = new PasswordHasher<AuthDb.Account>();
+        var account = new AuthDb.Account();
+        var password = Salt + command.Password;
+        var hashedPassword = passwordHasher.HashPassword(account, password);
+
         var newRow = new AuthDb.Account()
         {
             AccountId = command.AccountId,
-            Password = command.Password,
+            Password = hashedPassword,
             Token = string.Empty,
             CreatedAt = time.Now,
             Role = command.UserRole,

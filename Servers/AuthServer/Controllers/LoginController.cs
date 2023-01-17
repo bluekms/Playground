@@ -1,5 +1,4 @@
 using AuthLibrary.Extensions.Authentication;
-using AuthLibrary.Handlers;
 using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
@@ -16,22 +15,16 @@ namespace AuthServer.Controllers;
 public sealed class LoginController : ControllerBase
 {
     private readonly IRuleChecker<LoginRule> rule;
-    private readonly ICommandHandler<DeleteSessionCommand> deleteSession;
     private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
-    private readonly ICommandHandler<AddSessionCommand> addSession;
     private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
     public LoginController(
         IRuleChecker<LoginRule> rule,
-        ICommandHandler<DeleteSessionCommand> deleteSession,
         ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
-        ICommandHandler<AddSessionCommand> addSession,
         IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
     {
         this.rule = rule;
-        this.deleteSession = deleteSession;
         this.updateSession = updateSession;
-        this.addSession = addSession;
         this.getServerList = getServerList;
     }
 
@@ -42,12 +35,7 @@ public sealed class LoginController : ControllerBase
     {
         await rule.CheckAsync(new(args.AccountId, args.Password));
 
-        var sessionId = Guid.NewGuid().ToString();
-        var account = await updateSession.ExecuteAsync(new(args.AccountId, sessionId));
-
-        await deleteSession.ExecuteAsync(new(account.Token));
-        await addSession.ExecuteAsync(new(sessionId, account.Role));
-
+        var account = await updateSession.ExecuteAsync(new(args.AccountId, Guid.NewGuid().ToString()));
         var worlds = await getServerList.QueryAsync(new(ServerRoles.World));
 
         return new Result(account.Token, worlds);
