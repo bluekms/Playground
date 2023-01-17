@@ -64,9 +64,7 @@ public sealed class AccountScenarioTest : IDisposable
 
         var loginController = new LoginController(
             new LoginRuleChecker(dbContext),
-            new DeleteSessionHandler(redisConnection.GetDatabase()),
-            new UpdateSessionHandler(dbContext, mapper),
-            new AddSessionHandler(redisConnection.GetDatabase()),
+            new UpdateSessionHandler(dbContext, redisConnection.GetDatabase(), mapper),
             new GetServerListHandler(dbContext, timeService, mapper));
 
         var resultLogin = await loginController.Login(new(accountId, password));
