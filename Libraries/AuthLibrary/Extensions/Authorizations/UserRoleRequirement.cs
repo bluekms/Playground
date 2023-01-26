@@ -7,7 +7,7 @@ public class UserRoleRequirement : IAuthorizationRequirement
 {
     public const string ClaimType = "UserRole";
 
-    public UserRoleRequirement(UserRoles[] userRoles)
+    public UserRoleRequirement(AccountRoles[] userRoles)
     {
         UserRoleList = new(userRoles.Select(x => x.ToString()));
     }

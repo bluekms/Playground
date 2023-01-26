@@ -36,12 +36,12 @@ public sealed class SignUpController : ControllerBase
         var accountData = await addAccount.ExecuteAsync(new(
             args.AccountId,
             args.Password,
-            UserRoles.User));
+            AccountRoles.User));
 
         return mapper.Map<Result>(accountData);
     }
 
     public sealed record Arguments(string AccountId, string Password);
 
-    public sealed record Result(string AccountId, UserRoles Role);
+    public sealed record Result(string AccountId, AccountRoles Role);
 }

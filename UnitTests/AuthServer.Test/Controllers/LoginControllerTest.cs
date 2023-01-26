@@ -70,7 +70,7 @@ public sealed class LoginControllerTest : IDisposable
             AccountId = "bluekms",
             Password = "1234",
             CreatedAt = DateTime.Now,
-            Role = UserRoles.Administrator,
+            Role = AccountRoles.Administrator,
         });
 
         dbContext.Servers.Add(new()

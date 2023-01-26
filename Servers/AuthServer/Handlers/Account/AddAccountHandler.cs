@@ -11,7 +11,7 @@ namespace AuthServer.Handlers.Account;
 public sealed record AddAccountCommand(
     string AccountId,
     string Password,
-    UserRoles UserRole) : ICommand;
+    AccountRoles AccountRole) : ICommand;
 
 public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 {
@@ -44,7 +44,7 @@ public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, Accou
             Password = hashedPassword,
             Token = string.Empty,
             CreatedAt = time.Now,
-            Role = command.UserRole,
+            Role = command.AccountRole,
         };
 
         await dbContext.Accounts.AddAsync(newRow);

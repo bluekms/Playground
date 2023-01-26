@@ -45,6 +45,6 @@ public sealed class SignUpControllerTest : IDisposable
         var result = await controller.SignUp(new(accountId, password));
         result.Value.ShouldNotBeNull();
         result.Value?.AccountId.ShouldBe("bluekms1");
-        result.Value?.Role.ShouldBe(UserRoles.User);
+        result.Value?.Role.ShouldBe(AccountRoles.User);
     }
 }

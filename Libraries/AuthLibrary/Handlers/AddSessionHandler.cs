@@ -6,7 +6,7 @@ namespace AuthLibrary.Handlers;
 
 public sealed record AddSessionCommand(
     string Token,
-    UserRoles UserRole) : ICommand;
+    AccountRoles AccountRole) : ICommand;
 
 public sealed class AddSessionHandler : ICommandHandler<AddSessionCommand>
 {
@@ -22,6 +22,6 @@ public sealed class AddSessionHandler : ICommandHandler<AddSessionCommand>
     public async Task ExecuteAsync(AddSessionCommand command)
     {
         var key = $"Session:{command.Token}";
-        await redis.StringSetAsync(key, $"{command.UserRole}", DefaultExpire);
+        await redis.StringSetAsync(key, $"{command.AccountRole}", DefaultExpire);
     }
 }

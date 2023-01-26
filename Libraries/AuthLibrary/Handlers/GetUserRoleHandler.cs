@@ -1,30 +1,23 @@
+using AuthLibrary.Feature.Session;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
-using StackExchange.Redis;
 
 namespace AuthLibrary.Handlers;
 
-public sealed record GetUserRoleQuery(string Token) : IQuery;
+public sealed record GetAccountRoleQuery(string Token) : IQuery;
 
-public class GetUserRoleHandler : IQueryHandler<GetUserRoleQuery, UserRoles?>
+public class GetUserRoleHandler : IQueryHandler<GetAccountRoleQuery, AccountRoles?>
 {
-    private readonly IDatabase redis;
+    private readonly SessionStore sessionStore;
 
-    public GetUserRoleHandler(IDatabase redis)
+    public GetUserRoleHandler(SessionStore sessionStore)
     {
-        this.redis = redis;
+        this.sessionStore = sessionStore;
     }
 
-    public async Task<UserRoles?> QueryAsync(GetUserRoleQuery query)
+    public async Task<AccountRoles?> QueryAsync(GetAccountRoleQuery query, CancellationToken cancellationToken)
     {
-        var key = $"Session:{query.Token}";
-        var userRole = await redis.StringGetAsync(key);
-
-        if (!userRole.HasValue)
-        {
-            return null;
-        }
-
-        return Enum.Parse<UserRoles>(userRole.ToString());
+        var sessionData = await sessionStore.GetAsync(query.Token, cancellationToken);
+        return Enum.Parse<AccountRoles>(sessionData.Roles.ToString());
     }
 }

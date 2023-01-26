@@ -14,7 +14,7 @@ namespace AuthLibrary.Extensions.Authentication;
 
 public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
-    private readonly IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole;
+    private readonly IQueryHandler<GetAccountRoleQuery, AccountRoles?> getUserRole;
     private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
     private readonly ICommandHandler<AddSessionCommand> addSessionId;
 
@@ -23,7 +23,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
-        IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole,
+        IQueryHandler<GetAccountRoleQuery, AccountRoles?> getUserRole,
         IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
         ICommandHandler<AddSessionCommand> addSessionId)
         : base(options, logger, encoder, clock)
