@@ -3,6 +3,7 @@ using AuthDb;
 using AuthLibrary.Extensions;
 using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Extensions;
@@ -27,6 +28,7 @@ builder.Services.UseControllers();
 
 // DI
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
+builder.Services.AddScoped<SessionStore>();
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();

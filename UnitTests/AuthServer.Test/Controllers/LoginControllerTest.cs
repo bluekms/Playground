@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using AuthDb;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Handlers;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
@@ -52,10 +54,11 @@ public sealed class LoginControllerTest : IDisposable
     {
         var controller = new LoginController(
             new LoginRuleChecker(dbContext),
-            new UpdateSessionHandler(dbContext, redisConnection.GetDatabase(), mapper),
+            new UpdateSessionHandler(redisConnection, dbContext, mapper),
+            new SessionStore(redisConnection),
             new GetServerListHandler(dbContext, timeService, mapper));
 
-        var result = await controller.Login(new(accountId, password));
+        var result = await controller.Login(new(accountId, password), CancellationToken.None);
         var actionResult = Assert.IsType<ActionResult<LoginController.Result>>(result);
 
         actionResult.Value?.SessionId.ShouldNotBeNull();
