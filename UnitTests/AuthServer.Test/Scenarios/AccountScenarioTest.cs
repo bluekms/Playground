@@ -57,7 +57,7 @@ public sealed class AccountScenarioTest : IDisposable
             new AddAccountHandler(dbContext, mapper, timeService),
             mapper);
 
-        var resultSignUp = await signUpController.SignUp(new(accountId, password));
+        var resultSignUp = await signUpController.SignUp(new(accountId, password), CancellationToken.None);
         resultSignUp.Value.ShouldNotBeNull();
         resultSignUp.Value?.AccountId.ShouldBe(accountId);
         resultSignUp.Value?.Role.ShouldBe(AccountRoles.User);
@@ -67,7 +67,7 @@ public sealed class AccountScenarioTest : IDisposable
             new UpdateSessionHandler(dbContext, redisConnection.GetDatabase(), mapper),
             new GetServerListHandler(dbContext, timeService, mapper));
 
-        var resultLogin = await loginController.Login(new(accountId, password));
+        var resultLogin = await loginController.Login(new(accountId, password), CancellationToken.None);
         var actionResultLogin = Assert.IsType<ActionResult<LoginController.Result>>(resultLogin);
 
         actionResultLogin.Value?.SessionId.ShouldNotBeNull();

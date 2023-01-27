@@ -60,11 +60,11 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
 
     private async Task<Claim> CreateClientRoleClaim(string token)
     {
-        var userRole = await getUserRole.QueryAsync(new(token));
+        var userRole = await getUserRole.QueryAsync(new(token), CancellationToken.None);
 
         if (userRole is null)
         {
-            var accountData = await getAccount.QueryAsync(new(token));
+            var accountData = await getAccount.QueryAsync(new(token), CancellationToken.None);
             if (accountData == null)
             {
                 throw new KeyNotFoundException();

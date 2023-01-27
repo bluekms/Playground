@@ -20,11 +20,11 @@ public sealed class GetAccountBySessionHandler : IQueryHandler<GetAccountBySessi
         this.mapper = mapper;
     }
 
-    public async Task<AccountData?> QueryAsync(GetAccountBySessionQuery query)
+    public async Task<AccountData?> QueryAsync(GetAccountBySessionQuery query, CancellationToken cancellationToken)
     {
         var row = await dbContext.Accounts
             .Where(x => x.Token == query.Token)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (row == null)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AuthDb;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Maintenance;
@@ -46,15 +47,15 @@ public sealed class AddMaintenanceControllerTest : IDisposable
             new CheckMaintenanceRule(dbContext),
             new AddMaintenanceHandler(dbContext, mapper));
 
-        var result = await controller.AddMaintenance(new(start, end, reason));
+        var result = await controller.AddMaintenance(new(start, end, reason), CancellationToken.None);
         var actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
         actionResult.Value?.Id.ShouldBe(1);
 
-        result = await controller.AddMaintenance(new(start.AddDays(1), end.AddDays(1), reason));
+        result = await controller.AddMaintenance(new(start.AddDays(1), end.AddDays(1), reason), CancellationToken.None);
         actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
         actionResult.Value?.Id.ShouldBe(2);
 
-        result = await controller.AddMaintenance(new(start.AddDays(3), end.AddDays(3), reason));
+        result = await controller.AddMaintenance(new(start.AddDays(3), end.AddDays(3), reason), CancellationToken.None);
         actionResult = Assert.IsType<ActionResult<AddMaintenanceController.Returns>>(result);
         actionResult.Value?.Id.ShouldBe(3);
     }

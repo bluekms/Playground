@@ -9,6 +9,6 @@ namespace CommonLibrary.Handlers
     public interface IRuleChecker<in TRule> : IHandlerBase
         where TRule : IRule
     {
-        Task CheckAsync(TRule rule);
+        Task CheckAsync(TRule rule, CancellationToken cancellationToken);
     }
 }
