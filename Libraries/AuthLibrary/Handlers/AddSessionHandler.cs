@@ -14,9 +14,9 @@ public sealed class AddSessionHandler : ICommandHandler<AddSessionCommand>
 
     private readonly IDatabase redis;
 
-    public AddSessionHandler(IDatabase redis)
+    public AddSessionHandler(IConnectionMultiplexer multiplexer)
     {
-        this.redis = redis;
+        redis = multiplexer.GetDatabase();
     }
 
     public async Task ExecuteAsync(AddSessionCommand command)

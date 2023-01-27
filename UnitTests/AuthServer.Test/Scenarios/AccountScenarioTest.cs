@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using AuthDb;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Handlers;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
@@ -21,7 +23,7 @@ public sealed class AccountScenarioTest : IDisposable
 {
     private readonly AuthDbFixture authDbFixture;
     private readonly AuthDbContext dbContext;
-    private readonly ConnectionMultiplexer redisConnection;
+    private readonly ConnectionMultiplexer redisMultiplexer;
     private readonly IMapper mapper;
     private readonly ITimeService timeService;
 
@@ -31,7 +33,7 @@ public sealed class AccountScenarioTest : IDisposable
         dbContext = authDbFixture.CreateContext();
 
         var config = InitConfig.Use();
-        redisConnection = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache")!);
+        redisMultiplexer = ConnectionMultiplexer.Connect(config.GetConnectionString("RedisCache")!);
 
         mapper = InitMapper.Use();
         timeService = new ScopedTimeService();
@@ -41,7 +43,7 @@ public sealed class AccountScenarioTest : IDisposable
     {
         authDbFixture.Dispose();
         dbContext.Dispose();
-        redisConnection.Dispose();
+        redisMultiplexer.Dispose();
     }
 
     [Fact]
@@ -64,7 +66,8 @@ public sealed class AccountScenarioTest : IDisposable
 
         var loginController = new LoginController(
             new LoginRuleChecker(dbContext),
-            new UpdateSessionHandler(dbContext, redisConnection.GetDatabase(), mapper),
+            new UpdateSessionHandler(redisMultiplexer, dbContext, mapper),
+            new SessionStore(redisMultiplexer),
             new GetServerListHandler(dbContext, timeService, mapper));
 
         var resultLogin = await loginController.Login(new(accountId, password), CancellationToken.None);

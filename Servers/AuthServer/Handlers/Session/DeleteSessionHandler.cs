@@ -9,9 +9,9 @@ namespace AuthServer.Handlers.Session
     {
         private readonly IDatabase redis;
 
-        public DeleteSessionHandler(IDatabase redis)
+        public DeleteSessionHandler(IConnectionMultiplexer multiplexer)
         {
-            this.redis = redis;
+            redis = multiplexer.GetDatabase();
         }
 
         public async Task ExecuteAsync(DeleteSessionCommand command)
