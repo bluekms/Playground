@@ -1,5 +1,3 @@
-using System.Data;
-using System.Diagnostics;
 using System.Text.Json;
 using StackExchange.Redis;
 
@@ -8,6 +6,7 @@ namespace AuthLibrary.Feature.Session;
 public sealed class SessionStore
 {
     private const string SessionPrefix = "Session";
+
     private readonly IDatabase redis;
 
     public SessionStore(IConnectionMultiplexer multiplexer)

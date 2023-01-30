@@ -12,8 +12,8 @@ public sealed class FooController : ControllerBase
     }
 
     [HttpGet]
-    [Route("Auth/Foo2")]
-    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+    [Route("Auth/Foo")]
+    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
     public ActionResult<string> Foo([FromBody] Arguments args, CancellationToken cancellationToken)
     {
         return $"{args.Data}: Ok";

@@ -1,4 +1,5 @@
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Feature.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ public class FooWithoutAuthController : ControllerBase
     }
 
     [HttpGet]
-    [Route("Auth/Foo")]
-    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public ActionResult<string> Foo([FromBody] Arguments args, CancellationToken cancellationToken)
+    [Route("Auth/Foo2")]
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
+    public ActionResult<string> Foo([FromBody] Arguments args, SessionData session, CancellationToken cancellationToken)
     {
         return $"{args.Data}: Ok";
     }
