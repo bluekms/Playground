@@ -14,7 +14,7 @@ public static class PermissionAuthorizationExtension
             {
                 policy.Requirements.Add(new UserRoleRequirement(new[]
                 {
-                    UserRoles.Administrator,
+                    AccountRoles.Administrator,
                 }));
             });
 
@@ -22,9 +22,9 @@ public static class PermissionAuthorizationExtension
             {
                 policy.Requirements.Add(new UserRoleRequirement(new[]
                 {
-                    UserRoles.Developer,
-                    UserRoles.WhitelistUser,
-                    UserRoles.User,
+                    AccountRoles.Developer,
+                    AccountRoles.WhitelistUser,
+                    AccountRoles.User,
                 }));
             });
 
@@ -33,8 +33,8 @@ public static class PermissionAuthorizationExtension
                 policy.Requirements.Add(new BuildConfigurationRequirement(BuildConfigurationRequirement.BuildConfigurations.Debug));
                 policy.Requirements.Add(new UserRoleRequirement(new[]
                 {
-                    UserRoles.Developer,
-                    UserRoles.OpUser,
+                    AccountRoles.Developer,
+                    AccountRoles.OpUser,
                 }));
             });
         });

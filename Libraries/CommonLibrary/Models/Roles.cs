@@ -8,7 +8,7 @@ namespace CommonLibrary.Models
     /// User : 일반 유저 (AuthServer에서 가입)
     /// BanUser : 접속 불가능한 유저
     /// </summary>
-    public enum UserRoles
+    public enum AccountRoles
     {
         Administrator,
         Developer,

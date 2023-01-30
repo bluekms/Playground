@@ -29,19 +29,19 @@ public sealed class SignUpController : ControllerBase
     [HttpPost]
     [Route("Auth/SignUp")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args)
+    public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args, CancellationToken cancellationToken)
     {
-        await rule.CheckAsync(new(args.AccountId, args.Password));
+        await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 
         var accountData = await addAccount.ExecuteAsync(new(
             args.AccountId,
             args.Password,
-            UserRoles.User));
+            AccountRoles.User));
 
         return mapper.Map<Result>(accountData);
     }
 
     public sealed record Arguments(string AccountId, string Password);
 
-    public sealed record Result(string AccountId, UserRoles Role);
+    public sealed record Result(string AccountId, AccountRoles Role);
 }

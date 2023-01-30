@@ -20,14 +20,14 @@ internal sealed class QueryDecorator<TQuery, TResult> : IQueryHandler<TQuery, TR
         this.activitySource = activitySource;
     }
 
-    public async Task<TResult> QueryAsync(TQuery query)
+    public async Task<TResult> QueryAsync(TQuery query, CancellationToken cancellationToken)
     {
         try
         {
             using var activity = activitySource.StartActivity($"Query {typeof(TQuery).Name}");
             activity?.AddTag("Playground.Query.Type", typeof(TQuery).Name);
 
-            var result = await handler.QueryAsync(query);
+            var result = await handler.QueryAsync(query, cancellationToken);
             logger.LogDebug("Query {QueryType} {@Query}", typeof(TQuery).Name, query);
             logger.LogTrace("Query Result {@QueryResult}", result);
 

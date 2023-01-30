@@ -19,7 +19,7 @@ public sealed class Account
 
     public string Token { get; set; } = null!;
 
-    public UserRoles Role { get; set; }
+    public AccountRoles Role { get; set; }
 }
 
 internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>

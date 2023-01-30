@@ -22,11 +22,11 @@ namespace AuthServer.Handlers.Account
             this.mapper = mapper;
         }
 
-        public async Task<AccountData?> QueryAsync(GetAccountQuery query)
+        public async Task<AccountData?> QueryAsync(GetAccountQuery query, CancellationToken cancellationToken)
         {
             var row = await dbContext.Accounts
                 .Where(x => x.AccountId == query.AccountId)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (row == null)
             {

@@ -7,23 +7,23 @@ using StackExchange.Redis;
 
 namespace AuthServer.Handlers.Session
 {
-    public sealed record UpdateSessionCommand(string AccountId, string Token) : ICommand;
+    public sealed record UpdateSessionCommand(string AccountId) : ICommand;
 
     public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, AccountData>
     {
-        private static readonly TimeSpan DefaultExpire = new(0, 0, 5, 0);
+        private static readonly string SessionPrefix = "Session";
 
-        private readonly AuthDbContext dbContext;
         private readonly IDatabase redis;
+        private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
 
         public UpdateSessionHandler(
+            IConnectionMultiplexer multiplexer,
             AuthDbContext dbContext,
-            IDatabase redis,
             IMapper mapper)
         {
+            redis = multiplexer.GetDatabase();
             this.dbContext = dbContext;
-            this.redis = redis;
             this.mapper = mapper;
         }
 
@@ -38,13 +38,10 @@ namespace AuthServer.Handlers.Session
                 throw new NullReferenceException(nameof(command.AccountId));
             }
 
-            await redis.KeyDeleteAsync($"Session:{account.Token}");
-
-            account.Token = command.Token;
-
-            await redis.StringSetAsync($"Session:{command.Token}", $"{account.Role}", DefaultExpire);
-
+            await redis.KeyDeleteAsync($"{SessionPrefix}:{account.Token}");
+            account.Token = Guid.NewGuid().ToString();
             await dbContext.SaveChangesAsync();
+
             return mapper.Map<AccountData>(account);
         }
     }

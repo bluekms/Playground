@@ -1,7 +1,5 @@
 ﻿using System.Data;
-using System.Threading.Tasks;
 using AuthLibrary.Models;
-using AuthServer.Models;
 using CommonLibrary.Handlers;
 
 namespace AuthServer.Handlers.Account
@@ -20,7 +18,7 @@ namespace AuthServer.Handlers.Account
             this.getAccount = getAccount;
         }
 
-        public async Task CheckAsync(SignUpRule rule)
+        public async Task CheckAsync(SignUpRule rule, CancellationToken cancellationToken)
         {
             if (rule.AccountId.Length is < MinLength or > MaxLength)
             {
@@ -32,7 +30,7 @@ namespace AuthServer.Handlers.Account
                 throw new ArgumentOutOfRangeException(nameof(rule.Password));
             }
 
-            var account = await getAccount.QueryAsync(new(rule.AccountId));
+            var account = await getAccount.QueryAsync(new(rule.AccountId), cancellationToken);
             if (account != null)
             {
                 throw new DuplicateNameException(nameof(rule.AccountId));

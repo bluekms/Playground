@@ -18,11 +18,11 @@ namespace AuthServer.Handlers.Account
             this.dbContext = dbContext;
         }
 
-        public async Task CheckAsync(LoginRule rule)
+        public async Task CheckAsync(LoginRule rule, CancellationToken cancellationToken)
         {
             var row = await dbContext.Accounts
                 .Where(x => x.AccountId == rule.AccountId)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (row == null)
             {

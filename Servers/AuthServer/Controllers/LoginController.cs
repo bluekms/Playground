@@ -1,4 +1,5 @@
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Models;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
@@ -16,27 +17,34 @@ public sealed class LoginController : ControllerBase
 {
     private readonly IRuleChecker<LoginRule> rule;
     private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
+    private readonly SessionStore sessionStore;
     private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
     public LoginController(
         IRuleChecker<LoginRule> rule,
         ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
+        SessionStore sessionStore,
         IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
     {
         this.rule = rule;
         this.updateSession = updateSession;
+        this.sessionStore = sessionStore;
         this.getServerList = getServerList;
     }
 
     [HttpPost]
     [Route("Auth/Login")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Result>> Login([FromBody] Arguments args)
+    public async Task<ActionResult<Result>> Login([FromBody] Arguments args, CancellationToken cancellationToken)
     {
-        await rule.CheckAsync(new(args.AccountId, args.Password));
+        await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 
-        var account = await updateSession.ExecuteAsync(new(args.AccountId, Guid.NewGuid().ToString()));
-        var worlds = await getServerList.QueryAsync(new(ServerRoles.World));
+        var account = await updateSession.ExecuteAsync(new(args.AccountId));
+
+        var session = new SessionData(account.Token, account.Role);
+        await sessionStore.SetAsync(session, cancellationToken);
+
+        var worlds = await getServerList.QueryAsync(new(ServerRoles.World), cancellationToken);
 
         return new Result(account.Token, worlds);
     }

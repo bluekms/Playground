@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using AuthDb;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
@@ -42,9 +43,9 @@ public sealed class SignUpControllerTest : IDisposable
             new AddAccountHandler(dbContext, mapper, timeService),
             mapper);
 
-        var result = await controller.SignUp(new(accountId, password));
+        var result = await controller.SignUp(new(accountId, password), CancellationToken.None);
         result.Value.ShouldNotBeNull();
         result.Value?.AccountId.ShouldBe("bluekms1");
-        result.Value?.Role.ShouldBe(UserRoles.User);
+        result.Value?.Role.ShouldBe(AccountRoles.User);
     }
 }
