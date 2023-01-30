@@ -14,11 +14,11 @@ public class GetFooHandler : IQueryHandler<GetFooQuery, List<string>>
         this.dbContext = dbContext;
     }
 
-    public async Task<List<string>> QueryAsync(GetFooQuery query)
+    public async Task<List<string>> QueryAsync(GetFooQuery query, CancellationToken cancellationToken)
     {
         return await dbContext.Foos
             .Where(row => query.Seq < row.Seq)
             .Select(row => row.Data)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }

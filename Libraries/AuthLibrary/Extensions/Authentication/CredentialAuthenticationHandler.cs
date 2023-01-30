@@ -45,7 +45,7 @@ public sealed class CredentialAuthenticationHandler : AuthenticationHandler<Cred
 
     private async Task<Claim> CreateServerRoleClaim(string token)
     {
-        var serverRole = await getServerRole.QueryAsync(new(token));
+        var serverRole = await getServerRole.QueryAsync(new(token), CancellationToken.None);
 
         return new(ServerRoleRequirement.ClaimType, serverRole.ToString());
     }

@@ -1,5 +1,4 @@
 using AuthLibrary.Extensions.Authentication;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,24 +11,13 @@ public sealed class FooController : ControllerBase
     {
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("Auth/Foo")]
-    public async Task<ActionResult<string>> Foo([FromBody] ArgumentData args)
+    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
+    public ActionResult<string> Foo([FromBody] Arguments args, CancellationToken cancellationToken)
     {
-        try
-        {
-            return await HandleAsync(args);
-        }
-        catch (Exception e)
-        {
-            return NotFound($"{e.Message}:{e.InnerException?.Message ?? string.Empty}");
-        }
+        return $"{args.Data}: Ok";
     }
 
-    private async Task<string> HandleAsync(ArgumentData args)
-    {
-        return await Task.Run(() => args.Data + ": OK");
-    }
-
-    public sealed record ArgumentData(string Data);
+    public sealed record Arguments(string Data);
 }

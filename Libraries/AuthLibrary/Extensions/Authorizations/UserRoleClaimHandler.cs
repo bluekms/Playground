@@ -43,9 +43,9 @@ public sealed class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirem
             return;
         }
 
-        if (claim.Value == UserRoles.User.ToString())
+        if (claim.Value == AccountRoles.User.ToString())
         {
-            if (await isMaintenanceTime.QueryAsync(new()))
+            if (await isMaintenanceTime.QueryAsync(new(), CancellationToken.None))
             {
                 context.Fail();
                 return;

@@ -20,12 +20,12 @@ namespace AuthServer.Handlers.Maintenance
             this.dbContext = dbContext;
         }
 
-        public async Task CheckAsync(AddMaintenanceRule rule)
+        public async Task CheckAsync(AddMaintenanceRule rule, CancellationToken cancellationToken)
         {
             var row = await dbContext.Maintenance
                 .Where(x => x.Start <= rule.Start)
                 .Where(x => rule.Start <= x.End)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (row != null)
             {
@@ -35,7 +35,7 @@ namespace AuthServer.Handlers.Maintenance
             row = await dbContext.Maintenance
                 .Where(x => x.Start <= rule.End)
                 .Where(x => rule.End <= x.End)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (row != null)
             {
@@ -45,7 +45,7 @@ namespace AuthServer.Handlers.Maintenance
             var exist = await dbContext.Maintenance
                 .Where(x => rule.Start <= x.Start)
                 .Where(x => x.End <= rule.End)
-                .AnyAsync();
+                .AnyAsync(cancellationToken);
 
             if (exist)
             {

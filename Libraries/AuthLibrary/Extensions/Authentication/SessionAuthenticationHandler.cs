@@ -1,11 +1,8 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using AuthLibrary.Extensions.Authorizations;
-using AuthLibrary.Handlers;
-using AuthLibrary.Models;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Utility;
-using CommonLibrary.Handlers;
-using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,32 +11,28 @@ namespace AuthLibrary.Extensions.Authentication;
 
 public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthenticationSchemeOptions>
 {
-    private readonly IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole;
-    private readonly IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount;
-    private readonly ICommandHandler<AddSessionCommand> addSessionId;
+    private readonly SessionStore sessionStore;
 
     public SessionAuthenticationHandler(
         IOptionsMonitor<SessionAuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
-        IQueryHandler<GetUserRoleQuery, UserRoles?> getUserRole,
-        IQueryHandler<GetAccountBySessionQuery, AccountData?> getAccount,
-        ICommandHandler<AddSessionCommand> addSessionId)
+        SessionStore sessionStore)
         : base(options, logger, encoder, clock)
     {
-        this.getUserRole = getUserRole;
-        this.getAccount = getAccount;
-        this.addSessionId = addSessionId;
+        this.sessionStore = sessionStore;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var token = BearerTokenParser.GetBearerToken(Request);
+        var session = await sessionStore.GetAsync(token, CancellationToken.None);
+        Context.Features.Set(session);
 
         var claimsIdentity = new ClaimsIdentity(SessionAuthenticationSchemeOptions.Name);
         claimsIdentity.AddClaim(CreateBuildConfigurationClaim());
-        claimsIdentity.AddClaim(await CreateClientRoleClaim(token));
+        claimsIdentity.AddClaim(CreateAccountRoleClaim(session));
 
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
@@ -58,23 +51,8 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
     }
 
-    private async Task<Claim> CreateClientRoleClaim(string token)
+    private Claim CreateAccountRoleClaim(SessionData session)
     {
-        var userRole = await getUserRole.QueryAsync(new(token));
-
-        if (userRole is null)
-        {
-            var accountData = await getAccount.QueryAsync(new(token));
-            if (accountData == null)
-            {
-                throw new KeyNotFoundException();
-            }
-
-            await addSessionId.ExecuteAsync(new(accountData.Token, accountData.Role));
-
-            userRole = accountData.Role;
-        }
-
-        return new(UserRoleRequirement.ClaimType, userRole.ToString()!);
+        return new(UserRoleRequirement.ClaimType, session.AccountRole.ToString());
     }
 }

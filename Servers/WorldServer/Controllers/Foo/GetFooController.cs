@@ -19,9 +19,9 @@ public sealed class GetFooController : ControllerBase
     [HttpPost]
     [Route("World/Foo/Get")]
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
-    public async Task<ActionResult<List<string>>> HandleAsync([FromBody] ArgumentData args)
+    public async Task<ActionResult<List<string>>> HandleAsync([FromBody] ArgumentData args, CancellationToken cancellationToken)
     {
-        return await getFoo.QueryAsync(new(args.Seq));
+        return await getFoo.QueryAsync(new(args.Seq), cancellationToken);
     }
 
     public sealed record ArgumentData(long Seq);

@@ -26,14 +26,14 @@ namespace AuthServer.Handlers.World
             this.mapper = mapper;
         }
 
-        public async Task<List<ServerData>> QueryAsync(GetServerListQuery query)
+        public async Task<List<ServerData>> QueryAsync(GetServerListQuery query, CancellationToken cancellationToken)
         {
             var rows = await dbContext.Servers
                 .Where(x => x.Role == query.Role)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             dbContext.Servers.RemoveRange(rows.Where(x => x.ExpireAt <= time.Now));
-            await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return mapper.Map<List<ServerData>>(rows.Where(x => time.Now < x.ExpireAt));
         }

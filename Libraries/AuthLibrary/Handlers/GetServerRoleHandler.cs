@@ -16,11 +16,11 @@ public class GetServerRoleHandler : IQueryHandler<GetServerRoleQuery, ServerRole
         this.dbContext = dbContext;
     }
 
-    public async Task<ServerRoles> QueryAsync(GetServerRoleQuery query)
+    public async Task<ServerRoles> QueryAsync(GetServerRoleQuery query, CancellationToken cancellationToken)
     {
         return await dbContext.ServerRoles
             .Where(row => row.Token == query.Token)
             .Select(row => row.Role)
-            .SingleAsync();
+            .SingleAsync(cancellationToken);
     }
 }
