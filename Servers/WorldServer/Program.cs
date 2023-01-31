@@ -9,8 +9,7 @@ using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;
 using CommonLibrary.Models;
-
-// using StaticDataLibrary.Extensions;
+using StaticDataLibrary.Extensions;
 using WorldServer;
 using WorldServer.Extensions;
 
@@ -19,8 +18,7 @@ builder.Host.UseLogger();
 builder.Services.UseNginx();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString("WorldDb"));
-
-// builder.Services.UseStaticData("StaticData");
+builder.Services.UseStaticData("StaticData");
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisCache")!);
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
