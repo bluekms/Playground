@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using AuthLibrary.Extensions.Authorizations;
@@ -9,7 +8,6 @@ using CommonLibrary.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 
 namespace AuthLibrary.Extensions.Authentication;
 

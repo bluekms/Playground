@@ -1,3 +1,4 @@
+using AuthLibrary.Feature.Session;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthLibrary.Extensions.Authentication;
@@ -10,5 +11,7 @@ public static class SessionAuthenticationExtension
             .AddAuthentication(SessionAuthenticationSchemeOptions.Name)
             .AddScheme<SessionAuthenticationSchemeOptions, SessionAuthenticationHandler>(
                 SessionAuthenticationSchemeOptions.Name, configureOptions => { });
+
+        services.AddScoped<SessionStore>();
     }
 }

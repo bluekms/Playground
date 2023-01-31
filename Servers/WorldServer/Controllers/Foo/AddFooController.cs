@@ -32,10 +32,9 @@ public sealed class AddFooController : ControllerBase
         await addFoo.ExecuteAsync(new(args.Data));
 
         var id = int.Parse(args.Data);
+        var record = await staticData.TypeTestTable.SingleAsync(x => x.Id == id);
 
-        var record = await staticData.TypeTestTable.SingleAsync(x => x.Id == 1001);
-
-        return $"Ok: {record.Id}";
+        return $"Ok";
     }
 
     public sealed record ArgumentData(string Data);

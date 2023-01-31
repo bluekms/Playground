@@ -3,6 +3,7 @@ using AuthDb;
 using AuthLibrary.Extensions;
 using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
@@ -11,7 +12,6 @@ using CommonLibrary.Models;
 using StaticDataLibrary.Extensions;
 using WorldServer;
 using WorldServer.Extensions;
-using AssemblyEntry = AuthLibrary.Models.AssemblyEntry;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
@@ -23,6 +23,7 @@ builder.Services.UseRedisCache(builder.Configuration.GetConnectionString("RedisC
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
+builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
 builder.Services.UseHandlers(new(Assembly.GetExecutingAssembly()));
 builder.Services.UseHandlers(new(Assembly.GetAssembly(typeof(AssemblyEntry))!));

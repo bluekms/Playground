@@ -11,7 +11,7 @@ public sealed class FooController : ControllerBase
     {
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("Auth/Foo")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
     public ActionResult<string> Foo([FromBody] Arguments args, CancellationToken cancellationToken)
