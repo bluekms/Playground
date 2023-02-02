@@ -5,6 +5,8 @@ namespace AuthLibrary.Extensions;
 
 public static class RedisCacheExtension
 {
+    public const string SectionName = "RedisCache";
+
     public static void UseRedisCache(this IServiceCollection services, string connectionString)
     {
         var redisConnection = ConnectionMultiplexer.Connect(connectionString);
