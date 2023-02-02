@@ -49,7 +49,8 @@ public static class StaticDataExtension
 
         var provider = options.ProviderType switch
         {
-            StaticDataOptions.ProviderTypes.AwsS3 => new AwsS3Provider(),
+            StaticDataOptions.ProviderTypes.AwsS3 => (IProviderBase)new AwsS3Provider(),
+            StaticDataOptions.ProviderTypes.CsvFiles => new CsvFileProvider(),
             _ => null,
         };
 
