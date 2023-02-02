@@ -6,43 +6,61 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StaticDataLibrary.AwsS3Library;
+using StaticDataLibrary.Providers;
 using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.Extensions;
 
 public static class StaticDataExtension
 {
-    public static async void UseStaticData(this IServiceCollection services, IConfigurationSection staticDataSection)
+    public static async Task UseStaticDataAsync(this IServiceCollection services, IConfigurationSection staticDataSection)
     {
-        var options = staticDataSection.Get<StaticDataOptions>();
+        var options = staticDataSection.Get<StaticDataOptions>()!;
         
-        var folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var staticDataPath = Path.Combine(folder, "StaticData");
-        var di = new DirectoryInfo(staticDataPath);
-        if (!di.Exists)
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var staticDataRoot = Path.Combine(appDataPath, options.DataName);
+        var rootDi = new DirectoryInfo(staticDataRoot);
+        if (!rootDi.Exists)
         {
-            di.Create();
+            rootDi.Create();
         }
         
-        var fileName = $"{options.DataName}-{options.Version}.tar.gz";
-        var tarFileName = Path.Combine(staticDataPath, fileName);
-        var unpackPath = Path.Combine(staticDataPath, options.Version);
-
-        if (options.ForceUpdate)
+        var tarFileName = $"{options.DataName}-{options.Version}.tar.gz";
+        var targetVersionPath = Path.Combine(staticDataRoot, options.Version);
+        var targetVersionDi = new DirectoryInfo(targetVersionPath);
+        if (targetVersionDi.Exists && targetVersionDi.GetFiles().Length > 0)
         {
-            RemoveOldFiles(tarFileName, unpackPath);
-            await DownloadStaticData(options.S3Provider, staticDataPath, fileName);
-            UnpackStaticDataFile(tarFileName, unpackPath);    
+            if (options.ForceUpdate)
+            {
+                await Clean(options, staticDataRoot, tarFileName, targetVersionPath);
+            }
+        }
+        else
+        {
+            await Clean(options, staticDataRoot, tarFileName, targetVersionPath);
         }
         
-        await InitializeSqlite(services, unpackPath);
+        await InitializeSqlite(services, targetVersionPath);
     }
 
-    private static void RemoveOldFiles(string tarFile, string staticDataPath)
+    private static async Task Clean(StaticDataOptions options, string staticDataRoot, string tarFileName, string targetVersionPath)
     {
-        File.Delete(tarFile);
+        RemoveOldFiles(tarFileName, targetVersionPath);
 
-        var di = new DirectoryInfo(staticDataPath);
+        var provider = options.ProviderType switch
+        {
+            StaticDataOptions.ProviderTypes.AwsS3 => new AwsS3Provider(),
+            _ => null,
+        };
+
+        await provider!.RunAsync(options, staticDataRoot, tarFileName, targetVersionPath);
+    }
+
+    private static void RemoveOldFiles(string tarFileName, string tarVersionPath)
+    {
+        File.Delete(tarFileName);
+
+        var di = new DirectoryInfo(tarVersionPath);
         if (!di.Exists)
         {
             return;
@@ -54,32 +72,6 @@ public static class StaticDataExtension
         }
         
         di.Delete();
-    }
-
-    private static async Task DownloadStaticData(StaticDataOptions.AwsS3Provider options, string path, string fileName)
-    {
-        // TODO goto appsettings
-        var s3Services = new Aws3Services(
-            options.RegionalDomainName,
-            options.AwsAccessKeyId,
-            options.AwsSecretAccessKey);
-        var staticData = await s3Services.GetStaticDataAsync("nk-r-and-d", fileName);
-        
-        var localFileName = Path.Combine(path, fileName);
-        await File.WriteAllBytesAsync(localFileName, staticData);
-    }
-    
-    private static void UnpackStaticDataFile(string tarFile, string staticDataPath)
-    {
-        var stream = File.OpenRead(tarFile);
-        var gzStream = new GZipInputStream(stream);
-        var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
-        
-        tarArchive.ExtractContents(staticDataPath);
-        
-        tarArchive.Close();
-        gzStream.Close();
-        stream.Close();
     }
 
     private static async Task InitializeSqlite(IServiceCollection services, string staticDataPath)

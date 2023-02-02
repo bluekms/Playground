@@ -7,10 +7,10 @@ public class StaticDataOptions
     public string DataName { get; set; } = null!;
     public string Version { get; set; } = null!;
     public bool ForceUpdate { get; set; }
-    public Providers Provider { get; set; }
+    public ProviderTypes ProviderType { get; set; }
     public AwsS3Provider? S3Provider { get; set; } = null;
     
-    public enum Providers
+    public enum ProviderTypes
     {
         LocalFile,
         AwsS3,
@@ -26,5 +26,6 @@ public class StaticDataOptions
         public string RegionalDomainName { get; set; } = null!;
         public string AwsAccessKeyId { get; set; } = null!;
         public string AwsSecretAccessKey { get; set; } = null!;
+        public string BucketName { get; set; } = null!;
     }
 }

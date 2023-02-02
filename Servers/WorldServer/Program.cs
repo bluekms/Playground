@@ -17,11 +17,10 @@ using AssemblyEntry = AuthLibrary.Models.AssemblyEntry;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Services.UseNginx();
+builder.Services.UseMapster();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString("AuthDb"));
 builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString("WorldDb"));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.SectionName)!);
-builder.Services.UseStaticData(builder.Configuration.GetSection(StaticDataOptions.SectionName));
-builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
@@ -32,6 +31,8 @@ builder.Services.UseQueryDecorator();
 builder.Services.UseCommandDecorator();
 builder.Services.UseServerRegistry(builder.Configuration.GetSection(ServerRegistryOptions.ConfigurationSection));
 builder.Services.UseControllers();
+
+await builder.Services.UseStaticDataAsync(builder.Configuration.GetSection(StaticDataOptions.SectionName));
 
 // DI
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
