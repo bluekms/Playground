@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StaticDataLibrary.AwsS3Library;
+using StaticDataLibrary.Options;
 using StaticDataLibrary.Providers;
 using StaticDataLibrary.RecordLibrary;
 
@@ -50,7 +51,8 @@ public static class StaticDataExtension
         var provider = options.ProviderType switch
         {
             StaticDataOptions.ProviderTypes.AwsS3 => (IProviderBase)new AwsS3Provider(),
-            StaticDataOptions.ProviderTypes.CsvFiles => new CsvFileProvider(),
+            StaticDataOptions.ProviderTypes.CsvFiles => new CsvFilesProvider(),
+            StaticDataOptions.ProviderTypes.TarFile => new TarFileProvider(),
             _ => null,
         };
 

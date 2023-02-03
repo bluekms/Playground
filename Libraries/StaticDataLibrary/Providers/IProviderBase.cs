@@ -1,3 +1,5 @@
+using StaticDataLibrary.Options;
+
 namespace StaticDataLibrary.Providers;
 
 public interface IProviderBase

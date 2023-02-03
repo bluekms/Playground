@@ -10,6 +10,7 @@ using CommonLibrary.Handlers.Decorators;
 using CommonLibrary.Models;
 using StaticDataLibrary;
 using StaticDataLibrary.Extensions;
+using StaticDataLibrary.Options;
 using WorldServer;
 using WorldServer.Extensions;
 using AssemblyEntry = AuthLibrary.Models.AssemblyEntry;

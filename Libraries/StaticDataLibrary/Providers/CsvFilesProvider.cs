@@ -1,13 +1,15 @@
+using StaticDataLibrary.Options;
+
 namespace StaticDataLibrary.Providers;
 
-public class CsvFileProvider : IProviderBase
+public class CsvFilesProvider : IProviderBase
 {
     public Task RunAsync(StaticDataOptions options, string staticDataRoot, string tarFileName, string targetVersionPath)
     {
-        var srcDi = new DirectoryInfo(options.CsvProvider!.Path);
+        var srcDi = new DirectoryInfo(options.CsvFilesProvider!.Path);
         if (!srcDi.Exists || srcDi.GetFiles().Length == 0)
         {
-            throw new FileNotFoundException($"{options.CsvProvider.Path}");
+            throw new FileNotFoundException($"{options.CsvFilesProvider.Path}");
         }
 
         var dstPath = Path.Combine(staticDataRoot, options.Version);
@@ -20,7 +22,7 @@ public class CsvFileProvider : IProviderBase
         foreach (var file in srcDi.GetFiles("*.csv"))
         {
             var dst = Path.Combine(dstPath, file.Name);
-            File.Copy(file.FullName, dst);
+            file.CopyTo(dst);
         }
 
         return Task.CompletedTask;
