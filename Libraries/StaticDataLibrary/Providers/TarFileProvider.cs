@@ -9,7 +9,7 @@ public class TarFileProvider : IProviderBase
 {
     public Task RunAsync(StaticDataOptions options, string staticDataRoot, string tarFileName, string targetVersionPath)
     {
-        var fileFullName = Path.Combine(options.TarFileProvider.TarFilePath, tarFileName);
+        var fileFullName = Path.Combine(options.TarFileProvider!.TarFilePath, tarFileName);
         var fileInfo = new FileInfo(fileFullName);
         if (!fileInfo.Exists)
         {
