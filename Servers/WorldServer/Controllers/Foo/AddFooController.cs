@@ -1,11 +1,10 @@
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Feature.Session;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StaticDataLibrary;
-using StaticDataLibrary.DevDataObjects;
-using StaticDataLibrary.DevRecords;
 using WorldServer.Handlers.Foo;
 
 namespace WorldServer.Controllers.Foo;
@@ -27,7 +26,7 @@ public sealed class AddFooController : ControllerBase
     [HttpPost]
     [Route("World/Foo/Add")]
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
-    public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args)
+    public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args, SessionData session, CancellationToken cancellationToken)
     {
         await addFoo.ExecuteAsync(new(args.Data));
 

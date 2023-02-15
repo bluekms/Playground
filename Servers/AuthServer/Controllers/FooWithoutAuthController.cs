@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Feature.Session;
 using Microsoft.AspNetCore.Authorization;
@@ -7,16 +8,13 @@ namespace AuthServer.Controllers;
 
 public class FooWithoutAuthController : ControllerBase
 {
-    public FooWithoutAuthController()
-    {
-    }
-
     [HttpPost]
     [Route("Auth/Foo2")]
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
     public ActionResult<string> Foo([FromBody] Arguments args, SessionData session, CancellationToken cancellationToken)
     {
-        return $"{args.Data}: Ok";
+        var json = JsonSerializer.Serialize(session);
+        return $"{args.Data}: Ok. session: {json}";
     }
 
     public sealed record Arguments(string Data);

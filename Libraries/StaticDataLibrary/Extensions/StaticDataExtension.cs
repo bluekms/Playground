@@ -1,11 +1,7 @@
-using System.Text;
-using ICSharpCode.SharpZipLib.GZip;
-using ICSharpCode.SharpZipLib.Tar;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StaticDataLibrary.AwsS3Library;
 using StaticDataLibrary.Options;
 using StaticDataLibrary.Providers;
 using StaticDataLibrary.RecordLibrary;
@@ -46,7 +42,8 @@ public static class StaticDataExtension
 
     private static async Task Clean(StaticDataOptions options, string staticDataRoot, string tarFileName, string targetVersionPath)
     {
-        RemoveOldFiles(tarFileName, targetVersionPath);
+        var tarFileFullName = Path.Combine(staticDataRoot, tarFileName);
+        RemoveOldFiles(tarFileFullName, targetVersionPath);
 
         var provider = options.ProviderType switch
         {
@@ -59,11 +56,11 @@ public static class StaticDataExtension
         await provider!.RunAsync(options, staticDataRoot, tarFileName, targetVersionPath);
     }
 
-    private static void RemoveOldFiles(string tarFileName, string tarVersionPath)
+    private static void RemoveOldFiles(string tarFileFullName, string staticDataRoot)
     {
-        File.Delete(tarFileName);
+        File.Delete(tarFileFullName);
 
-        var di = new DirectoryInfo(tarVersionPath);
+        var di = new DirectoryInfo(staticDataRoot);
         if (!di.Exists)
         {
             return;

@@ -25,6 +25,6 @@ public sealed class FooControllerTest
         var actionResult2 = Assert.IsType<ActionResult<string>>(result2);
         
         Assert.Equal($"{foo}: Ok", actionResult1.Value);
-        Assert.Equal($"{foo}: Ok", actionResult2.Value);
+        Assert.StartsWith($"{foo}: Ok", actionResult2.Value);
     }
 }
