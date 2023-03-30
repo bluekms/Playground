@@ -6,6 +6,8 @@ namespace WorldServer;
 
 public sealed class WorldDbContext : DbContext
 {
+    public const string SectionName = "WorldDb";
+
     public WorldDbContext(DbContextOptions<WorldDbContext> options)
         : base(options)
     {
