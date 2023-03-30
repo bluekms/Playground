@@ -1,4 +1,5 @@
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Feature.Session;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
@@ -25,8 +26,11 @@ public sealed class AddFooController : ControllerBase
 
     [HttpPost]
     [Route("World/Foo/Add")]
-    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
-    public async Task<ActionResult<string>> HandleAsync([FromBody] ArgumentData args, SessionData session, CancellationToken cancellationToken)
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.ServiceApi)]
+    public async Task<ActionResult<string>> HandleAsync(
+        SessionInfo session,
+        [FromBody] Arguments args,
+        CancellationToken cancellationToken)
     {
         await addFoo.ExecuteAsync(new(args.Data));
 
@@ -36,5 +40,5 @@ public sealed class AddFooController : ControllerBase
         return $"Ok";
     }
 
-    public sealed record ArgumentData(string Data);
+    public sealed record Arguments(string Data);
 }

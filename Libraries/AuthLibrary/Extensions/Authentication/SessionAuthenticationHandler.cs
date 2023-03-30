@@ -51,7 +51,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
     }
 
-    private Claim CreateAccountRoleClaim(SessionData session)
+    private Claim CreateAccountRoleClaim(SessionInfo session)
     {
         return new(AccountRoleRequirement.ClaimType, session.AccountRole.ToString());
     }

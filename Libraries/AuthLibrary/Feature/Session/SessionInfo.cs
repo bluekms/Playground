@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthLibrary.Feature.Session;
 
 [ModelBinder(BinderType = typeof(SessionBinder))]
-public sealed class SessionData
+public sealed class SessionInfo
 {
-    public SessionData(string sessionId, AccountRoles accountRole)
+    public SessionInfo(string sessionId, AccountRoles accountRole)
     {
         SessionId = sessionId;
         AccountRole = accountRole;

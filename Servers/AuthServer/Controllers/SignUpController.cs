@@ -29,7 +29,9 @@ public sealed class SignUpController : ControllerBase
     [HttpPost]
     [Route("Auth/SignUp")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Result>> SignUp([FromBody] Arguments args, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result>> SignUp(
+        [FromBody] Arguments args,
+        CancellationToken cancellationToken)
     {
         await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 

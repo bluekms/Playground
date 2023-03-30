@@ -35,13 +35,15 @@ public sealed class LoginController : ControllerBase
     [HttpPost]
     [Route("Auth/Login")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Result>> Login([FromBody] Arguments args, CancellationToken cancellationToken)
+    public async Task<ActionResult<Result>> Login(
+        [FromBody] Arguments args,
+        CancellationToken cancellationToken)
     {
         await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 
         var account = await updateSession.ExecuteAsync(new(args.AccountId));
 
-        var session = new SessionData(account.Token, account.Role);
+        var session = new SessionInfo(account.Token, account.Role);
         await sessionStore.SetAsync(session, cancellationToken);
 
         var worlds = await getServerList.QueryAsync(new(ServerRoles.World), cancellationToken);

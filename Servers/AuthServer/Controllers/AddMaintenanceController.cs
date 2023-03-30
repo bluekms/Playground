@@ -28,7 +28,9 @@ public class AddMaintenanceController : ControllerBase
     [HttpPost]
     [Route("Auth/Maintenance/Add")]
     [Authorize(AuthenticationSchemes = CredentialAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Returns>> AddMaintenance([FromBody] Arguments args, CancellationToken cancellationToken)
+    public async Task<ActionResult<Returns>> AddMaintenance(
+        [FromBody] Arguments args,
+        CancellationToken cancellationToken)
     {
         await rule.CheckAsync(new(args.Start, args.End, args.Reason), cancellationToken);
         var newData = await addMaintenance.ExecuteAsync(new(args.Start, args.End, args.Reason));
