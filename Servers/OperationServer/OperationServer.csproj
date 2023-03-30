@@ -38,4 +38,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\AuthDb\AuthDb.csproj" />
+    <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
+    <ProjectReference Include="..\WorldServer\WorldServer.csproj" />
+  </ItemGroup>
+
 </Project>
