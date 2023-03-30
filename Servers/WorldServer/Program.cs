@@ -12,7 +12,6 @@ using StaticDataLibrary.Extensions;
 using StaticDataLibrary.Options;
 using WorldDb;
 using WorldServer.Extensions;
-using AssemblyEntry = AuthLibrary.Models.AssemblyEntry;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
@@ -26,7 +25,7 @@ builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
 builder.Services.UseHandlers(new(Assembly.GetExecutingAssembly()));
-builder.Services.UseHandlers(new(Assembly.GetAssembly(typeof(AssemblyEntry))!));
+builder.Services.UseHandlers(new(Assembly.GetAssembly(typeof(AuthLibrary.Models.AssemblyEntry))!));
 builder.Services.UseQueryDecorator();
 builder.Services.UseCommandDecorator();
 builder.Services.UseServerRegistry(builder.Configuration.GetSection(ServerRegistryOptions.ConfigurationSection));
