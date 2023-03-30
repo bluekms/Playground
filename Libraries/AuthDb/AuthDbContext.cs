@@ -5,7 +5,7 @@ namespace AuthDb;
 
 public sealed class AuthDbContext : DbContext
 {
-    public const string SectionName = "AuthDb";
+    public const string ConfigurationSection = "AuthDb";
 
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)

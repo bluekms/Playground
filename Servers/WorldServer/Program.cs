@@ -18,9 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Services.UseNginx();
 builder.Services.UseMapster();
-builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.SectionName));
-builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString(WorldDbContext.SectionName));
-builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.SectionName)!);
+builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
+builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString(WorldDbContext.ConfigurationSection));
+builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
@@ -32,10 +32,10 @@ builder.Services.UseCommandDecorator();
 builder.Services.UseServerRegistry(builder.Configuration.GetSection(ServerRegistryOptions.ConfigurationSection));
 builder.Services.UseControllers();
 
-await builder.Services.UseStaticDataAsync(builder.Configuration.GetSection(StaticDataOptions.SectionName));
-
 // DI
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
+
+await builder.Services.UseStaticDataAsync(builder.Configuration.GetSection(StaticDataOptions.ConfigurationSection));
 
 // Configure the HTTP request pipeline.
 //
