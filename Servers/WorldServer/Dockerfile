@@ -8,6 +8,7 @@ WORKDIR /src
 COPY ["Servers/WorldServer/appsettings.Docker.json", "Servers/WorldServer/"]
 COPY ["Servers/WorldServer/WorldServer.csproj", "Servers/WorldServer/"]
 COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/AuthDb/"]
+COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/WorldDb/"]
 COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
 COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "Libraries/AuthLibrary/"]
 RUN dotnet restore "Servers/WorldServer/WorldServer.csproj"

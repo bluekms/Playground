@@ -1,4 +1,5 @@
 using CommonLibrary.Handlers;
+using WorldDb;
 
 namespace WorldServer.Handlers.Foo;
 

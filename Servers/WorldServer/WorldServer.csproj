@@ -47,6 +47,7 @@
     <ProjectReference Include="..\..\Libraries\AuthLibrary\AuthLibrary.csproj" />
     <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
     <ProjectReference Include="..\..\Libraries\StaticDataLibrary\StaticDataLibrary.csproj" />
+    <ProjectReference Include="..\..\Libraries\WorldDb\WorldDb.csproj" />
   </ItemGroup>
 
 </Project>

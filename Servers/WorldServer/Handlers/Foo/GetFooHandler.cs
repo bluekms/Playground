@@ -1,5 +1,6 @@
 using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
+using WorldDb;
 
 namespace WorldServer.Handlers.Foo;
 
