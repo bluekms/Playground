@@ -53,6 +53,6 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
 
     private Claim CreateAccountRoleClaim(SessionData session)
     {
-        return new(UserRoleRequirement.ClaimType, session.AccountRole.ToString());
+        return new(AccountRoleRequirement.ClaimType, session.AccountRole.ToString());
     }
 }

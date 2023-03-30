@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthLibrary.Extensions.Authorizations;
 
-public sealed class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirement>
+public sealed class AccountRoleClaimHandler : AuthorizationHandler<AccountRoleRequirement>
 {
     private readonly IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime;
 
-    public UserRoleClaimHandler(IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime)
+    public AccountRoleClaimHandler(IQueryHandler<IsMaintenanceTimeQuery, bool> isMaintenanceTime)
     {
         this.isMaintenanceTime = isMaintenanceTime;
     }
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserRoleRequirement requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AccountRoleRequirement requirement)
     {
         if (context.User?.Identity == null)
         {
@@ -29,7 +29,7 @@ public sealed class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirem
         }
 
         var claim = context.User.Claims
-            .FirstOrDefault(x => x.Type == UserRoleRequirement.ClaimType);
+            .FirstOrDefault(x => x.Type == AccountRoleRequirement.ClaimType);
 
         if (claim == null)
         {
@@ -37,7 +37,7 @@ public sealed class UserRoleClaimHandler : AuthorizationHandler<UserRoleRequirem
             return;
         }
 
-        if (requirement.UserRoleList.All(x => x != claim.Value))
+        if (requirement.AccountRoleList.All(x => x != claim.Value))
         {
             context.Fail();
             return;

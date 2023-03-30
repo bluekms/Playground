@@ -12,7 +12,7 @@ public static class PermissionAuthorizationExtension
         {
             options.AddPolicy("AdminApi", policy =>
             {
-                policy.Requirements.Add(new UserRoleRequirement(new[]
+                policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
                     AccountRoles.Administrator,
                 }));
@@ -20,7 +20,7 @@ public static class PermissionAuthorizationExtension
 
             options.AddPolicy("ServiceApi", policy =>
             {
-                policy.Requirements.Add(new UserRoleRequirement(new[]
+                policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
                     AccountRoles.Developer,
                     AccountRoles.WhitelistUser,
@@ -31,7 +31,7 @@ public static class PermissionAuthorizationExtension
             options.AddPolicy("CheatApi", policy =>
             {
                 policy.Requirements.Add(new BuildConfigurationRequirement(BuildConfigurationRequirement.BuildConfigurations.Debug));
-                policy.Requirements.Add(new UserRoleRequirement(new[]
+                policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
                     AccountRoles.Developer,
                     AccountRoles.OpUser,
@@ -40,6 +40,6 @@ public static class PermissionAuthorizationExtension
         });
 
         services.AddScoped<IAuthorizationHandler, BuildConfigurationClaimHandler>();
-        services.AddScoped<IAuthorizationHandler, UserRoleClaimHandler>();
+        services.AddScoped<IAuthorizationHandler, AccountRoleClaimHandler>();
     }
 }
