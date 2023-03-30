@@ -1,6 +1,6 @@
 ﻿using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Handlers;
 using AuthLibrary.Models;
-using AuthServer.Handlers.Account;
 using CommonLibrary.Handlers;
 using CommonLibrary.Models;
 using MapsterMapper;
