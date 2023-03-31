@@ -7,11 +7,9 @@ using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
 using CommonLibrary.Handlers.Decorators;
-using CommonLibrary.Models;
 using StaticDataLibrary.Extensions;
 using StaticDataLibrary.Options;
 using WorldDb;
-using WorldServer.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
@@ -28,7 +26,6 @@ builder.Services.UseHandlers(new(Assembly.GetExecutingAssembly()));
 builder.Services.UseHandlers(new(Assembly.GetAssembly(typeof(AuthLibrary.Models.AssemblyEntry))!));
 builder.Services.UseQueryDecorator();
 builder.Services.UseCommandDecorator();
-builder.Services.UseServerRegistry(builder.Configuration.GetSection(ServerRegistryOptions.ConfigurationSection));
 builder.Services.UseControllers();
 
 // DI
