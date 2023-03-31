@@ -7,9 +7,8 @@
 ## How to use
 ```
 docker network create playground-network
-docker network create playground-network
 ```
-먼저 볼륨과 네트워크가 필요
+먼저 네트워크가 필요
 
 ```
 docker run --name AuthServer --network playground-network --ip 172.18.0.4 -p 5241:80 -p 7241:443 -v playground-volume-auth-server:/app -e ASPNETCORE_ENVIRONMENT=Docker -d bluekms/playground-auth-server:latest
