@@ -1,4 +1,4 @@
-﻿using AuthDb;
+using AuthDb;
 using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
@@ -6,14 +6,14 @@ using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthServer.Handlers.Account;
+namespace AuthLibrary.Handlers;
 
 public sealed record AddAccountCommand(
     string AccountId,
     string Password,
     AccountRoles AccountRole) : ICommand;
 
-public sealed class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
+public class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 {
     private const string Salt = "Playground.bluekms";
 

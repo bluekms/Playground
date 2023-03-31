@@ -11,7 +11,7 @@ public sealed class SessionBinder : IModelBinder
             throw new InvalidOperationException("Is not TopLevelObject");
         }
 
-        var session = bindingContext.HttpContext.Features.Get<SessionData>();
+        var session = bindingContext.HttpContext.Features.Get<SessionInfo>();
         bindingContext.Result = ModelBindingResult.Success(session);
         return Task.CompletedTask;
     }

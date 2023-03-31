@@ -1,11 +1,13 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using WorldServer.Tables;
+using WorldDb.Tables;
 
-namespace WorldServer;
+namespace WorldDb;
 
-public sealed class WorldDbContext : DbContext
+public class WorldDbContext : DbContext
 {
+    public const string ConfigurationSection = "WorldDb";
+
     public WorldDbContext(DbContextOptions<WorldDbContext> options)
         : base(options)
     {

@@ -18,10 +18,10 @@ public sealed class FooControllerTest
         var result1 = controller1.Foo(new(foo), CancellationToken.None);
         var actionResult1 = Assert.IsType<ActionResult<string>>(result1);
 
-        var session = new SessionData("TEST", AccountRoles.User);
+        var session = new SessionInfo("TEST", AccountRoles.User);
         
         var controller2 = new FooWithoutAuthController();
-        var result2 = controller2.Foo(new(foo), session, CancellationToken.None);
+        var result2 = controller2.Foo(session, new(foo), CancellationToken.None);
         var actionResult2 = Assert.IsType<ActionResult<string>>(result2);
         
         Assert.Equal($"{foo}: Ok", actionResult1.Value);

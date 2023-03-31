@@ -1,4 +1,5 @@
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Feature.Session;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,11 @@ public sealed class GetFooController : ControllerBase
 
     [HttpPost]
     [Route("World/Foo/Get")]
-    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = "ServiceApi")]
-    public async Task<ActionResult<List<string>>> HandleAsync([FromBody] ArgumentData args, SessionData session, CancellationToken cancellationToken)
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.ServiceApi)]
+    public async Task<ActionResult<List<string>>> HandleAsync(
+        SessionInfo session,
+        [FromBody] ArgumentData args,
+        CancellationToken cancellationToken)
     {
         return await getFoo.QueryAsync(new(args.Seq), cancellationToken);
     }

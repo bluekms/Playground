@@ -31,7 +31,7 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
 
     public AuthDbContext CreateDbContext(string[] args)
     {
-        var conn = config.GetConnectionString("AuthDb");
+        var conn = config.GetConnectionString(AuthDbContext.ConfigurationSection);
 
         var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
         optionsBuilder.UseMySql(

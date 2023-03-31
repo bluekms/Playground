@@ -1,4 +1,6 @@
-﻿using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Feature.Session;
 using AuthLibrary.Handlers;
 using AuthLibrary.Models;
 using CommonLibrary.Handlers;
@@ -7,10 +9,10 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthServer.Controllers;
+namespace OperationServer.Controllers;
 
 [ApiController]
-public sealed class SignUpController : ControllerBase
+public class SignUpController : ControllerBase
 {
     private readonly IRuleChecker<SignUpRule> rule;
     private readonly ICommandHandler<AddAccountCommand, AccountData> addAccount;
@@ -27,9 +29,10 @@ public sealed class SignUpController : ControllerBase
     }
 
     [HttpPost]
-    [Route("Auth/SignUp")]
-    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
+    [Route("Operation/SignUp")]
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.AdminApi)]
     public async Task<ActionResult<Result>> SignUp(
+        SessionInfo session,
         [FromBody] Arguments args,
         CancellationToken cancellationToken)
     {
@@ -38,12 +41,12 @@ public sealed class SignUpController : ControllerBase
         var accountData = await addAccount.ExecuteAsync(new(
             args.AccountId,
             args.Password,
-            AccountRoles.User));
+            args.Role));
 
         return mapper.Map<Result>(accountData);
     }
 
-    public sealed record Arguments(string AccountId, string Password);
+    public sealed record Arguments(string AccountId, string Password, AccountRoles Role);
 
     public sealed record Result(string AccountId, AccountRoles Role);
 }

@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace WorldServer.Tables;
+namespace WorldDb.Tables;
 
-public sealed class WorldFoo
+public class WorldFoo
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]

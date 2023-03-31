@@ -14,13 +14,13 @@ public sealed class SessionStore
         redis = multiplexer.GetDatabase();
     }
 
-    public async Task SetAsync(SessionData session, CancellationToken cancellationToken)
+    public async Task SetAsync(SessionInfo session, CancellationToken cancellationToken)
     {
         var data = JsonSerializer.SerializeToUtf8Bytes(session);
         await redis.StringSetAsync($"{SessionPrefix}:{session.SessionId}", data);
     }
 
-    public async Task<SessionData> GetAsync(string sessionId, CancellationToken cancellationToken)
+    public async Task<SessionInfo> GetAsync(string sessionId, CancellationToken cancellationToken)
     {
         var data = await redis.StringGetAsync($"{SessionPrefix}:{sessionId}");
         if (data.HasValue is false)
@@ -28,7 +28,7 @@ public sealed class SessionStore
             throw new InvalidDataException(nameof(sessionId));
         }
 
-        var session = JsonSerializer.Deserialize<SessionData>(data!);
+        var session = JsonSerializer.Deserialize<SessionInfo>(data!);
         if (session is null)
         {
             throw new NullReferenceException($"{nameof(sessionId)}: {sessionId}, {data}");

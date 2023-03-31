@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 using AuthDb;
+using AuthLibrary.Handlers;
 using AuthServer.Controllers;
-using AuthServer.Handlers.Account;
 using AuthServer.Test.Models;
 using CommonLibrary;
 using CommonLibrary.Models;

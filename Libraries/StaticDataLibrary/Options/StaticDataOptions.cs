@@ -2,7 +2,7 @@ namespace StaticDataLibrary.Options;
 
 public class StaticDataOptions
 {
-    public const string SectionName = "StaticData";
+    public const string ConfigurationSection = "StaticData";
 
     public string DataName { get; set; } = null!;
     public string Version { get; set; } = null!;

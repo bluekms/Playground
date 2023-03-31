@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using CommonLibrary.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
