@@ -7,5 +7,9 @@ jobs:
   Test:
     runs-on: ubuntu-22.04
     steps:
+      - name: Split Github Sha
+        id: vars
+        run: echo "name=sha_short::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Message Test
-        run: MESSAGE="release-${{ github.ref.replace('refs/heads/', '') }}-${{ github.sha:0:7 }}"
+        run: echo "release-${{ github.ref }}-${{ steps.vars.outputs.sha_short }}" >> $GITHUB_OUTPUT
