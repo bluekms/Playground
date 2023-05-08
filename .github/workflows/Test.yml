@@ -1,16 +1,15 @@
 name: Test
 on:
-  push:
-    branches: ["Release/*"]
+  workflow_dispatch:
 
 jobs:
-  Test:
-    runs-on: ubuntu-22.04
+  list_release_branches:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: main
-
-      - name: Message Test
-        run: echo "release-${{ github.ref }}-${GITHUB_SHA::7}"
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: List Branches
+        run: |
+          git fetch --prune --unshallow
+          branches=$(git branch -r --format='%(refname:lstrip=3)')
+          echo "$branches" | tr ' ' '\n' | grep "^release/" | sort
