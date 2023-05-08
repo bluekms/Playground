@@ -31,7 +31,7 @@ jobs:
           
       - name: Split Github Sha
         id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: echo "name=sha_short::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         
       - name: Build and tag:${{ steps.vars.outputs.sha_short }} push
         if: ${{ inputs.UseSpecificTag }}
