@@ -13,4 +13,4 @@ jobs:
           path: main
 
       - name: Message Test
-        run: echo "release-${{ github.ref }}-${GITHUB_SHA:7}" >> $GITHUB_OUTPUT
+        run: echo "release-${{ github.ref }}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
