@@ -6,4 +6,4 @@ jobs:
   Test:
     runs-on: ubuntu-22.04
     steps:
-      - run: echo "release-" ${{ github.ref }} "-" ${{ github.sha:0:7 }}
+      - run: echo "Test~!!!"
