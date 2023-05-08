@@ -33,14 +33,14 @@ jobs:
         id: vars
         run: echo "name=sha_short::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           
-      - name: Build and tag:${{ steps.vars.outputs.sha_short }} push
+      - name: Build and tag:${GITHUB_SHA::7} push
         if: ${{ inputs.UseSpecificTag }}
         uses: docker/build-push-action@v3
         with:
           file: Servers/AuthServer/Dockerfile
           context: .
           push: true
-          tags: bluekms/playground-auth-server:${{ steps.vars.outputs.sha_short }}
+          tags: bluekms/playground-auth-server:${GITHUB_SHA::7}
           
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
