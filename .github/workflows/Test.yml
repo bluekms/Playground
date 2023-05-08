@@ -1,9 +1,11 @@
 name: Test
 on:
-  workflow_dispatch:
+  push:
+    branches: ["release/*"]
 
 jobs:
   Test:
     runs-on: ubuntu-22.04
     steps:
-      - run: echo "Test~!!!"
+      - name: Message Test
+        run: MESSAGE="release-${{ github.ref.replace('refs/heads/', '') }}-${{ github.sha:0:7 }}"
