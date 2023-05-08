@@ -1,0 +1,10 @@
+name: Test
+on:
+  workflow_dispatch:
+
+jobs:
+  Test:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          echo "release-" ${{github.ref.replace('refs/heads/', '')}} "-" ${{ github.sha:0:7 }}
