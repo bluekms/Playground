@@ -17,4 +17,4 @@ jobs:
         run: echo "name=sha_short::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Message Test
-        run: echo "release-${{ github.ref }}-${{ steps.vars.outputs.sha_short }}" >> $GITHUB_OUTPUT
+        run: echo "release-" ${{ github.ref }} "-" ${{ steps.vars.outputs.sha_short }} >> $GITHUB_OUTPUT
