@@ -8,10 +8,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: List Branches
+      - name: Get Last Branch
         run: |
           git fetch --prune --unshallow
-          branches=$(git branch -r | grep "^release" | sort -rn | head -n3)
+          last=$(git branch -r | grep "origin/release" | cut -c 18-23 | sort -rn | head -n1)
           echo "!!!"
-          echo "$branches"
+          echo "$last"
           echo "!!!"
+      - name: Use Last Branch
+        run: echo "$last"
