@@ -11,7 +11,7 @@ jobs:
       - name: List Branches
         run: |
           git fetch --prune --unshallow
-          branches=$(git branch -r --format='%(refname:lstrip=3)')
+          branches=$(git branch -r | grep "^release" | sort -rn | head -n3)
           echo "!!!"
           echo "$branches"
           echo "!!!"
