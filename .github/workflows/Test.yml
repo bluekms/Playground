@@ -3,13 +3,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  list_release_branches:
+  output_branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: List Branches
-        run: |
-          git fetch --prune --unshallow
-          branches=$(git branch -r --format='%(refname:lstrip=3)')
-          echo "$branches" | tr ' ' '\n' | grep "^release/" | sort
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: List Branches
+      run: git branch --list
+        
+    - name: Find Branch with Largest Name
+      run: |
+        BRANCH=$(git for-each-ref --format='%(refname:short)' refs/heads/ | awk '{ print length, $0 }' | sort -rn | head -n 1 | awk '{print $2}')
+        echo "Branch with largest name is: $BRANCH"
