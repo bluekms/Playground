@@ -3,13 +3,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  list_release_branches:
+  retrieve_branch_name:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: List Branches
-        run: |
-          git fetch --prune --unshallow
-          branches=$(git branch -r --format='%(refname:lstrip=3)')
-          echo "$branches"
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Get Release Branch Name
+      run: |
+        RELEASE_BRANCH=$(git for-each-ref --sort=-committerdate refs/heads/Release* --format='%(refname:short)' | head -n 1)
+        echo "The last Release branch name is: $RELEASE_BRANCH"
+        
+    - name: Save Release Branch Name as Variable
+      run: |
+        echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
+      
+    - name: Output Release Branch Name
+      run: |
+        echo "The saved Release branch name is: $RELEASE_BRANCH"
