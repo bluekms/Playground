@@ -13,5 +13,5 @@ jobs:
           git fetch --prune --unshallow
           branches=$(git branch -r --format='%(refname:lstrip=3)')
           echo "!!!"
-          echo "$branches" | tr ' ' '\n' | grep "^origin/release/" | sort
+          echo "$branches"
           echo "!!!"
