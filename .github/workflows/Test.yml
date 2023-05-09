@@ -12,16 +12,16 @@ jobs:
         run: |
           git fetch --prune --unshallow
           echo "=== 1 ==="
-          last=$(git branch -r | sort -rn | head -n1)
+          last=$(git branch -r | sort -rn | head -n10)
           echo "$last"
           echo "=== 2 ==="
-          last=$(git branch -r | cut -c 18-23 | sort -rn | head -n1)
+          last=$(git branch -r | cut -c 18-23 | sort -rn | head -n10)
           echo "$last"
           echo "=== 3 ==="
           last=$(git branch -r | grep "origin/release")
           echo "$last"
           echo "=== 4 ==="
-          last=$(git branch -r | grep "origin/release" | cut -c 18-23 | sort -rn | head -n1)
+          last=$(git branch -r | grep "origin/release" | cut -c 18-23 | sort -rn | head -n10)
           echo "$last"
       - name: Use Last Branch
         run: echo "$last"
