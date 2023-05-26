@@ -34,7 +34,7 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         sw.Stop();
         Console.WriteLine($"InitializeStaticData Fin: {sw.Elapsed.TotalMilliseconds}ms");
         
-        var errors = new StringBuilder();
+        var errors = new List<string>();
         
         sw.Reset();
         sw.Start();
@@ -57,9 +57,17 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         sw.Stop();
         Console.WriteLine($"Regex Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
         
-        if (errors.Length > 0)
+        if (errors.Count > 0)
         {
-            throw new ValidationException(errors.ToString());
+            if (!string.IsNullOrWhiteSpace(programOptions.OutputPath))
+            {
+                File.WriteAllLines(programOptions.OutputPath, errors, Encoding.UTF8);
+            }
+
+            foreach (var error in errors)
+            {
+                Console.WriteLine(error);
+            }
         }
     }
     catch (Exception e)
