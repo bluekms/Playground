@@ -3,16 +3,16 @@ using Microsoft.Extensions.Logging;
 
 namespace CommonLibrary.Handlers.Decorators;
 
-internal sealed class QueryDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
+public sealed class QueryHandlerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
     where TQuery : IQuery
 {
     private readonly IQueryHandler<TQuery, TResult> handler;
-    private readonly ILogger<QueryDecorator<TQuery, TResult>> logger;
+    private readonly ILogger<QueryHandlerDecorator<TQuery, TResult>> logger;
     private readonly ActivitySource activitySource;
 
-    public QueryDecorator(
+    public QueryHandlerDecorator(
         IQueryHandler<TQuery, TResult> handler,
-        ILogger<QueryDecorator<TQuery, TResult>> logger,
+        ILogger<QueryHandlerDecorator<TQuery, TResult>> logger,
         ActivitySource activitySource)
     {
         this.handler = handler;

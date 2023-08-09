@@ -3,16 +3,16 @@ using Microsoft.Extensions.Logging;
 
 namespace CommonLibrary.Handlers.Decorators;
 
-internal sealed class CommandDecorator<TCommand> : ICommandHandler<TCommand>
+public sealed class CommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
     private readonly ICommandHandler<TCommand> handler;
-    private readonly ILogger<CommandDecorator<TCommand>> logger;
+    private readonly ILogger<CommandHandlerDecorator<TCommand>> logger;
     private readonly ActivitySource activitySource;
 
-    public CommandDecorator(
+    public CommandHandlerDecorator(
         ICommandHandler<TCommand> handler,
-        ILogger<CommandDecorator<TCommand>> logger,
+        ILogger<CommandHandlerDecorator<TCommand>> logger,
         ActivitySource activitySource)
     {
         this.handler = handler;
@@ -38,16 +38,22 @@ internal sealed class CommandDecorator<TCommand> : ICommandHandler<TCommand>
     }
 }
 
-internal sealed class CommandDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
+public sealed class CommandHandlerDecorator<TCommand, TResult> : ICommandHandler<TCommand, TResult>
     where TCommand : ICommand
 {
+    private static readonly Action<ILogger, Type, object, Exception?> logInformation =
+        LoggerMessage.Define<Type, object>(
+            LogLevel.Information,
+            new EventId(1, "Command"),
+            "Command {CommandType} {@Command}");
+
     private readonly ICommandHandler<TCommand, TResult> target;
-    private readonly ILogger<CommandDecorator<TCommand, TResult>> logger;
+    private readonly ILogger<CommandHandlerDecorator<TCommand, TResult>> logger;
     private readonly ActivitySource activitySource;
 
-    public CommandDecorator(
+    public CommandHandlerDecorator(
         ICommandHandler<TCommand, TResult> target,
-        ILogger<CommandDecorator<TCommand, TResult>> logger,
+        ILogger<CommandHandlerDecorator<TCommand, TResult>> logger,
         ActivitySource activitySource)
     {
         this.target = target;
@@ -63,7 +69,10 @@ internal sealed class CommandDecorator<TCommand, TResult> : ICommandHandler<TCom
             activity?.AddTag("Playground.Command.Type", typeof(TCommand).Name);
 
             var result = await target.ExecuteAsync(command);
-            logger.LogInformation("Command {CommandType} {@Command}", typeof(TCommand).Name, command);
+
+            logInformation(logger, typeof(TCommand), command, null);
+
+            //logger.LogInformation("Command {CommandType} {@Command}", typeof(TCommand).Name, command);
             logger.LogTrace("Command Result {@CommandResult}", result);
 
             return result;

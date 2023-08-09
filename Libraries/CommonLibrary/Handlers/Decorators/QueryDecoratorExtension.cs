@@ -6,7 +6,7 @@ public static class QueryDecoratorExtension
 {
     public static IServiceCollection UseQueryDecorator(this IServiceCollection services)
     {
-        services.Decorate(typeof(IQueryHandler<,>), typeof(QueryDecorator<,>));
+        services.Decorate(typeof(IQueryHandler<,>), typeof(QueryHandlerDecorator<,>));
         return services;
     }
 }
