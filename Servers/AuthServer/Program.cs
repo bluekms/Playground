@@ -7,10 +7,11 @@ using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
-using CommonLibrary.Handlers.Decorators;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
+builder.Host.UseStashbox();
 builder.Services.UseNginx();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
@@ -19,17 +20,15 @@ builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
-builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetExecutingAssembly()));
-builder.Services.UseHandlers(new GenericDerivedTypeSelector(Assembly.GetAssembly(typeof(AssemblyEntry))!));
-builder.Services.UseQueryDecorator();
-builder.Services.UseCommandDecorator();
+builder.Services.UseHandlers(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(AssemblyEntry))!);
 builder.Services.UseControllers();
 
-// DI
+// 추가 DI
 builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
+app.UseSerilogRequestLogging();
 app.UseForwardedHeaders();
 app.UseAuthorization();
 app.MapControllers();

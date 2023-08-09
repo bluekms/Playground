@@ -70,9 +70,18 @@ public sealed class CommandHandlerDecorator<TCommand, TResult> : ICommandHandler
 
             var result = await target.ExecuteAsync(command);
 
+            logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
             logInformation(logger, typeof(TCommand), command, null);
 
-            //logger.LogInformation("Command {CommandType} {@Command}", typeof(TCommand).Name, command);
+            logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            logger.LogInformation("Command {CommandType} {@Command}", typeof(TCommand).Name, command);
+
+            logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            logger.LogInformation("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
             logger.LogTrace("Command Result {@CommandResult}", result);
 
             return result;

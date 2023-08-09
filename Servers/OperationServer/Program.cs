@@ -6,13 +6,14 @@ using AuthLibrary.Extensions.Authorizations;
 using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
-using CommonLibrary.Handlers.Decorators;
+using Serilog;
 using StaticDataLibrary.Extensions;
 using StaticDataLibrary.Options;
 using WorldDb;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
+builder.Host.UseStashbox();
 builder.Services.UseNginx();
 builder.Services.UseMapster();
 builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
@@ -22,10 +23,7 @@ builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
-builder.Services.UseHandlers(new(Assembly.GetExecutingAssembly()));
-builder.Services.UseHandlers(new(Assembly.GetAssembly(typeof(AuthLibrary.Models.AssemblyEntry))!));
-builder.Services.UseQueryDecorator();
-builder.Services.UseCommandDecorator();
+builder.Services.UseHandlers(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(AuthLibrary.Models.AssemblyEntry))!);
 builder.Services.UseControllers();
 
 // DI
@@ -36,6 +34,7 @@ await builder.Services.UseStaticDataAsync(builder.Configuration.GetSection(Stati
 // Configure the HTTP request pipeline.
 //
 var app = builder.Build();
+app.UseSerilogRequestLogging();
 app.UseForwardedHeaders();
 app.UseAuthorization();
 app.MapControllers();
