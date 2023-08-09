@@ -24,6 +24,12 @@ public class WorkService<TWork> : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var taskCompletionSource = new TaskCompletionSource();
+        await using (stoppingToken.Register(taskCompletionSource.SetResult))
+        {
+            await taskCompletionSource.Task;
+        }
+
         await Task.Delay(options.Delay, stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
@@ -40,17 +46,35 @@ public class WorkService<TWork> : BackgroundService
         var activitySource = provider.GetRequiredService<ActivitySource>();
         using var activity = activitySource.StartActivity(typeof(TWork).Name);
 
-        logger.LogTrace("{Work} is starting", typeof(TWork));
+        LogTrace(logger, typeof(TWork), null);
         var work = (IWork)ActivatorUtilities.CreateInstance(provider, typeof(TWork));
         try
         {
             await work.RunAsync();
-            logger.LogInformation("{Work} is finished.", typeof(TWork));
+            LogInformation(logger, typeof(TWork), null);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "{Work} is failed", typeof(TWork));
+            LogError(logger, typeof(TWork), e);
             throw;
         }
     }
+
+    private static readonly Action<ILogger, Type, Exception?> LogTrace =
+        LoggerMessage.Define<Type>(
+            LogLevel.Trace,
+            EventIdFactory.Create(ReservedLogEventId.WorkerStart),
+            "{Work} is starting");
+
+    private static readonly Action<ILogger, Type, Exception?> LogInformation =
+        LoggerMessage.Define<Type>(
+            LogLevel.Information,
+            EventIdFactory.Create(ReservedLogEventId.WorkerFinished),
+            "{Work} is finished");
+
+    private static readonly Action<ILogger, Type, Exception?> LogError =
+        LoggerMessage.Define<Type>(
+            LogLevel.Error,
+            EventIdFactory.Create(ReservedLogEventId.WorkServiceError),
+            "{Work} is failed");
 }

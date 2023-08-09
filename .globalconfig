@@ -33,3 +33,6 @@ dotnet_diagnostic.SA1413.severity = silent
 # SA1516: Elements should be separated by blank line
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1516.md
 dotnet_diagnostic.SA1516.severity = silent
+
+## 필드 전방 선언 선언 관련
+dotnet_diagnostic.SA1201.severity = silent

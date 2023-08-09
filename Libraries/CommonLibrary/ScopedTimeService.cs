@@ -31,11 +31,11 @@ namespace CommonLibrary
             }
         }
 
-        public DateTime FirstDayOfWeek(int startHour = 0, DayOfWeek startDow = DayOfWeek.Sunday)
+        public DateTime FirstDayOfWeek(int startHour = 0, DayOfWeek dow = DayOfWeek.Sunday)
         {
             var today = StartOfToday(startHour);
             var todayDow = today.DayOfWeek;
-            var diff = startDow - todayDow;
+            var diff = dow - todayDow;
             return diff switch
             {
                 0 => today,
