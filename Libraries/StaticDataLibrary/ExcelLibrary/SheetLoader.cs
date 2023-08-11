@@ -89,6 +89,9 @@ public sealed class SheetLoader
             var index = columnNameList.IndexOf(name);
             if (index < 0)
             {
+                // TODO
+                // Record Class에만 있는 컬럼일 경우 여기서 exception
+                // 개발 프로세스 상 기본값으로 체우고 경고만 내줘야 하는지 고민
                 throw new IndexOutOfRangeException($"Not found column. {name}");
             }
             
