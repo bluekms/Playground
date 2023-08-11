@@ -11,7 +11,7 @@ using StaticDataLibrary.ValidationLibrary;
 
 // TODO 실 사용 시 TestStaticDataContext 를 StaticDataContext 로 교체해야 함
 
-Parser.Default.ParseArguments<ProgramOptions>(args)
+await Parser.Default.ParseArguments<ProgramOptions>(args)
     .WithParsedAsync(RunOptionsAsync);
 
 static async Task RunOptionsAsync(ProgramOptions programOptions)
