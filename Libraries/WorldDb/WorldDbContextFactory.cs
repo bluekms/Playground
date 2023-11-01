@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace WorldDb;
 
@@ -31,9 +30,12 @@ public class WorldDbContextFactory : IDesignTimeDbContextFactory<WorldDbContext>
 
     public WorldDbContext CreateDbContext(string[] args)
     {
-        var conn = config.GetConnectionString("WorldDb");
+        // TODO
+        throw new NotImplementedException();
 
+        var conn = config.GetConnectionString("WorldDb");
         var optionsBuilder = new DbContextOptionsBuilder<WorldDbContext>();
+        /*
         optionsBuilder.UseMySql(
             conn,
             ServerVersion.Create(8, 0, 0, ServerType.MySql),
@@ -44,5 +46,8 @@ public class WorldDbContextFactory : IDesignTimeDbContextFactory<WorldDbContext>
             });
 
         return new WorldDbContext(optionsBuilder.Options);
+        */
+
+        return null;
     }
 }

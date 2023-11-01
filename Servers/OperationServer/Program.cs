@@ -16,8 +16,9 @@ builder.Host.UseLogger();
 builder.Host.UseStashbox();
 builder.Services.UseNginx();
 builder.Services.UseMapster();
-builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
-builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString(WorldDbContext.ConfigurationSection));
+
+// builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
+// builder.Services.UseMySql<WorldDbContext>(builder.Configuration.GetConnectionString(WorldDbContext.ConfigurationSection));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection));
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();

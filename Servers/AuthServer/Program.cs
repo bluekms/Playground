@@ -13,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Host.UseStashbox();
 builder.Services.UseNginx();
-builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
+
+// builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
