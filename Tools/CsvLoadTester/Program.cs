@@ -16,13 +16,8 @@ await Parser.Default.ParseArguments<ProgramOptions>(args)
 
 static async Task RunOptionsAsync(ProgramOptions programOptions)
 {
-    var swTotal = new Stopwatch();
-    swTotal.Start();
-    
     try
     {
-        var sw = new Stopwatch();
-        sw.Start();
         Console.WriteLine("InitializeStaticData ...");
         var connection = new SqliteConnection("DataSource=:memory:");
         var options = new DbContextOptionsBuilder<TestStaticDataContext>().UseSqlite(connection).Options;
@@ -31,32 +26,18 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         await context.Database.EnsureCreatedAsync();
         await connection.OpenAsync();
         await InitializeStaticData(context, connection, programOptions.CsvDirectory);
-        sw.Stop();
-        Console.WriteLine($"InitializeStaticData Fin: {sw.Elapsed.TotalMilliseconds}ms");
-        
+
         var errors = new List<string>();
         
-        sw.Reset();
-        sw.Start();
         Console.WriteLine("Range Check ...");
         await RangeChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
-        sw.Stop();
-        Console.WriteLine($"Range Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
-        
-        sw.Reset();
-        sw.Start();
+
         Console.WriteLine("Regex Check ...");
         await RegexChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
-        sw.Stop();
-        Console.WriteLine($"Regex Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
-        
-        sw.Reset();
-        sw.Start();
+
         Console.WriteLine("Foreign Check ...");
         await ForeignChecker.CheckAsync<TestStaticDataContext>(connection, errors);
-        sw.Stop();
-        Console.WriteLine($"Regex Check Fin: {sw.Elapsed.TotalMilliseconds}ms");
-        
+
         if (errors.Count > 0)
         {
             if (!string.IsNullOrWhiteSpace(programOptions.OutputPath))
@@ -76,8 +57,7 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         throw;
     }
 
-    swTotal.Stop();
-    Console.WriteLine($"Fin:\t{swTotal.Elapsed.TotalMilliseconds}ms");
+    Console.WriteLine("Done.");
 }
 
 static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath) where T : DbContext
@@ -92,11 +72,11 @@ static async Task InitializeStaticData<T>(T context, SqliteConnection connection
         {
             Console.WriteLine($"{fileName} 파일이 없습니다. 일단 넘어갑니다.");
         }
-            
+
         var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
 
         await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
     }
-        
+
     await transaction!.CommitAsync();
 }
