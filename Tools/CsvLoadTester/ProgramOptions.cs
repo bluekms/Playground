@@ -9,4 +9,7 @@ public class ProgramOptions
     
     [Option('t', "test", Required = false, HelpText = "TestStaticDataContext")]
     public bool UseTestContext { get; set; } = false;
+
+    [Option('o', "output", Required = false, HelpText = "발생한 문제를 해당 경로에 txt 파일로 출력합니다.")]
+    public required string OutputPath { get; set; }
 }
