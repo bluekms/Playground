@@ -25,5 +25,8 @@ public sealed class AuthDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.HasDefaultSchema(ConfigurationSection);
+
+        // modelBuilder.HasPostgresExtension("pg_bigm");
     }
 }

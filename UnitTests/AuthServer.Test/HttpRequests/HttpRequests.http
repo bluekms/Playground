@@ -1,0 +1,36 @@
+###
+# @name Foo
+POST https://{{host}}:{{port}}/Auth/Foo2
+Content-Type: application/json
+
+{ "Data": "asdfasdf" }
+
+
+###
+# @name Foo2
+POST https://{{host}}:{{port}}/Auth/Foo2
+Content-Type: application/json
+
+{ "Data": "@@@@@@@@@@" }
+
+
+###
+# @name SignUp
+POST https://{{host}}:{{port}}/Auth/SignUp
+Content-Type: application/json
+
+{
+  "AccountId": "{{username}}",
+  "Password": "{{password}}"
+}
+
+
+###
+# @name Login
+POST https://{{host}}:{{port}}/Auth/Login
+Content-Type: application/json
+
+{
+  "AccountId": "{{username}}",
+  "Password": "{{password}}"
+}

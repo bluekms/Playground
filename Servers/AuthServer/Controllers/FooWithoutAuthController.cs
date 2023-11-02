@@ -11,7 +11,6 @@ public class FooWithoutAuthController : ControllerBase
 {
     [HttpPost]
     [Route("Auth/Foo2")]
-    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.ServiceApi)]
     public ActionResult<string> Foo(
         SessionInfo session,
         [FromBody] Arguments args,

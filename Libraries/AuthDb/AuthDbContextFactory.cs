@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace AuthDb;
 
@@ -34,14 +33,7 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
         var conn = config.GetConnectionString(AuthDbContext.ConfigurationSection);
 
         var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
-        optionsBuilder.UseMySql(
-            conn,
-            ServerVersion.Create(8, 0, 0, ServerType.MySql),
-            builder =>
-            {
-                builder.EnableRetryOnFailure();
-                builder.CommandTimeout(5);
-            });
+        optionsBuilder.UseNpgsql(conn);
 
         return new AuthDbContext(optionsBuilder.Options);
     }
