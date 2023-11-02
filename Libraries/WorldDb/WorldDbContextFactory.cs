@@ -30,24 +30,11 @@ public class WorldDbContextFactory : IDesignTimeDbContextFactory<WorldDbContext>
 
     public WorldDbContext CreateDbContext(string[] args)
     {
-        // TODO
-        throw new NotImplementedException();
+        var conn = config.GetConnectionString(WorldDbContext.ConfigurationSection);
 
-        var conn = config.GetConnectionString("WorldDb");
         var optionsBuilder = new DbContextOptionsBuilder<WorldDbContext>();
-        /*
-        optionsBuilder.UseMySql(
-            conn,
-            ServerVersion.Create(8, 0, 0, ServerType.MySql),
-            builder =>
-            {
-                builder.EnableRetryOnFailure();
-                builder.CommandTimeout(5);
-            });
+        optionsBuilder.UseNpgsql(conn);
 
         return new WorldDbContext(optionsBuilder.Options);
-        */
-
-        return null;
     }
 }
