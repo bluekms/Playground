@@ -30,25 +30,11 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
 
     public AuthDbContext CreateDbContext(string[] args)
     {
-        // TODO
-        throw new NotImplementedException();
-
-        /*
         var conn = config.GetConnectionString(AuthDbContext.ConfigurationSection);
 
         var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
-        optionsBuilder.UseMySql(
-            conn,
-            ServerVersion.Create(8, 0, 0, ServerType.MySql),
-            builder =>
-            {
-                builder.EnableRetryOnFailure();
-                builder.CommandTimeout(5);
-            });
+        optionsBuilder.UseNpgsql(conn);
 
         return new AuthDbContext(optionsBuilder.Options);
-        */
-
-        return null;
     }
 }
