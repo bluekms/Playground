@@ -1,11 +1,11 @@
 # Playground
-dotnet core 6로 구성된 R&D를 위한 개인 서버군입니다.
+dotnet core 7로 구성된 개인 학습을 위한 웹 앱 서버입니다.
 
 ## 사용된 기술
 * dotnet core 7
-* EF Core (Pomelo)
+* EF Core
 * Serilog
-* Mysqal 8
+* PostgreSql
 * Redis 6
 * Docker
 * Protobuf
@@ -16,10 +16,7 @@ dotnet core 6로 구성된 R&D를 위한 개인 서버군입니다.
 * Github Action
 
 ## 개발에 사용된 도구
-* Rider
-* Visual studio 2022
-* Docker Desktop
-* SQLyog
-* Postman
-* Redis Desktop Manager
+* JetBrain Rider, Datagripp
 * git Fork
+* Docker Desktop
+* Redis Desktop Manager
