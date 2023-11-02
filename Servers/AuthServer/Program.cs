@@ -9,12 +9,14 @@ using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Host.UseStashbox();
 builder.Services.UseNginx();
-
-// builder.Services.UseMySql<AuthDbContext>(builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection));
+builder.Services.UsePostgreSql<AuthDbContext>(
+    builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection),
+    "AuthServer",
+    builder.Environment.IsProduction());
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
