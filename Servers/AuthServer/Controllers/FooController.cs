@@ -1,4 +1,7 @@
+using System.Text.Json;
 using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Feature.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,13 +12,14 @@ public sealed class FooController : ControllerBase
 {
     [HttpPost]
     [Route("Auth/Foo")]
-    [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
+    [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.ServiceApi)]
     public ActionResult<string> Foo(
+        SessionInfo session,
         [FromBody] Arguments args,
         CancellationToken cancellationToken)
     {
-        // TODO Open일때 Session을 인자로 받지 못하도록 유닛테스트 걸자
-        return $"{args.Data}: Ok";
+        var json = JsonSerializer.Serialize(session);
+        return $"{args.Data}: Ok. session: {json}";
     }
 
     public sealed record Arguments(string Data);

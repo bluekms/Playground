@@ -14,13 +14,13 @@ public sealed class FooControllerTest
     [InlineData("UnitTest")]
     public void Foo(string foo)
     {
-        var controller1 = new FooController();
+        var controller1 = new FooWithoutAuthController();
         var result1 = controller1.Foo(new(foo), CancellationToken.None);
         var actionResult1 = Assert.IsType<ActionResult<string>>(result1);
 
         var session = new SessionInfo("TEST", AccountRoles.User);
         
-        var controller2 = new FooWithoutAuthController();
+        var controller2 = new FooController();
         var result2 = controller2.Foo(session, new(foo), CancellationToken.None);
         var actionResult2 = Assert.IsType<ActionResult<string>>(result2);
         
