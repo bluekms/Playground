@@ -1,0 +1,14 @@
+# @name Login
+POST https://{{host}}:{{port}}/Auth/Login
+Content-Type: application/json
+
+{
+  "AccountId": "{{username}}",
+  "Password": "{{password}}"
+}
+
+> {%
+    var responseString = JSON.stringify(response.body, null, 2);
+    var responseBody = JSON.parse(responseString);
+    client.global.set("SessionId", responseBody.sessionId);
+%}

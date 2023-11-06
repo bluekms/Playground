@@ -1,0 +1,16 @@
+# @name Foo2
+### OpenApi
+POST https://{{host}}:{{port}}/Auth/Foo2
+Content-Type: application/json
+
+{ "Data": "asdfasdf" }
+
+###
+
+# @name Foo
+### After Login
+POST https://{{host}}:{{port}}/Auth/Foo
+Content-Type: application/json
+Authorization: Bearer {{SessionId}}
+
+{ "Data": "kkk" }
