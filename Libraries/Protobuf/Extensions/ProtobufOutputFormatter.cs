@@ -2,7 +2,7 @@ using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 
-namespace CommonLibrary.Extensions.Protobuf;
+namespace Protobuf.Extensions;
 
 public class ProtobufOutputFormatter : OutputFormatter
 {

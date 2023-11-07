@@ -6,8 +6,8 @@ using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Extensions;
-using CommonLibrary.Extensions.Protobuf;
 using CommonLibrary.Handlers;
+using Protobuf.Extensions;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

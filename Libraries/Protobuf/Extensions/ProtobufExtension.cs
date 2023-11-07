@@ -1,11 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CommonLibrary.Extensions.Protobuf;
+namespace Protobuf.Extensions;
 
 public static class ProtobufExtension
 {
     public static void UseProtobuf(this IServiceCollection services)
     {
+        services.AddControllers();
         services.AddControllers(options =>
         {
             options.InputFormatters.Add(new ProtobufInputFormatter());
