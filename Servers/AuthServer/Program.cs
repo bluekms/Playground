@@ -7,23 +7,25 @@ using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Extensions;
 using CommonLibrary.Handlers;
+using Protobuf.Extensions;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogger();
 builder.Host.UseStashbox();
 builder.Services.UseNginx();
+builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UsePostgreSql<AuthDbContext>(
     builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection),
     "AuthServer",
     builder.Environment.IsProduction());
-builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
 builder.Services.UseOpenAuthentication();
 builder.Services.UsePermissionAuthorization();
 builder.Services.UseHandlers(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(AssemblyEntry))!);
+builder.Services.UseProtobuf();
 builder.Services.UseControllers();
 
 // 추가 DI

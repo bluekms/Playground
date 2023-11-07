@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvLoadTester", "Tools\CsvL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldDb", "Libraries\WorldDb\WorldDb.csproj", "{A1EFC8C8-CD44-4551-8CC2-C3C43041E1F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protobuf", "Libraries\Protobuf\Protobuf.csproj", "{61F74328-B0BA-4D1C-899F-F465046951DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{A1EFC8C8-CD44-4551-8CC2-C3C43041E1F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1EFC8C8-CD44-4551-8CC2-C3C43041E1F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1EFC8C8-CD44-4551-8CC2-C3C43041E1F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61F74328-B0BA-4D1C-899F-F465046951DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61F74328-B0BA-4D1C-899F-F465046951DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61F74328-B0BA-4D1C-899F-F465046951DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61F74328-B0BA-4D1C-899F-F465046951DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

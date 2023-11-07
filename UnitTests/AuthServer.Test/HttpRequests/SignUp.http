@@ -1,0 +1,8 @@
+# @name SignUp
+POST https://{{host}}:{{port}}/Auth/SignUp
+Content-Type: application/json
+
+{
+  "AccountId": "{{username}}",
+  "Password": "{{password}}"
+}

@@ -15,12 +15,10 @@ public sealed class FooController : ControllerBase
     [Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.ServiceApi)]
     public ActionResult<string> Foo(
         SessionInfo session,
-        [FromBody] Arguments args,
+        [FromBody] ReqFoo request,
         CancellationToken cancellationToken)
     {
         var json = JsonSerializer.Serialize(session);
-        return $"{args.Data}: Ok. session: {json}";
+        return $"{request.Data}: Ok. session: {json}";
     }
-
-    public sealed record Arguments(string Data);
 }

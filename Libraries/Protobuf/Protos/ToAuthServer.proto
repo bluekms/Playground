@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+message ReqFoo {
+  string Data = 1;
+}
+
+message ResFoo {
+  string Result = 1;
+}
+
+message ReqSignUp {
+  string AccountId = 1;
+  string Password = 2;
+}
+
+message ResSignUp {
+  enum AccountRoles {
+    User = 0;             // 일반 유저
+    BanUser = 1;          // 차단 상태
+    AuthorizedUser = 2;   // 점검 시간에 접속 가능한 유저
+    OpUser = 3;           // 내부 서버 혹은 운영자. 유저 롤 변경 가능(유저 밴 등)
+    Developer = 4;        // 개발자. 프로덕션 서버에 접속 불가.
+    Administrator = 5;    // 모든 Role의 유저를 생성 가능. 그 밖에 다른 행동은 불가능
+  }
+
+  string AccountId = 1;
+  AccountRoles Role = 2;
+}

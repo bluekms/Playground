@@ -43,6 +43,7 @@
     <ProjectReference Include="..\..\Libraries\AuthDb\AuthDb.csproj" />
     <ProjectReference Include="..\..\Libraries\AuthLibrary\AuthLibrary.csproj" />
     <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
+    <ProjectReference Include="..\..\Libraries\Protobuf\Protobuf.csproj" />
   </ItemGroup>
 
 </Project>
