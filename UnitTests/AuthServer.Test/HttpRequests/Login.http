@@ -1,5 +1,5 @@
 # @name Login
-POST https://{{host}}:{{port}}/Auth/Login
+POST {{Address}}/Auth/Login
 Content-Type: application/json
 
 {
