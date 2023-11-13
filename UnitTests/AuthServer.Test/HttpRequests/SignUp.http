@@ -1,5 +1,5 @@
 # @name SignUp
-POST https://{{host}}:{{port}}/Auth/SignUp
+POST {{Address}}/Auth/SignUp
 Content-Type: application/json
 
 {
