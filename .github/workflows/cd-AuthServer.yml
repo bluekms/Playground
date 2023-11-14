@@ -41,7 +41,7 @@ jobs:
         run: echo "{VERSION}={bluekms/playground-auth-server:${GITHUB_SHA::7}}" >> $GITHUB_OUTPUT
 
       - name: Check Tag
-        run: echo "Version Tag is {$VERSION}"
+        run: echo "Version Tag is {$VERSION}. another ${VERSION}"
 
       - name: Build and tag push
         if: ${{ inputs.UseSpecificTag }}
@@ -50,7 +50,7 @@ jobs:
           file: Servers/AuthServer/Dockerfile
           context: .
           push: true
-          tags: {$VERSION}
+          tags: ${VERSION}
           
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
