@@ -31,10 +31,10 @@ jobs:
           
       - name: Get Github Sha
         id: sha
-        run: echo "{GITHUB_SHA}=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "GITHUB_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Check Github Sha
-        run: echo "Github Sha is {$GITHUB_SHA}. Short is ${GITHUB_SHA::7}"
+        run: echo "Github Sha is ${{ env.GITHUB_SHA }}. Short is ${GITHUB_SHA::7}"
 
       - name: Build and tag push
         if: ${{ inputs.UseSpecificTag }}
@@ -43,7 +43,7 @@ jobs:
           file: Servers/AuthServer/Dockerfile
           context: .
           push: true
-          tags: bluekms/playground-auth-server:${GITHUB_SHA::7}
+          tags: bluekms/playground-auth-server:${{ env.GITHUB_SHA_SHORT }}
           
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
