@@ -29,18 +29,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Split Github Sha
-        id: vars
-        run: echo "name=sha_short::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          
-      - name: Build and tag:${GITHUB_SHA::7} push
+      - name: Build and tag:$(git rev-parse --short HEAD) push
         if: ${{ inputs.UseSpecificTag }}
         uses: docker/build-push-action@v3
         with:
           file: Servers/AuthServer/Dockerfile
           context: .
           push: true
-          tags: bluekms/playground-auth-server:${GITHUB_SHA::7}
+          tags: bluekms/playground-auth-server:$(git rev-parse --short HEAD)
           
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
