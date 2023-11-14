@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -8,8 +8,9 @@ WORKDIR /src
 COPY ["Servers/AuthServer/appsettings.Docker.json", "Servers/AuthServer/"]
 COPY ["Servers/AuthServer/AuthServer.csproj", "Servers/AuthServer/"]
 COPY ["Libraries/AuthDb/AuthDb.csproj", "Libraries/AuthDb/"]
-COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
 COPY ["Libraries/AuthLibrary/AuthLibrary.csproj", "Libraries/AuthLibrary/"]
+COPY ["Libraries/CommonLibrary/CommonLibrary.csproj", "Libraries/CommonLibrary/"]
+COPY ["Libraries/Protobuf/Protobuf.csproj", "Libraries/Protobuf/"]
 RUN dotnet restore "Servers/AuthServer/AuthServer.csproj"
 COPY . .
 WORKDIR "/src/Servers/AuthServer"
