@@ -29,14 +29,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Build and tag:$(git rev-parse --short HEAD) push
+      - name: Get Commit ID
+        id: commit_id
+        run: echo "::set-output name=COMMIT_ID::$(git rev-parse --short HEAD)"
+
+      - name: Build and tag push
         if: ${{ inputs.UseSpecificTag }}
         uses: docker/build-push-action@v3
         with:
           file: Servers/AuthServer/Dockerfile
           context: .
           push: true
-          tags: bluekms/playground-auth-server:$(git rev-parse --short HEAD)
+          tags: bluekms/playground-auth-server:${{ steps.commit_id.outputs.COMMIT_ID }}
           
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
