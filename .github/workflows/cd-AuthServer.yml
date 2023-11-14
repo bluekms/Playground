@@ -30,6 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
       - name: Get Github Sha
+        if: ${{ inputs.UseSpecificTag }}
         id: sha
         run: echo "GITHUB_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
@@ -37,7 +38,7 @@ jobs:
         if: ${{ inputs.UseSpecificTag }}
         uses: docker/build-push-action@v3
         with:
-          file: Servers/AuthServer/Dockerfile
+          file: AuthServer.Dockerfile
           context: .
           push: true
           tags: bluekms/playground-auth-server:${{ env.GITHUB_SHA }}
@@ -45,7 +46,7 @@ jobs:
       - name: Build and tag:latest push
         uses: docker/build-push-action@v3
         with:
-          file: Servers/AuthServer/Dockerfile
+          file: AuthServer.Dockerfile
           context: .
           push: true
           tags: bluekms/playground-auth-server:latest
