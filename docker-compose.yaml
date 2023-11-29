@@ -14,7 +14,7 @@ services:
     container_name: MyRedisCache
     networks:
       playground:
-        ipv4_address: 172.18.0.3
+        ipv4_address: 172.18.0.2
     ports:
       - "6380:6379"
 
@@ -23,7 +23,7 @@ services:
     container_name: MyPlaygroundDb
     networks:
       playground:
-        ipv4_address: 172.18.0.2
+        ipv4_address: 172.18.0.3
     environment:
       POSTGRES_PASSWORD: 1234
     ports:
