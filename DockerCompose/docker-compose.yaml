@@ -1,0 +1,88 @@
+version: '3'
+
+networks:
+  PlaygroundNetworks:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+          gateway: 172.21.0.1
+
+services:
+  RedisCache:
+    image: redis:7.0.14
+    container_name: RedisCache
+    networks:
+      PlaygroundNetworks:
+        ipv4_address: "172.21.0.10"
+    ports:
+      - "6380:6379"
+    restart: always
+
+  PlaygroundDb:
+    image: postgres:14.9
+    container_name: PlaygroundDb
+    networks:
+      PlaygroundNetworks:
+        ipv4_address: "172.21.0.20"
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: "1234"
+    restart: always
+
+  AuthServer:
+    image: bluekms/playground-auth-server
+    container_name: AuthServer
+    networks:
+      - PlaygroundNetworks
+    ports:
+      - "8081:80"
+      - "8444:443"
+    volumes:
+      - ./mnt/Logs/AuthServer:/app/Logs
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Docker"
+    depends_on:
+      - RedisCache
+      - PlaygroundDb
+
+  loki:
+    image: grafana/loki:2.9.1
+    container_name: loki
+    networks:
+      PlaygroundNetworks:
+        ipv4_address: "172.21.0.30"
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./mnt/Config:/mnt/config
+    command: --config.file=/mnt/config/loki-config.yaml
+    restart: always
+
+  promtail_AuthServer:
+    image: grafana/promtail:2.9.1
+    container_name: promtail_AuthServer
+    networks:
+      - PlaygroundNetworks
+    volumes:
+      - ./mnt/Config:/mnt/config
+      - ./mnt/Logs/AuthServer:/var/log
+    command: --config.file=/mnt/config/promtail-config.yaml
+    depends_on:
+      - AuthServer
+    restart: always
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    networks:
+      - PlaygroundNetworks
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mnt/GrafanaStorage:/var/lib/grafana
+    environment:
+      - GF_LOG_LEVEL=debug
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    restart: always
