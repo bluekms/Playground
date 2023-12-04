@@ -14,15 +14,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5241;https://localhost:7241",
-      "dotnetRunMessages": true
-    },
-    "AccountServer Shiftup": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Shiftup"
-      },
-      "applicationUrl": "http://localhost:5241;https://localhost:7241",
+      "applicationUrl": "http://localhost:8081;https://localhost:8444",
       "dotnetRunMessages": true
     },
     "Docker": {
