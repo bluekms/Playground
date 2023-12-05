@@ -73,7 +73,7 @@ public sealed class LoginControllerTest : IDisposable
             AccountId = "bluekms",
             Password = "1234",
             CreatedAt = DateTime.Now,
-            Role = AccountRoles.Administrator,
+            Role = ResSignUp.Types.AccountRoles.Administrator,
         });
 
         dbContext.Servers.Add(new()

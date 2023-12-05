@@ -43,7 +43,7 @@ public sealed class AccountRoleClaimHandler : AuthorizationHandler<AccountRoleRe
             return;
         }
 
-        if (claim.Value == AccountRoles.User.ToString())
+        if (claim.Value == ResSignUp.Types.AccountRoles.User.ToString())
         {
             if (await isMaintenanceTime.QueryAsync(new(), CancellationToken.None))
             {

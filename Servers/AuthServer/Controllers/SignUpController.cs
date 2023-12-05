@@ -2,7 +2,6 @@
 using AuthLibrary.Handlers;
 using AuthLibrary.Models;
 using CommonLibrary.Handlers;
-using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,12 +37,12 @@ public sealed class SignUpController : ControllerBase
         var accountData = await addAccount.ExecuteAsync(new(
             args.AccountId,
             args.Password,
-            AccountRoles.User));
+            ResSignUp.Types.AccountRoles.User));
 
         return mapper.Map<Result>(accountData);
     }
 
     public sealed record Arguments(string AccountId, string Password);
 
-    public sealed record Result(string AccountId, AccountRoles Role);
+    public sealed record Result(string AccountId, ResSignUp.Types.AccountRoles Role);
 }

@@ -6,7 +6,7 @@ namespace AuthLibrary.Feature.Session;
 [ModelBinder(BinderType = typeof(SessionBinder))]
 public sealed class SessionInfo
 {
-    public SessionInfo(string sessionId, AccountRoles accountRole)
+    public SessionInfo(string sessionId, ResSignUp.Types.AccountRoles accountRole)
     {
         SessionId = sessionId;
         AccountRole = accountRole;
@@ -14,7 +14,7 @@ public sealed class SessionInfo
 
     public string SessionId { get; }
 
-    public AccountRoles AccountRole { get; }
+    public ResSignUp.Types.AccountRoles AccountRole { get; }
 
     public DeviceInfo? Device { get; init; }
 

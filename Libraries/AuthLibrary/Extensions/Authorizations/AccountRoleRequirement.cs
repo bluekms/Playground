@@ -7,7 +7,7 @@ public class AccountRoleRequirement : IAuthorizationRequirement
 {
     public const string ClaimType = "AccountRole";
 
-    public AccountRoleRequirement(AccountRoles[] userRoles)
+    public AccountRoleRequirement(ResSignUp.Types.AccountRoles[] userRoles)
     {
         AccountRoleList = new(userRoles.Select(x => x.ToString()));
     }

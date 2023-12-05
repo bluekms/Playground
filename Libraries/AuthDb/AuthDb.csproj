@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+    <ProjectReference Include="..\Protobuf\Protobuf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
