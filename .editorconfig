@@ -1,13 +1,10 @@
-# 최적화된 .editorconfig 파일 예제
-
-# 최상위 섹션
 root = true
 
 # 기본 설정
 [*]
 charset = utf-8
 end_of_line = lf
-indent_style = spaces
+indent_style = space
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
@@ -20,7 +17,6 @@ csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
 csharp_indent_labels = oneLess
 csharp_prefer_static_local_function = true
-csharp_prefer_static_method = true
 csharp_style_expression_bodied_accessors = true:suggestion
 csharp_style_expression_bodied_constructors = true:suggestion
 csharp_style_expression_bodied_indexers = true:suggestion
@@ -44,7 +40,6 @@ csharp_indent_labels = oneLess
 # ASP.NET Core MVC Controller 설정
 [**/Controllers/*Controller.cs]
 csharp_style_pattern_local_over_anonymous_function = true:silent
-csharp_style_pattern_local_over_tuple = true:silent
 
 # MSBuild 설정
 [*.{csproj, vbproj, fsproj}]
