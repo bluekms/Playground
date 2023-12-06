@@ -1,25 +1,49 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Reflection;
+using AuthDb;
+using AuthLibrary.Extensions;
+using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
+using AuthLibrary.Models;
+using CommonLibrary;
+using CommonLibrary.Extensions;
+using CommonLibrary.Handlers;
+using Protobuf.Extensions;
+using Serilog;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseLogger();
+builder.Host.UseStashbox();
+builder.Services.UseNginx();
+builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
+builder.Services.UsePostgreSql<AuthDbContext>(
+    builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection),
+    "AuthServer",
+    builder.Environment.IsProduction());
+builder.Services.UseMapster();
+
+// builder.Services.UseSessionAuthentication();
+// builder.Services.UseCredentialAuthentication();
+// builder.Services.UseOpenAuthentication();
+// builder.Services.UsePermissionAuthorization();
+
+builder.Services.UseHandlers(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(AssemblyEntry))!);
+builder.Services.UseProtobuf();
 builder.Services.AddRazorPages();
 
-var app = builder.Build();
+// 추가 DI
+builder.Services.AddScoped<ITimeService, ScopedTimeService>();
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapRazorPages();
-
 app.Run();

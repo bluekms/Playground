@@ -13,4 +13,23 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Libraries\AuthLibrary\AuthLibrary.csproj" />
+      <ProjectReference Include="..\..\Libraries\CommonLibrary\CommonLibrary.csproj" />
+      <ProjectReference Include="..\..\Libraries\Protobuf\Protobuf.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+      <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    </ItemGroup>
+
 </Project>
