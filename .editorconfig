@@ -1,0 +1,51 @@
+# 최적화된 .editorconfig 파일 예제
+
+# 최상위 섹션
+root = true
+
+# 기본 설정
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = spaces
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# C# 설정
+[*.cs]
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = oneLess
+csharp_prefer_static_local_function = true
+csharp_prefer_static_method = true
+csharp_style_expression_bodied_accessors = true:suggestion
+csharp_style_expression_bodied_constructors = true:suggestion
+csharp_style_expression_bodied_indexers = true:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
+csharp_style_expression_bodied_operators = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_inlined_variable_declaration = true:silent
+csharp_style_throw_expression = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:silent
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# ASP.NET Core 및 Razor 설정
+[**/*.cshtml]
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = oneLess
+
+# ASP.NET Core MVC Controller 설정
+[**/Controllers/*Controller.cs]
+csharp_style_pattern_local_over_anonymous_function = true:silent
+csharp_style_pattern_local_over_tuple = true:silent
+
+# MSBuild 설정
+[*.{csproj, vbproj, fsproj}]
+indent_size = 2
