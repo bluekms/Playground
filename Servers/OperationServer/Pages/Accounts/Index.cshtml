@@ -1,0 +1,49 @@
+@page
+@model OperationServer.Pages.Accounts.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].AccountId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Accounts) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                <a asp-page="./EditPassword" asp-route-accountId="@item.AccountId">EditPassword</a> |
+                <a asp-page="./EditRole" asp-route-accountId="@item.AccountId">EditRole</a> |
+                <a asp-page="./Details" asp-route-accountId="@item.AccountId">Details</a> |
+                <a asp-page="./Delete" asp-route-accountId="@item.AccountId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

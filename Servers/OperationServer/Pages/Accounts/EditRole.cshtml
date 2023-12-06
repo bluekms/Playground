@@ -1,0 +1,31 @@
+@page
+@model OperationServer.Pages.Accounts.EditRoleModel
+
+@{
+    ViewData["Title"] = "EditRole";
+}
+
+<h1>EditRole</h1>
+
+<h4>Account</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Account.AccountId" />
+            <div class="form-group">
+                <label asp-for="Account.Role" class="control-label"></label>
+                <select asp-for="Account.Role" class="form-control" asp-items="Model.RoleList"></select>
+                <span asp-validation-for="Account.Role" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
