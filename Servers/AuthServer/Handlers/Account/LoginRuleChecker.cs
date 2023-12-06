@@ -30,10 +30,7 @@ namespace AuthServer.Handlers.Account
             }
 
             var passwordHasher = new PasswordHasher<AuthDb.Account>();
-            var account = new AuthDb.Account();
-            var password = Salt + rule.Password;
-            var hashedPassword = passwordHasher.HashPassword(account, password);
-            var result = passwordHasher.VerifyHashedPassword(account, hashedPassword, password);
+            var result = passwordHasher.VerifyHashedPassword(row, row.Password, Salt + rule.Password);
 
             if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
             {

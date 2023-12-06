@@ -33,19 +33,16 @@ public class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 
     public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
     {
-        var passwordHasher = new PasswordHasher<Account>();
-        var account = new Account();
-        var password = Salt + command.Password;
-        var hashedPassword = passwordHasher.HashPassword(account, password);
-
         var newRow = new Account()
         {
             AccountId = command.AccountId,
-            Password = hashedPassword,
             Token = string.Empty,
             CreatedAt = time.Now,
             Role = command.AccountRole,
         };
+
+        var passwordHasher = new PasswordHasher<Account>();
+        newRow.Password = passwordHasher.HashPassword(newRow, Salt + command.Password);
 
         await dbContext.Accounts.AddAsync(newRow);
         await dbContext.SaveChangesAsync();
