@@ -62,7 +62,7 @@ public sealed class AccountScenarioTest : IDisposable
         var resultSignUp = await signUpController.SignUp(new(accountId, password), CancellationToken.None);
         resultSignUp.Value.ShouldNotBeNull();
         resultSignUp.Value?.AccountId.ShouldBe(accountId);
-        resultSignUp.Value?.Role.ShouldBe(AccountRoles.User);
+        resultSignUp.Value?.Role.ShouldBe(ResSignUp.Types.AccountRoles.User);
 
         var loginController = new LoginController(
             new LoginRuleChecker(dbContext),

@@ -27,7 +27,7 @@ public static class PermissionAuthorizationExtension
             {
                 policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
-                    AccountRoles.Administrator,
+                    ResSignUp.Types.AccountRoles.Administrator,
                 }));
             });
 
@@ -35,9 +35,9 @@ public static class PermissionAuthorizationExtension
             {
                 policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
-                    AccountRoles.Developer,
-                    AccountRoles.WhitelistUser,
-                    AccountRoles.User,
+                    ResSignUp.Types.AccountRoles.Developer,
+                    ResSignUp.Types.AccountRoles.AuthorizedUser,
+                    ResSignUp.Types.AccountRoles.User,
                 }));
             });
 
@@ -46,8 +46,8 @@ public static class PermissionAuthorizationExtension
                 policy.Requirements.Add(new BuildConfigurationRequirement(BuildConfigurationRequirement.BuildConfigurations.Debug));
                 policy.Requirements.Add(new AccountRoleRequirement(new[]
                 {
-                    AccountRoles.Developer,
-                    AccountRoles.OpUser,
+                    ResSignUp.Types.AccountRoles.Developer,
+                    ResSignUp.Types.AccountRoles.OpUser,
                 }));
             });
         });

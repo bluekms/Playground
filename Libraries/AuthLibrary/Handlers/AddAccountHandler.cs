@@ -2,16 +2,16 @@ using AuthDb;
 using AuthLibrary.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;
-using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 
+// TODO Library 레이어에서 Handler는 제공하지 말자
 namespace AuthLibrary.Handlers;
 
 public sealed record AddAccountCommand(
     string AccountId,
     string Password,
-    AccountRoles AccountRole) : ICommand;
+    ResSignUp.Types.AccountRoles AccountRole) : ICommand;
 
 public class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 {
@@ -33,19 +33,16 @@ public class AddAccountHandler : ICommandHandler<AddAccountCommand, AccountData>
 
     public async Task<AccountData> ExecuteAsync(AddAccountCommand command)
     {
-        var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        var account = new AuthDb.Account();
-        var password = Salt + command.Password;
-        var hashedPassword = passwordHasher.HashPassword(account, password);
-
-        var newRow = new AuthDb.Account()
+        var newRow = new Account()
         {
             AccountId = command.AccountId,
-            Password = hashedPassword,
             Token = string.Empty,
             CreatedAt = time.Now,
             Role = command.AccountRole,
         };
+
+        var passwordHasher = new PasswordHasher<Account>();
+        newRow.Password = passwordHasher.HashPassword(newRow, Salt + command.Password);
 
         await dbContext.Accounts.AddAsync(newRow);
         await dbContext.SaveChangesAsync();

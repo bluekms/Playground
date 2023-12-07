@@ -1,5 +1,6 @@
 namespace CommonLibrary.Models
 {
+    /* enum을 protobuf에 정의하는게 맞는 레이어인가?
     /// <summary>
     /// Administrator : 모든 Role의 유저를 생성 가능
     /// Developer : 개발자 개발서버의 모든 권한. 유저 롤은 변경 불가
@@ -17,6 +18,7 @@ namespace CommonLibrary.Models
         User,
         BanUser,
     }
+    */
 
     /// <summary>
     /// Auth : N대. 일반 유저 회원가입. 계정 인증. 점검 공지. 내려가지 않음

@@ -11,6 +11,8 @@ using AuthServer.Test.Models;
 using CommonLibrary;
 using CommonLibrary.Models;
 using MapsterMapper;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Shouldly;
@@ -21,6 +23,8 @@ namespace AuthServer.Test.Controllers;
 
 public sealed class LoginControllerTest : IDisposable
 {
+    private const string Salt = "Playground.bluekms";
+
     private readonly AuthDbFixture authDbFixture;
     private readonly AuthDbContext dbContext;
     private readonly ConnectionMultiplexer redisConnection;
@@ -67,14 +71,17 @@ public sealed class LoginControllerTest : IDisposable
 
     private void InitData()
     {
-        dbContext.Accounts.Add(new()
+        var newRow = new Account()
         {
-            Token = string.Empty,
             AccountId = "bluekms",
-            Password = "1234",
-            CreatedAt = DateTime.Now,
-            Role = AccountRoles.Administrator,
-        });
+            Token = string.Empty,
+            CreatedAt = DateTime.UtcNow,
+            Role = ResSignUp.Types.AccountRoles.Administrator,
+        };
+        var passwordHasher = new PasswordHasher<Account>();
+        newRow.Password = passwordHasher.HashPassword(newRow, Salt + "1234");
+
+        dbContext.Accounts.Add(newRow);
 
         dbContext.Servers.Add(new()
         {
