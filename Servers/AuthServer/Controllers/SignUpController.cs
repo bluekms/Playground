@@ -1,8 +1,6 @@
 ﻿using AuthLibrary.Extensions.Authentication;
-using AuthLibrary.Handlers;
-using AuthLibrary.Models;
+using AuthServer.Handlers.Account;
 using CommonLibrary.Handlers;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,35 +9,37 @@ namespace AuthServer.Controllers;
 [ApiController]
 public sealed class SignUpController : ControllerBase
 {
+    // TODO 유효성 검사 가능하고 nullable 체크하도록 수정하자
+    private readonly IConfiguration appConfig;
     private readonly IRuleChecker<SignUpRule> rule;
-    private readonly ICommandHandler<AddAccountCommand, AccountData> addAccount;
-    private readonly IMapper mapper;
+    private readonly ICommandHandler<SignUpCommand> signUp;
 
     public SignUpController(
+        IConfiguration appConfig,
         IRuleChecker<SignUpRule> rule,
-        ICommandHandler<AddAccountCommand, AccountData> addAccount,
-        IMapper mapper)
+        ICommandHandler<SignUpCommand> signUp)
     {
+        this.appConfig = appConfig;
         this.rule = rule;
-        this.addAccount = addAccount;
-        this.mapper = mapper;
+        this.signUp = signUp;
     }
 
     [HttpPost]
     [Route("Auth/SignUp")]
     [Authorize(AuthenticationSchemes = OpenAuthenticationSchemeOptions.Name)]
-    public async Task<ActionResult<Result>> SignUp(
+    public async Task<Result> SignUp(
         [FromBody] Arguments args,
         CancellationToken cancellationToken)
     {
         await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 
-        var accountData = await addAccount.ExecuteAsync(new(
+        await signUp.ExecuteAsync(new(
+            appConfig["AppSecrets:AccountSalt"]!,
             args.AccountId,
             args.Password,
             ResSignUp.Types.AccountRoles.User));
 
-        return mapper.Map<Result>(accountData);
+        return new(args.AccountId, ResSignUp.Types.AccountRoles.User);
     }
 
     public sealed record Arguments(string AccountId, string Password);

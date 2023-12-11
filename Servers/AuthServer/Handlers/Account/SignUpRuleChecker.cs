@@ -1,21 +1,22 @@
 using System.Data;
-using AuthLibrary.Models;
+using AuthDb;
 using CommonLibrary.Handlers;
+using Microsoft.EntityFrameworkCore;
 
-namespace AuthLibrary.Handlers;
+namespace AuthServer.Handlers.Account;
 
 public sealed record SignUpRule(string AccountId, string Password) : IRule;
 
-public class SignUpRuleChecker : IRuleChecker<SignUpRule>
+public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
 {
     private const int MinLength = 3;
     private const int MaxLength = 20;
 
-    private readonly IQueryHandler<GetAccountQuery, AccountData?> getAccount;
+    private readonly AuthDbContext dbContext;
 
-    public SignUpRuleChecker(IQueryHandler<GetAccountQuery, AccountData?> getAccount)
+    public SignUpRuleChecker(AuthDbContext dbContext)
     {
-        this.getAccount = getAccount;
+        this.dbContext = dbContext;
     }
 
     public async Task CheckAsync(SignUpRule rule, CancellationToken cancellationToken)
@@ -30,8 +31,8 @@ public class SignUpRuleChecker : IRuleChecker<SignUpRule>
             throw new ArgumentOutOfRangeException(nameof(rule.Password));
         }
 
-        var account = await getAccount.QueryAsync(new(rule.AccountId), cancellationToken);
-        if (account != null)
+        var exists = await dbContext.Accounts.AnyAsync(row => row.AccountId == rule.AccountId, cancellationToken);
+        if (exists)
         {
             throw new DuplicateNameException(nameof(rule.AccountId));
         }

@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using AuthDb;
 using AuthLibrary.Feature.Session;
-using AuthLibrary.Handlers;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Account;
 using AuthServer.Handlers.Session;
@@ -26,6 +26,7 @@ public sealed class AccountScenarioTest : IDisposable
     private readonly ConnectionMultiplexer redisMultiplexer;
     private readonly IMapper mapper;
     private readonly ITimeService timeService;
+    private readonly IConfigurationRoot appConfig;
 
     public AccountScenarioTest()
     {
@@ -37,6 +38,13 @@ public sealed class AccountScenarioTest : IDisposable
 
         mapper = InitMapper.Use();
         timeService = new ScopedTimeService();
+
+        appConfig = new ConfigurationBuilder()
+            .AddInMemoryCollection(new[]
+            {
+                new KeyValuePair<string, string>("AppSecrets:AccountSalt", "Foo"),
+                new KeyValuePair<string, string>("AppSecrets:SessionPrefix", "Bar")
+            }!).Build();
     }
 
     public void Dispose()
@@ -55,16 +63,17 @@ public sealed class AccountScenarioTest : IDisposable
         var password = "1234";
 
         var signUpController = new SignUpController(
-            new SignUpRuleChecker(new GetAccountHandler(dbContext, mapper)),
-            new AddAccountHandler(dbContext, mapper, timeService),
-            mapper);
+            appConfig,
+            new SignUpRuleChecker(dbContext),
+            new SignUpHandler(timeService, dbContext));
 
         var resultSignUp = await signUpController.SignUp(new(accountId, password), CancellationToken.None);
-        resultSignUp.Value.ShouldNotBeNull();
-        resultSignUp.Value?.AccountId.ShouldBe(accountId);
-        resultSignUp.Value?.Role.ShouldBe(ResSignUp.Types.AccountRoles.User);
+        resultSignUp.ShouldNotBeNull();
+        resultSignUp.AccountId.ShouldBe(accountId);
+        resultSignUp.Role.ShouldBe(ResSignUp.Types.AccountRoles.User);
 
         var loginController = new LoginController(
+            appConfig,
             new LoginRuleChecker(dbContext),
             new UpdateSessionHandler(redisMultiplexer, dbContext, mapper),
             new SessionStore(redisMultiplexer),
