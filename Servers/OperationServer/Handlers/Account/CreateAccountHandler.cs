@@ -12,15 +12,15 @@ public sealed record CreateAccountCommand(
 
 public sealed class CreateAccountHandler : ICommandHandler<CreateAccountCommand>
 {
-    private const string Salt = "Playground.bluekms";
-
     private readonly AuthDbContext dbContext;
     private readonly ITimeService timeService;
+    private readonly string salt;
 
-    public CreateAccountHandler(AuthDbContext dbContext, ITimeService timeService)
+    public CreateAccountHandler(ITimeService timeService, AuthDbContext dbContext, string salt)
     {
-        this.dbContext = dbContext;
         this.timeService = timeService;
+        this.dbContext = dbContext;
+        this.salt = salt;
     }
 
     public async Task ExecuteAsync(CreateAccountCommand command)
@@ -34,7 +34,7 @@ public sealed class CreateAccountHandler : ICommandHandler<CreateAccountCommand>
         };
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        newAccount.Password = passwordHasher.HashPassword(newAccount, Salt + command.Password);
+        newAccount.Password = passwordHasher.HashPassword(newAccount, salt + command.Password);
 
         await dbContext.Accounts.AddAsync(newAccount);
         await dbContext.SaveChangesAsync();

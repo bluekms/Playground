@@ -9,13 +9,13 @@ public sealed record UpdateAccountPasswordCommand(string AccountId, string Passw
 
 public class UpdateAccountPasswordHandler : ICommandHandler<UpdateAccountPasswordCommand>
 {
-    private const string Salt = "Playground.bluekms";
-
     private readonly AuthDbContext dbContext;
+    private readonly string salt;
 
-    public UpdateAccountPasswordHandler(AuthDbContext dbContext)
+    public UpdateAccountPasswordHandler(AuthDbContext dbContext, string salt)
     {
         this.dbContext = dbContext;
+        this.salt = salt;
     }
 
     public async Task ExecuteAsync(UpdateAccountPasswordCommand command)
@@ -23,10 +23,8 @@ public class UpdateAccountPasswordHandler : ICommandHandler<UpdateAccountPasswor
         var dbAccount = await dbContext.Accounts
             .SingleAsync(row => row.AccountId == command.AccountId);
 
-        var password = Salt + command.Password;
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-
-        dbAccount.Password = passwordHasher.HashPassword(dbAccount, password);
+        dbAccount.Password = passwordHasher.HashPassword(dbAccount, salt + command.Password);
 
         await dbContext.SaveChangesAsync();
     }

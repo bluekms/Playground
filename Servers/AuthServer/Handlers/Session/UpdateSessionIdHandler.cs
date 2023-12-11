@@ -7,12 +7,10 @@ using StackExchange.Redis;
 
 namespace AuthServer.Handlers.Session
 {
-    public sealed record UpdateSessionCommand(string AccountId) : ICommand;
+    public sealed record UpdateSessionCommand(string AccountId, string SessionPrefix) : ICommand;
 
     public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, AccountData>
     {
-        private static readonly string SessionPrefix = "Session";
-
         private readonly IDatabase redis;
         private readonly AuthDbContext dbContext;
         private readonly IMapper mapper;
@@ -38,7 +36,7 @@ namespace AuthServer.Handlers.Session
                 throw new NullReferenceException(nameof(command.AccountId));
             }
 
-            await redis.KeyDeleteAsync($"{SessionPrefix}:{account.Token}");
+            await redis.KeyDeleteAsync(command.SessionPrefix + account.Token);
             account.Token = Guid.NewGuid().ToString();
             await dbContext.SaveChangesAsync();
 

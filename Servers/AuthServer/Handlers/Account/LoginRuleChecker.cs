@@ -5,12 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.Handlers.Account
 {
-    public sealed record LoginRule(string AccountId, string Password) : IRule;
+    public sealed record LoginRule(string AccountId, string Password, string Salt) : IRule;
 
     public sealed class LoginRuleChecker : IRuleChecker<LoginRule>
     {
-        private const string Salt = "Playground.bluekms";
-
         private readonly AuthDbContext dbContext;
 
         public LoginRuleChecker(AuthDbContext dbContext)
@@ -30,7 +28,7 @@ namespace AuthServer.Handlers.Account
             }
 
             var passwordHasher = new PasswordHasher<AuthDb.Account>();
-            var result = passwordHasher.VerifyHashedPassword(row, row.Password, Salt + rule.Password);
+            var result = passwordHasher.VerifyHashedPassword(row, row.Password, rule.Salt + rule.Password);
 
             if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
             {
