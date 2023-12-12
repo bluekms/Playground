@@ -9,9 +9,9 @@ namespace AuthServer.Handlers.Account
 
     public sealed class LoginRuleChecker : IRuleChecker<LoginRule>
     {
-        private readonly AuthDbContext dbContext;
+        private readonly ReadOnlyAuthDbContext dbContext;
 
-        public LoginRuleChecker(AuthDbContext dbContext)
+        public LoginRuleChecker(ReadOnlyAuthDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

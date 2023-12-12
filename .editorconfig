@@ -20,7 +20,6 @@ csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
 csharp_prefer_static_local_function = true
 csharp_style_expression_bodied_accessors = true:suggestion
-csharp_style_expression_bodied_constructors = true:suggestion
 csharp_style_expression_bodied_indexers = true:suggestion
 csharp_style_expression_bodied_operators = true:suggestion
 csharp_style_expression_bodied_properties = true:suggestion

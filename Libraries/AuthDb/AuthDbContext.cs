@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthDb;
 
-public sealed class AuthDbContext : DbContext
+public sealed class AuthDbContext : DbContext, IAuthDbContext
 {
     public const string ConfigurationSection = "AuthDb";
 
@@ -13,13 +13,9 @@ public sealed class AuthDbContext : DbContext
     }
 
     public DbSet<Foo> Foos => Set<Foo>();
-
     public DbSet<Account> Accounts => Set<Account>();
-
     public DbSet<Maintenance> Maintenance => Set<Maintenance>();
-
     public DbSet<ServerRole> ServerRoles => Set<ServerRole>();
-
     public DbSet<Server> Servers => Set<Server>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

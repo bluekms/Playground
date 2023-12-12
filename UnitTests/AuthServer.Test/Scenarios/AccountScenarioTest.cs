@@ -64,7 +64,7 @@ public sealed class AccountScenarioTest : IDisposable
 
         var signUpController = new SignUpController(
             appConfig,
-            new SignUpRuleChecker(dbContext),
+            new SignUpRuleChecker(new ReadOnlyAuthDbContext(dbContext)),
             new SignUpHandler(timeService, dbContext));
 
         var resultSignUp = await signUpController.SignUp(new(accountId, password), CancellationToken.None);
@@ -74,7 +74,7 @@ public sealed class AccountScenarioTest : IDisposable
 
         var loginController = new LoginController(
             appConfig,
-            new LoginRuleChecker(dbContext),
+            new LoginRuleChecker(new ReadOnlyAuthDbContext(dbContext)),
             new UpdateSessionHandler(redisMultiplexer, dbContext, mapper),
             new SessionStore(redisMultiplexer),
             new GetServerListHandler(dbContext, timeService, mapper));

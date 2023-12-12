@@ -12,9 +12,9 @@ public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
     private const int MinLength = 3;
     private const int MaxLength = 20;
 
-    private readonly AuthDbContext dbContext;
+    private readonly ReadOnlyAuthDbContext dbContext;
 
-    public SignUpRuleChecker(AuthDbContext dbContext)
+    public SignUpRuleChecker(ReadOnlyAuthDbContext dbContext)
     {
         this.dbContext = dbContext;
     }
