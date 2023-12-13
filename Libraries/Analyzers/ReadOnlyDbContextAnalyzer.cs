@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using Analyzers.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -42,7 +43,7 @@ public class ReadOnlyDbContextAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        if (InheritsFrom(classSymbol, new[]{ "IQueryHandler", "IRuleChecker" }))
+        if (classSymbol.IsInheritedFrom(new[]{ "IQueryHandler", "IRuleChecker" }))
         {
             var fieldType = fieldDeclaration.Declaration.Type;
 
@@ -53,75 +54,10 @@ public class ReadOnlyDbContextAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (InheritsFrom(typeSymbol, "DbContext"))
+            if (typeSymbol.IsInheritedFrom("DbContext"))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rule, fieldDeclaration.GetLocation(), classSymbol.Name, fieldDeclaration.Declaration.Variables.First().Identifier.ValueText, fieldType));
             }
-        }
-    }
-
-    // Todo Extension Method
-    private static bool InheritsFrom(INamedTypeSymbol typeSymbol, string baseTypeName)
-    {
-        // 자신이 baseTypeName 라면 true
-        if (typeSymbol.Name == baseTypeName)
-        {
-            return true;
-        }
-
-        // 배이스가 baseTypeName 라면 true
-        foreach (var baseType in typeSymbol.AllInterfaces.Concat(GetAllBaseTypes(typeSymbol)))
-        {
-            if (baseType.Name == baseTypeName)
-            {
-                return true;
-            }
-        }
-
-        // 재귀
-        if (typeSymbol.ContainingType != null)
-        {
-            return InheritsFrom(typeSymbol.ContainingType, baseTypeName);
-        }
-
-        return false;
-    }
-
-    private static bool InheritsFrom(INamedTypeSymbol typeSymbol, string[] baseTypeNames)
-    {
-        // 자신이 baseTypeName 라면 true
-        if (baseTypeNames.Contains(typeSymbol.Name))
-        {
-            return true;
-        }
-
-        // 배이스가 baseTypeName 라면 true
-        foreach (var baseType in typeSymbol.AllInterfaces.Concat(GetAllBaseTypes(typeSymbol)))
-        {
-            if (baseTypeNames.Contains(baseType.Name))
-            {
-                return true;
-            }
-        }
-
-        // 재귀
-        if (typeSymbol.ContainingType != null)
-        {
-            return InheritsFrom(typeSymbol.ContainingType, baseTypeNames);
-        }
-
-        return false;
-    }
-
-    // Todo Extension Method
-    private static IEnumerable<INamedTypeSymbol> GetAllBaseTypes(INamedTypeSymbol typeSymbol)
-    {
-        var currentType = typeSymbol.BaseType;
-
-        while (currentType != null)
-        {
-            yield return currentType;
-            currentType = currentType.BaseType;
         }
     }
 }
