@@ -1,56 +1,50 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using AuthDb;
 using CommonLibrary.Handlers;
 using Microsoft.EntityFrameworkCore;
-using Serilog.Core;
 
-namespace AuthServer.Handlers.Maintenance
+namespace AuthServer.Handlers.Maintenance;
+
+public sealed record AddMaintenanceRule(DateTime Start, DateTime End, string Reason) : IRule;
+
+public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
 {
-    public sealed record AddMaintenanceRule(DateTime Start, DateTime End, string Reason) : IRule;
+    private readonly ReadOnlyAuthDbContext dbContext;
 
-    public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
+    public CheckMaintenanceRule(ReadOnlyAuthDbContext dbContext)
     {
-        private readonly AuthDbContext dbContext;
+        this.dbContext = dbContext;
+    }
 
-        public CheckMaintenanceRule(AuthDbContext dbContext)
+    public async Task CheckAsync(AddMaintenanceRule rule, CancellationToken cancellationToken)
+    {
+        var row = await dbContext.Maintenance
+            .Where(x => x.Start <= rule.Start)
+            .Where(x => rule.Start <= x.End)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (row != null)
         {
-            this.dbContext = dbContext;
+            throw new Exception($"Duplicate Start. {row.ToString()}");
         }
 
-        public async Task CheckAsync(AddMaintenanceRule rule, CancellationToken cancellationToken)
+        row = await dbContext.Maintenance
+            .Where(x => x.Start <= rule.End)
+            .Where(x => rule.End <= x.End)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (row != null)
         {
-            var row = await dbContext.Maintenance
-                .Where(x => x.Start <= rule.Start)
-                .Where(x => rule.Start <= x.End)
-                .SingleOrDefaultAsync(cancellationToken);
+            throw new Exception($"Duplicate End. {@row}");
+        }
 
-            if (row != null)
-            {
-                throw new Exception($"Duplicate Start. {row.ToString()}");
-            }
+        var exist = await dbContext.Maintenance
+            .Where(x => rule.Start <= x.Start)
+            .Where(x => x.End <= rule.End)
+            .AnyAsync(cancellationToken);
 
-            row = await dbContext.Maintenance
-                .Where(x => x.Start <= rule.End)
-                .Where(x => rule.End <= x.End)
-                .SingleOrDefaultAsync(cancellationToken);
-
-            if (row != null)
-            {
-                throw new Exception($"Duplicate End. {@row}");
-            }
-
-            var exist = await dbContext.Maintenance
-                .Where(x => rule.Start <= x.Start)
-                .Where(x => x.End <= rule.End)
-                .AnyAsync(cancellationToken);
-
-            if (exist)
-            {
-                throw new Exception($"Duplicate Start and End. {@row}");
-            }
+        if (exist)
+        {
+            throw new Exception($"Duplicate Start and End. {@row}");
         }
     }
 }
