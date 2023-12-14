@@ -5,3 +5,4 @@
 Rule ID | Category               | Severity | Notes
 --------|------------------------|----------|--------------------
 BPG0001  | ReadOnlyDbContextRules |  Warning | HandlersAnalyzer
+BPG0002  | SealedHandlerAnalyzer |  Warning | HandlersAnalyzer

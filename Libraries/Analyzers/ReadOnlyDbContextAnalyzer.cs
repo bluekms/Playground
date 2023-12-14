@@ -56,7 +56,12 @@ public class ReadOnlyDbContextAnalyzer : DiagnosticAnalyzer
 
             if (typeSymbol.IsInheritedFrom("DbContext"))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rule, fieldDeclaration.GetLocation(), classSymbol.Name, fieldDeclaration.Declaration.Variables.First().Identifier.ValueText, fieldType));
+                context.ReportDiagnostic(Diagnostic.Create(
+                    Rule,
+                    fieldDeclaration.GetLocation(),
+                    classSymbol.Name,
+                    fieldDeclaration.Declaration.Variables.First().Identifier.ValueText,
+                    fieldType));
             }
         }
     }
