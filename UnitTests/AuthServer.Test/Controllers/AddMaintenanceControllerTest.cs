@@ -44,7 +44,7 @@ public sealed class AddMaintenanceControllerTest : IDisposable
     {
         var controller = new AddMaintenanceController(
             mapper,
-            new CheckMaintenanceRule(dbContext),
+            new CheckMaintenanceRule(new(dbContext)),
             new AddMaintenanceHandler(dbContext, mapper));
 
         var result = await controller.AddMaintenance(new(start, end, reason), CancellationToken.None);

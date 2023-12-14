@@ -1,6 +1,5 @@
-namespace CommonLibrary.Handlers
+namespace CommonLibrary.Handlers;
+
+public interface IHandlerBase
 {
-    public interface IHandlerBase
-    {
-    }
 }

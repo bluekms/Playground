@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AuthDb;
 using AuthServer.Models;
 using CommonLibrary;
@@ -9,33 +6,30 @@ using CommonLibrary.Models;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthServer.Handlers.World
+namespace AuthServer.Handlers.World;
+
+public sealed record GetServerListQuery(ServerRoles Role) : IQuery;
+
+public sealed class GetServerListHandler : IQueryHandler<GetServerListQuery, List<ServerData>>
 {
-    public sealed record GetServerListQuery(ServerRoles Role) : IQuery;
+    private readonly ReadOnlyAuthDbContext dbContext;
+    private readonly ITimeService timeService;
+    private readonly IMapper mapper;
 
-    public sealed class GetServerListHandler : IQueryHandler<GetServerListQuery, List<ServerData>>
+    public GetServerListHandler(ReadOnlyAuthDbContext dbContext, ITimeService timeService, IMapper mapper)
     {
-        private readonly AuthDbContext dbContext;
-        private readonly ITimeService time;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.timeService = timeService;
+        this.mapper = mapper;
+    }
 
-        public GetServerListHandler(AuthDbContext dbContext, ITimeService time, IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.time = time;
-            this.mapper = mapper;
-        }
+    public async Task<List<ServerData>> QueryAsync(GetServerListQuery query, CancellationToken cancellationToken)
+    {
+        var rows = await dbContext.Servers
+            .Where(x => x.Role == query.Role)
+            .Where(x => x.ExpireAt > timeService.Now)
+            .ToListAsync(cancellationToken);
 
-        public async Task<List<ServerData>> QueryAsync(GetServerListQuery query, CancellationToken cancellationToken)
-        {
-            var rows = await dbContext.Servers
-                .Where(x => x.Role == query.Role)
-                .ToListAsync(cancellationToken);
-
-            dbContext.Servers.RemoveRange(rows.Where(x => x.ExpireAt <= time.Now));
-            await dbContext.SaveChangesAsync(cancellationToken);
-
-            return mapper.Map<List<ServerData>>(rows.Where(x => time.Now < x.ExpireAt));
-        }
+        return mapper.Map<List<ServerData>>(rows.Where(x => timeService.Now < x.ExpireAt));
     }
 }
