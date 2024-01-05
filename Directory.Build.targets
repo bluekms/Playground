@@ -1,0 +1,27 @@
+<Project>
+
+  <ItemGroup Label="RequiredPackageReferences">
+    <!-- TODO Microsoft.CodeAnalysis.Analyzers 빼면 경고 줄어드는지 보고 실효성 파악하기 -->
+    <RequirePackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
+    <RequirePackageReference Include="StyleCop.Analyzers" />
+  </ItemGroup>
+
+  <Target Name="CheckRequirePackageReferences" AfterTargets="CollectPackageReferences">
+    <ItemGroup>
+      <MissingPackages Include="@(RequirePackageReference)" Exclude="@(PackageReference)" />
+    </ItemGroup>
+    <Error Condition="@(MissingPackages) != ''" Text="Missing RequiredPackageReference: @(MissingPackages)" />
+  </Target>
+
+  <ItemGroup Label="RequiredProjectReference">
+    <RequireProjectReference Include="$(SolutionDir)Libraries\Analyzers\Analyzers.csproj" />
+  </ItemGroup>
+
+  <Target Name="CheckRequiredProjectReference" AfterTargets="CollectPackageReferences">
+    <ItemGroup>
+      <MissingProject Include="@(RequireProjectReference)" Exclude="@(ProjectReference)" Condition="$(SkipCheckAnalyzersImported) != 'true'" />
+    </ItemGroup>
+    <Error Condition="@(MissingProject) != ''" Text="Missing RequiredProjectReference: @(MissingProject)" />
+  </Target>
+
+</Project>
