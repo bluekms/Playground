@@ -20,19 +20,14 @@ namespace AuthServer.Handlers.Account
         {
             var row = await dbContext.Accounts
                 .Where(x => x.AccountId == rule.AccountId)
-                .SingleOrDefaultAsync(cancellationToken);
-
-            if (row == null)
-            {
-                throw new NullReferenceException(nameof(rule.AccountId));
-            }
+                .SingleAsync(cancellationToken);
 
             var passwordHasher = new PasswordHasher<AuthDb.Account>();
             var result = passwordHasher.VerifyHashedPassword(row, row.Password, rule.Salt + rule.Password);
 
             if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
             {
-                throw new ArgumentException(string.Empty, nameof(rule.Password));
+                throw new ArgumentException(rule.Password);
             }
         }
     }

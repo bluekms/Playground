@@ -24,13 +24,13 @@ public static class RecordParser
 
         return list;
     }
-    
+
     private static IList CreateList(Type t)
     {
         var values = Array.CreateInstance(t, 0);
         var genericListType = typeof(List<>);
         var concreteListType = genericListType.MakeGenericType(t);
-        
+
         return (Activator.CreateInstance(concreteListType, values) as IList)!;
     }
 }

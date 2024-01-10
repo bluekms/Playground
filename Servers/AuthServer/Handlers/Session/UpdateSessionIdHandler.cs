@@ -29,12 +29,7 @@ namespace AuthServer.Handlers.Session
         {
             var account = await dbContext.Accounts
                 .Where(x => x.AccountId == command.AccountId)
-                .SingleOrDefaultAsync();
-
-            if (account == null)
-            {
-                throw new NullReferenceException(nameof(command.AccountId));
-            }
+                .SingleAsync();
 
             await redis.KeyDeleteAsync(command.SessionPrefix + account.Token);
             account.Token = Guid.NewGuid().ToString();

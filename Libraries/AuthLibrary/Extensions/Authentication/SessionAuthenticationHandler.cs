@@ -40,7 +40,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         return AuthenticateResult.Success(authTicket);
     }
 
-    private Claim CreateBuildConfigurationClaim()
+    private static Claim CreateBuildConfigurationClaim()
     {
 #if DEBUG
         var buildConfiguration = BuildConfigurationRequirement.BuildConfigurations.Debug;
@@ -51,7 +51,7 @@ public class SessionAuthenticationHandler : AuthenticationHandler<SessionAuthent
         return new(BuildConfigurationRequirement.ClaimType, buildConfiguration.ToString());
     }
 
-    private Claim CreateAccountRoleClaim(SessionInfo session)
+    private static Claim CreateAccountRoleClaim(SessionInfo session)
     {
         return new(AccountRoleRequirement.ClaimType, session.AccountRole.ToString());
     }

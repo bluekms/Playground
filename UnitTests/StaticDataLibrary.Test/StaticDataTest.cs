@@ -19,7 +19,8 @@ public sealed class StaticDataTest : IStaticDataContextTester
         var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
-            PropertyAttributeFinder.Single<KeyAttribute>(tableInfo);
+            var finder = new PropertyAttributeFinder();
+            PropertyAttributeFinder.ValidateSingle<KeyAttribute>(tableInfo);
 
             var propertyCount = tableInfo.RecordType.GetProperties().Length;
             var orderCount = PropertyAttributeFinder.Count<OrderAttribute>(tableInfo);
@@ -41,7 +42,7 @@ public sealed class StaticDataTest : IStaticDataContextTester
     public async Task LoadCsvToRecordTestAsync()
     {
         var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
-        
+
         var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
@@ -54,7 +55,8 @@ public sealed class StaticDataTest : IStaticDataContextTester
             Assert.NotEmpty(dataList);
 
             var tableName = dataList[0]?.GetType().Name ?? string.Empty;
-            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix), 
+            Assert.True(
+                compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix),
                 $"The suffix is different. {tableName}, {TableInfo.RecordTypeNameSuffix}");
         }
     }
@@ -86,8 +88,8 @@ public sealed class StaticDataTest : IStaticDataContextTester
 
         await ForeignChecker.CheckAsync<StaticDataContext>(connection);
     }
-    
-    private async Task<StaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
+
+    private static async Task<StaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
     {
         var options = new DbContextOptionsBuilder<StaticDataContext>()
             .UseSqlite(connection)
@@ -108,12 +110,12 @@ public sealed class StaticDataTest : IStaticDataContextTester
             {
                 throw new FileNotFoundException(fileName);
             }
-            
+
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
 
             await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
         }
-        
+
         await transaction!.CommitAsync();
 
         return context;

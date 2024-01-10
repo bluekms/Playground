@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-[SuppressMessage("MicrosoftCodeAnalysisReleaseTracking", "RS2001")]
+[SuppressMessage("MicrosoftCodeAnalysisReleaseTracking", "RS2001", Justification = "내부 분석기를 위한 분석 항목 추가 무시")]
 public class ReadOnlyDbContextAnalyzer : DiagnosticAnalyzer
 {
     public static readonly DiagnosticDescriptor Rule = new(
@@ -43,7 +43,7 @@ public class ReadOnlyDbContextAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        if (classSymbol.IsInheritedFrom(new[]{ "IQueryHandler", "IRuleChecker" }))
+        if (classSymbol.IsInheritedFrom(new[] { "IQueryHandler", "IRuleChecker" }))
         {
             var fieldType = fieldDeclaration.Declaration.Type;
 

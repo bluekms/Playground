@@ -17,7 +17,8 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     public void TableCountTest()
     {
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
-        Assert.True(tableInfoList.Count == TestStaticDataContext.TestTableCount, 
+        Assert.True(
+            tableInfoList.Count == TestStaticDataContext.TestTableCount,
             $"Check the suffix. {TableInfo.DbSetNameSuffix}");
     }
 
@@ -37,7 +38,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
-            PropertyAttributeFinder.Single<KeyAttribute>(tableInfo);
+            PropertyAttributeFinder.ValidateSingle<KeyAttribute>(tableInfo);
 
             var propertyCount = tableInfo.RecordType.GetProperties().Length;
             var orderCount = PropertyAttributeFinder.Count<OrderAttribute>(tableInfo);
@@ -49,7 +50,7 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     public async Task LoadCsvToRecordTestAsync()
     {
         var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
-        
+
         var tableInfoList = TableFinder.Find<TestStaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
@@ -62,7 +63,8 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             Assert.NotEmpty(dataList);
 
             var tableName = dataList[0]?.GetType().Name ?? string.Empty;
-            Assert.True(compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix), 
+            Assert.True(
+                compareInfo.IsSuffix(tableName, TableInfo.RecordTypeNameSuffix),
                 $"The suffix is different. {tableName}, {TableInfo.RecordTypeNameSuffix}");
         }
     }
@@ -84,14 +86,14 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "InsertTest.db");
-        
+
         var nameCount = await context.NameTestTable.CountAsync();
         var arrayCount = await context.ArrayTestTable.CountAsync();
         var classCount = await context.ClassListTestTable.CountAsync();
         var complexCount = await context.ComplexTestTable.CountAsync();
         var groupItemCount = await context.GroupedItemTestTable.CountAsync();
         var groupCount = await context.GroupTestTable.CountAsync();
-        
+
         Assert.Equal(5, nameCount);
         Assert.Equal(5, arrayCount);
         Assert.Equal(3, classCount);
@@ -99,13 +101,13 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         Assert.Equal(5, groupItemCount);
         Assert.Equal(2, groupCount);
     }
-    
+
     [Fact]
     public async Task ForeignTableCheckTestAsync()
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         await using var context = await InitializeStaticData(connection, "ForeignTest.db");
-        
+
         await ForeignChecker.CheckAsync<TestStaticDataContext>(connection);
     }
 
@@ -117,22 +119,22 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
         var tableInfo = TableFinder
             .Find<TestStaticDataContext>()
             .Single(x => x.DbSetName == dbSetName);
-        
+
         var fileName = Path.Combine(
             Directory.GetCurrentDirectory(),
             TestStaticDataPath,
             $"{tableInfo.SheetName}.csv");
-        
+
         var query = RecordQueryBuilder.InsertQuery(tableInfo, out var parameters);
 
         // 대체로 가장 마지막 데이터가 가장 독특한 형태
         var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
         var lastData = dataList[^1]!;
-        
+
         var propertiesCount = lastData.GetType().GetProperties().Length;
         var parametersCount = parameters?.Count ?? 0;
         Assert.Equal(propertiesCount, parametersCount);
-        
+
         foreach (var name in parameters!)
         {
             var value = lastData.GetType()
@@ -141,14 +143,13 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
 
             query = query.Replace($"@{name}", value.ToString());
         }
-        
+
         Assert.Equal(dataList.Count, rowCount);
         Assert.Equal(expected, query);
     }
 
     // TODO 쿼리빌더 다른 쿼리들도 테스트
-    
-    private async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
+    private static async Task<TestStaticDataContext> InitializeStaticData(SqliteConnection connection, string dbFileName)
     {
         var options = new DbContextOptionsBuilder<TestStaticDataContext>()
             .UseSqlite(connection)
@@ -169,12 +170,12 @@ public sealed class RecordLibraryTest : IStaticDataContextTester
             {
                 throw new FileNotFoundException(fileName);
             }
-            
+
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
 
             await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
         }
-        
+
         await transaction!.CommitAsync();
 
         return context;

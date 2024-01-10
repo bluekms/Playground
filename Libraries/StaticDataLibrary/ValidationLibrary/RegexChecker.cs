@@ -5,9 +5,11 @@ namespace StaticDataLibrary.ValidationLibrary;
 
 public static class RegexChecker
 {
-    public static async Task CheckAsync<T>(string staticDataPath, List<string>? errors = null) where T : DbContext
+    public static async Task CheckAsync<T>(string staticDataPath, List<string>? errors = null)
+        where T : DbContext
     {
-        await ValidationAttributeChecker<T, RegularExpressionAttribute>.CheckAsync(
+        var checker = new ValidationAttributeChecker<T, RegularExpressionAttribute>();
+        await checker.CheckAsync(
             staticDataPath,
             (_, value, location) =>
             {

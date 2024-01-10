@@ -29,7 +29,7 @@ public sealed class CellLocationParserTest
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new CellLocationParser(cellName));
     }
-    
+
     [Theory]
     [InlineData("XFE1048576")]
     [InlineData("ZZZ1048576")]
@@ -37,7 +37,7 @@ public sealed class CellLocationParserTest
     {
         Assert.Throws<ColumnNameOutOfRangeException>(() => new CellLocationParser(cellName));
     }
-    
+
     [Theory]
     [InlineData("A0")]
     [InlineData("xfd1048577")]

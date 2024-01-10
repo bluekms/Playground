@@ -11,7 +11,7 @@ public sealed class EvnConditionalFactAttribute<T> : FactAttribute
         {
             return;
         }
-        
+
         Skip = $"Skip. {evn}({value}) is not {runCondition}";
     }
 }

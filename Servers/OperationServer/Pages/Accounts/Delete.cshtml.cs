@@ -1,6 +1,6 @@
+using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CommonLibrary.Handlers;
 using OperationServer.Handlers.Account;
 using OperationServer.Pages.Accounts.ViewModels;
 
@@ -20,7 +20,7 @@ namespace OperationServer.Pages.Accounts
         }
 
         [BindProperty]
-      public AccountVM Account { get; set; } = default!;
+        public AccountVM Account { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(string accountId)
         {

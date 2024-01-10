@@ -1,4 +1,3 @@
-using System;
 using AuthDb;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

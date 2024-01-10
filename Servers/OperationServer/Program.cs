@@ -24,7 +24,7 @@ builder.Services.UseMapster();
 // builder.Services.UseCredentialAuthentication();
 // builder.Services.UseOpenAuthentication();
 // builder.Services.UsePermissionAuthorization();
-
+//
 builder.Services.UseHandlers(Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(AssemblyEntry))!);
 builder.Services.UseProtobuf();
 builder.Services.AddRazorPages();

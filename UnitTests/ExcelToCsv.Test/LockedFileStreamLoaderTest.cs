@@ -24,10 +24,10 @@ public sealed class LockedFileStreamLoaderTest
     {
         var stream = File.Open(excelFileName, FileMode.Open, FileAccess.Read);
         Assert.NotNull(stream);
-        
+
         var loader = new LockedFileStreamLoader(excelFileName);
         Assert.NotNull(loader);
-        
+
         Assert.True(loader.IsTemp);
     }
 

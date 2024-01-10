@@ -10,6 +10,6 @@ public class FooWithoutAuthController : ControllerBase
         [FromBody] ReqFoo request,
         CancellationToken cancellationToken)
     {
-        throw new Exception($"{request.Data}");
+        throw new InvalidOperationException($"{request.Data}");
     }
 }

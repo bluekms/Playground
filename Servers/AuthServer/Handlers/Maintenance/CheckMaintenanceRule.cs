@@ -24,7 +24,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
 
         if (row != null)
         {
-            throw new Exception($"Duplicate Start. {row.ToString()}");
+            throw new InvalidOperationException($"Duplicate Start. {row}");
         }
 
         row = await dbContext.Maintenance
@@ -34,7 +34,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
 
         if (row != null)
         {
-            throw new Exception($"Duplicate End. {@row}");
+            throw new InvalidOperationException($"Duplicate End. {row}");
         }
 
         var exist = await dbContext.Maintenance
@@ -44,7 +44,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
 
         if (exist)
         {
-            throw new Exception($"Duplicate Start and End. {@row}");
+            throw new InvalidOperationException($"Duplicate Start and End. {row}");
         }
     }
 }

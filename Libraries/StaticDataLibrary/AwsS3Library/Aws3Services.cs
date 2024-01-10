@@ -5,8 +5,7 @@ using Amazon.S3.Model;
 namespace StaticDataLibrary.AwsS3Library;
 
 // https://www.c-sharpcorner.com/article/uploaddownloaddelete-files-from-aws-s3-using-net-core-api/
-
-public class Aws3Services
+public class Aws3Services : IDisposable
 {
     private readonly IAmazonS3 awsS3Client;
 
@@ -17,7 +16,7 @@ public class Aws3Services
             ServiceURL = regionalDomainName,
             MaxConnectionsPerServer = 32,
         };
-        
+
         awsS3Client = new AmazonS3Client(awsAccessKeyId, awsSecretAccessKey, config);
     }
 
@@ -38,5 +37,11 @@ public class Aws3Services
         await using var ms = new MemoryStream();
         await response.ResponseStream.CopyToAsync(ms);
         return ms.ToArray();
+    }
+
+    public void Dispose()
+    {
+        awsS3Client.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

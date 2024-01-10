@@ -1,4 +1,3 @@
-using System;
 using AuthServer.Models;
 using CommonLibrary;
 using CommonLibrary.Handlers;

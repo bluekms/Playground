@@ -13,7 +13,7 @@ public static class StaticDataExtension
     public static async Task UseStaticDataAsync(this IServiceCollection services, IConfigurationSection staticDataSection)
     {
         var options = staticDataSection.Get<StaticDataOptions>()!;
-        
+
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var staticDataRoot = Path.Combine(appDataPath, options.DataName);
         var rootDi = new DirectoryInfo(staticDataRoot);
@@ -21,7 +21,7 @@ public static class StaticDataExtension
         {
             rootDi.Create();
         }
-        
+
         var tarFileName = $"{options.DataName}-{options.Version}.tar.gz";
         var targetVersionPath = Path.Combine(staticDataRoot, options.Version);
         var targetVersionDi = new DirectoryInfo(targetVersionPath);
@@ -36,7 +36,7 @@ public static class StaticDataExtension
         {
             await Clean(options, staticDataRoot, tarFileName, targetVersionPath);
         }
-        
+
         await InitializeSqlite(services, targetVersionPath);
     }
 
@@ -65,28 +65,28 @@ public static class StaticDataExtension
         {
             return;
         }
-        
+
         foreach (var file in di.GetFiles())
         {
             file.Delete();
         }
-        
+
         di.Delete();
     }
 
     private static async Task InitializeSqlite(IServiceCollection services, string staticDataPath)
     {
         services.AddEntityFrameworkSqlite().AddDbContext<StaticDataContext>();
-        
+
         await using var serviceProvider = services.BuildServiceProvider();
         var context = serviceProvider.GetRequiredService<StaticDataContext>();
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
-        
+
         await using SqliteConnection connection = new SqliteConnection(context.Database.GetConnectionString());
         await connection.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
-        
+
         var tableInfoList = TableFinder.Find<StaticDataContext>();
         foreach (var tableInfo in tableInfoList)
         {
@@ -97,7 +97,7 @@ public static class StaticDataExtension
             }
 
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
-            
+
             await RecordSqlExecutor.InsertAsync(connection, tableInfo, dataList, transaction!);
         }
 

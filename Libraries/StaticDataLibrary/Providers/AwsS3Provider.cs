@@ -11,7 +11,7 @@ public class AwsS3Provider : IProviderBase
     public async Task RunAsync(StaticDataOptions options, string staticDataRoot, string tarFileName, string targetVersionPath)
     {
         await DownloadStaticData(options.AwsS3Provider!, staticDataRoot, tarFileName);
-        
+
         var tarFileFullName = Path.Combine(staticDataRoot, tarFileName);
         UnpackStaticDataFile(tarFileFullName, targetVersionPath);
     }
@@ -23,7 +23,7 @@ public class AwsS3Provider : IProviderBase
             options.AwsAccessKeyId,
             options.AwsSecretAccessKey);
         var staticData = await s3Services.GetStaticDataAsync(options.BucketName, tarFileName);
-        
+
         var tarFileFullName = Path.Combine(staticDataRoot, tarFileName);
         await File.WriteAllBytesAsync(tarFileFullName, staticData);
     }
@@ -33,9 +33,9 @@ public class AwsS3Provider : IProviderBase
         var stream = File.OpenRead(tarFileFullName);
         var gzStream = new GZipInputStream(stream);
         var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
-        
+
         tarArchive.ExtractContents(targetVersionPath);
-        
+
         tarArchive.Close();
         gzStream.Close();
         stream.Close();

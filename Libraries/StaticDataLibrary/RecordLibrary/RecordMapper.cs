@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 
@@ -21,10 +22,10 @@ public static class RecordMapper
         }
 
         var instance = Activator.CreateInstance(t);
-        for (int i = 0; i < properties.Count; ++i)
+        for (var i = 0; i < properties.Count; ++i)
         {
             var realType = GetRealType(properties[i]);
-            
+
             if (string.IsNullOrWhiteSpace(values[i]))
             {
                 if (properties[i].IsNullable())
@@ -34,7 +35,7 @@ public static class RecordMapper
                 }
                 else
                 {
-                    throw new Exception($"{t.Name}.{properties[i].Name} 반드시 값이 있어야 합니다.");
+                    throw new ArgumentException($"{t.Name}.{properties[i].Name} must not be null or empty");
                 }
             }
 
@@ -53,19 +54,19 @@ public static class RecordMapper
             }
             catch (Exception e)
             {
-                throw new Exception($"{t.Name}.{properties[i].Name} value({values[i]}) is not {realType!.Name}", e);
+                throw new ArgumentException($"Type Error. {t.Name}.{properties[i].Name} value({values[i]}) is not {realType!.Name}", e);
             }
-            
+
             properties[i].SetValue(instance, value, null);
         }
 
         return instance;
     }
-    
+
     private static List<string> CsvLineParser(string csvLine)
     {
         var values = csvLine.Split(',');
-        
+
         var list = new List<string>(values.Length);
         var merging = false;
         var sb = new StringBuilder();
@@ -75,7 +76,7 @@ public static class RecordMapper
             {
                 merging = true;
                 sb.Clear();
-                sb.Append($"{value},");
+                sb.Append(CultureInfo.InvariantCulture, $"{value},");
             }
             else if (merging && IsMergeEndColumn(value))
             {
@@ -87,11 +88,11 @@ public static class RecordMapper
             {
                 if (merging)
                 {
-                    sb.Append($"{value},");
+                    sb.Append(CultureInfo.InvariantCulture, $"{value},");
                 }
                 else
                 {
-                    list.Add(value);    
+                    list.Add(value);
                 }
             }
         }
@@ -111,7 +112,7 @@ public static class RecordMapper
 
         return false;
     }
-    
+
     private static bool IsMergeEndColumn(string column)
     {
         if (!string.IsNullOrWhiteSpace(column))

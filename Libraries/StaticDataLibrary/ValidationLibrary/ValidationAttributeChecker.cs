@@ -4,13 +4,13 @@ using StaticDataLibrary.RecordLibrary;
 
 namespace StaticDataLibrary.ValidationLibrary;
 
-public static class ValidationAttributeChecker<TDbContext, TAttribute>
+public class ValidationAttributeChecker<TDbContext, TAttribute>
     where TDbContext : DbContext
     where TAttribute : ValidationAttribute
 {
     public delegate void ValidationFailureHandler(TAttribute attribute, object value, string location);
-    
-    public static async Task CheckAsync(string staticDataPath, ValidationFailureHandler handler)
+
+    public async Task CheckAsync(string staticDataPath, ValidationFailureHandler handler)
     {
         var tableInfoList = TableFinder.Find<TDbContext>();
         foreach (var tableInfo in tableInfoList)
@@ -19,9 +19,9 @@ public static class ValidationAttributeChecker<TDbContext, TAttribute>
                 Directory.GetCurrentDirectory(),
                 staticDataPath,
                 $"{tableInfo.SheetName}.csv");
-            
+
             var properties = OrderedPropertySelector.GetList(tableInfo.RecordType);
-            
+
             var dataList = await RecordParser.GetDataListAsync(tableInfo, fileName);
             foreach (var data in dataList)
             {
@@ -41,14 +41,14 @@ public static class ValidationAttributeChecker<TDbContext, TAttribute>
                     {
                         if (propertyInfo.IsNullable())
                         {
-                            continue;    
+                            continue;
                         }
                         else
                         {
                             throw new ArgumentNullException($"Nullable Error. {tableInfo.RecordType.Name}.{propertyInfo.Name} 반드시 값이 있어야 합니다.");
                         }
                     }
-                    
+
                     if (!attribute.IsValid(value))
                     {
                         handler(attribute, value, $"{tableInfo.RecordType.Name}.{propertyInfo.Name}");

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using CommandLine;
 using CsvLoadTester;
 using Microsoft.Data.Sqlite;
@@ -10,7 +8,6 @@ using StaticDataLibrary.Test;
 using StaticDataLibrary.ValidationLibrary;
 
 // TODO 실 사용 시 TestStaticDataContext 를 StaticDataContext 로 교체해야 함
-
 await Parser.Default.ParseArguments<ProgramOptions>(args)
     .WithParsedAsync(RunOptionsAsync);
 
@@ -28,7 +25,7 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
         await InitializeStaticData(context, connection, programOptions.CsvDirectory);
 
         var errors = new List<string>();
-        
+
         Console.WriteLine("Range Check ...");
         await RangeChecker.CheckAsync<TestStaticDataContext>(programOptions.CsvDirectory, errors);
 
@@ -60,7 +57,8 @@ static async Task RunOptionsAsync(ProgramOptions programOptions)
     Console.WriteLine("Done.");
 }
 
-static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath) where T : DbContext
+static async Task InitializeStaticData<T>(T context, SqliteConnection connection, string csvFilePath)
+    where T : DbContext
 {
     await using var transaction = await connection.BeginTransactionAsync() as SqliteTransaction;
 

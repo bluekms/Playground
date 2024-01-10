@@ -1,5 +1,6 @@
 using System.Text;
 using ExcelDataReader;
+using StaticDataLibrary.ExcelLibrary.Exceptions;
 
 namespace StaticDataLibrary.ExcelLibrary;
 
@@ -8,7 +9,7 @@ public sealed class SheetLoader
     private readonly List<string> columnNameList = new();
     private readonly List<List<string?>> rowList = new();
     private readonly List<int> targetColumnIndices = new();
-    
+
     public SheetLoader(IExcelDataReader reader, string sheetName, int startColumn)
     {
         while (reader.Read())
@@ -18,6 +19,7 @@ public sealed class SheetLoader
                 ReadHeader(reader, startColumn);
                 reader.Read();
             }
+
             ReadBody(reader, startColumn);
         }
 
@@ -29,9 +31,9 @@ public sealed class SheetLoader
     public List<string> ToCsvLineList(IList<string>? targetNameList = null)
     {
         SetColumnIndices(targetNameList);
-        
+
         var list = new List<string>(rowList.Count);
-        
+
         var sb = new StringBuilder();
         foreach (var row in rowList)
         {
@@ -46,7 +48,7 @@ public sealed class SheetLoader
                     sb.Append(',');
                 }
             }
-            
+
             list.Add(sb.ToString());
         }
 
@@ -67,10 +69,10 @@ public sealed class SheetLoader
         for (var i = startColumn; i < reader.FieldCount; ++i)
         {
             var str = reader.GetValue(i)?.ToString() ?? null;
-            
+
             cells.Add(QuotationMarks.Wrapped(str));
         }
-        
+
         rowList.Add(cells);
     }
 
@@ -92,9 +94,9 @@ public sealed class SheetLoader
                 // TODO
                 // Record Class에만 있는 컬럼일 경우 여기서 exception
                 // 개발 프로세스 상 기본값으로 체우고 경고만 내줘야 하는지 고민
-                throw new IndexOutOfRangeException($"Not found column. {name}");
+                throw new ColumnNotFoundException(name);
             }
-            
+
             targetColumnIndices.Add(index);
         }
     }
