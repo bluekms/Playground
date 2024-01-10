@@ -1,0 +1,3 @@
+# NoWarn Generated Files
+[*.cs]
+dotnet_diagnostic.SA1518.severity = none

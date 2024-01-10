@@ -24,4 +24,8 @@
     <Protobuf Include="Protos/**/*.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Include="obj\.editorconfig" />
+  </ItemGroup>
+
 </Project>
