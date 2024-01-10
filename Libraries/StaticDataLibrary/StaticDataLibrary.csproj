@@ -1,29 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>preview</LangVersion>
-    </PropertyGroup>
+  <ItemGroup Label="Required Package And Project Reference">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23525.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <ProjectReference Include="$(SolutionDir)Libraries\Analyzers\Analyzers.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="AWSSDK.Core" Version="3.7.204.13" />
-      <PackageReference Include="AWSSDK.S3" Version="3.7.205.23" />
-      <PackageReference Include="ExcelDataReader" Version="3.7.0-develop00310" />
-      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
-      <PackageReference Include="SharpZipLib" Version="1.4.2" />
-      <PackageReference Include="xunit.extensibility.core" Version="2.6.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.7.204.13" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.205.23" />
+    <PackageReference Include="ExcelDataReader" Version="3.7.0-develop00310" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.6.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+  </ItemGroup>
 
 </Project>

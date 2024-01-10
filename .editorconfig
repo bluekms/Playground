@@ -40,5 +40,5 @@ csharp_indent_switch_labels = true
 csharp_style_pattern_local_over_anonymous_function = true:silent
 
 # MSBuild 설정
-[*.{csproj,vbproj,fsproj}]
+[*.{csproj,vbproj,fsproj,props,targets,xml}]
 indent_size = 2
