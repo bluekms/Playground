@@ -1,4 +1,5 @@
 using System.Data;
+using System.Globalization;
 using System.Text;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -8,16 +9,17 @@ namespace StaticDataLibrary.ValidationLibrary;
 
 public static class ForeignChecker
 {
-    public static async Task CheckAsync<T>(SqliteConnection connection, List<string>? errors = null) where T : DbContext
+    public static async Task CheckAsync<T>(SqliteConnection connection, List<string>? errors = null)
+        where T : DbContext
     {
         var tableInfoList = TableFinder.FindAllTablesWithForeignKey<T>();
         foreach (var tableInfo in tableInfoList)
         {
-            if (tableInfo.ForeignInfoList == null)
+            if (tableInfo.ForeignInfoList is null)
             {
-                throw new NullReferenceException($"{nameof(tableInfo.ForeignInfoList)}");
+                continue;
             }
-            
+
             foreach (var foreignInfo in tableInfo.ForeignInfoList)
             {
                 var results = await CheckForeignKeyAsync(connection, tableInfo, foreignInfo);
@@ -25,11 +27,11 @@ public static class ForeignChecker
                 {
                     continue;
                 }
-                
+
                 var sb = new StringBuilder();
                 foreach (var result in results)
                 {
-                    sb.AppendLine($"{foreignInfo.CurrentTableName}.{foreignInfo.CurrentColumnName} 에서 사용된 {result.ToString()}");
+                    sb.AppendLine(CultureInfo.InvariantCulture, $"{foreignInfo.CurrentTableName}.{foreignInfo.CurrentColumnName} 에서 사용된 {result.ToString()}");
                 }
 
                 if (errors is null)
@@ -43,19 +45,19 @@ public static class ForeignChecker
             }
         }
     }
-    
-    public sealed record NotExistsForeignKeyResult(string ForeignTableName, string ColumnName, string? expected)
+
+    public sealed record NotExistsForeignKeyResult(string ForeignTableName, string ColumnName, string? Expected)
     {
         public override string ToString()
         {
-            return $"'{expected}'는 {ForeignTableName}.{ColumnName} 에 존재하지 않습니다.";
+            return $"'{Expected}'는 {ForeignTableName}.{ColumnName} 에 존재하지 않습니다.";
         }
     }
-    
+
     public static async Task<List<NotExistsForeignKeyResult>> CheckForeignKeyAsync(SqliteConnection connection, TableInfo tableInfo, TableInfo.ForeignInfo foreignInfo)
     {
         var sqlExpected = RecordQueryBuilder.SelectForeignKeyListQuery(tableInfo, foreignInfo);
-                
+
         await using var cmdExpected = new SqliteCommand(sqlExpected, connection);
 
         var expectedList = new List<object>();
@@ -72,7 +74,7 @@ public static class ForeignChecker
         {
             throw new InvalidOperationException($"{foreignInfo.ForeignTableName}.{foreignInfo.ForeignColumnName} sql: {sqlExpected}", e);
         }
-        
+
         var list = new List<NotExistsForeignKeyResult>();
         foreach (var expected in expectedList)
         {
@@ -80,9 +82,9 @@ public static class ForeignChecker
             {
                 continue;
             }
-            
+
             var sqlResult = RecordQueryBuilder.SelectCountQuery(foreignInfo, expected);
-                    
+
             await using var cmdResult = new SqliteCommand(sqlResult, connection);
 
             try

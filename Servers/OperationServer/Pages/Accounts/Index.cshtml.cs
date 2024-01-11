@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CommonLibrary.Handlers;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using OperationServer.Handlers.Account;
 using OperationServer.Pages.Accounts.ViewModels;
 
@@ -14,7 +14,7 @@ namespace OperationServer.Pages.Accounts
             this.listAccounts = listAccounts;
         }
 
-        public IList<AccountVM> Accounts { get;set; } = default!;
+        public IList<AccountVM> Accounts { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

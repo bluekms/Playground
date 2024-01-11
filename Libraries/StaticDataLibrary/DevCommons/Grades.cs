@@ -2,5 +2,9 @@ namespace StaticDataLibrary.DevCommons;
 
 public enum Grades
 {
-    A, B, C, D, F,
+    A,
+    B,
+    C,
+    D,
+    F,
 }

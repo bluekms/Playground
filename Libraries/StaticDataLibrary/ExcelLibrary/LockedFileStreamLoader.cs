@@ -20,7 +20,7 @@ public class LockedFileStreamLoader : IDisposable
             Stream = File.Open(TempFileName, FileMode.Open, FileAccess.Read);
         }
     }
-    
+
     public Stream Stream { get; }
 
     public bool IsTemp => !string.IsNullOrEmpty(TempFileName);
@@ -35,6 +35,8 @@ public class LockedFileStreamLoader : IDisposable
                 File.Delete(TempFileName);
             }
         }
+
+        GC.SuppressFinalize(this);
     }
 
     private static void ForceCopyAsync(string src, string dst)

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using AuthDb;
 using AuthLibrary.Feature.Session;
 using AuthServer.Controllers;
@@ -39,12 +36,7 @@ public sealed class AccountScenarioTest : IDisposable
         mapper = InitMapper.Use();
         timeService = new ScopedTimeService();
 
-        appConfig = new ConfigurationBuilder()
-            .AddInMemoryCollection(new[]
-            {
-                new KeyValuePair<string, string>("AppSecrets:AccountSalt", "Foo"),
-                new KeyValuePair<string, string>("AppSecrets:SessionPrefix", "Bar")
-            }!).Build();
+        appConfig = new ConfigurationBuilder().AddInMemoryCollection(new[] { new KeyValuePair<string, string>("AppSecrets:AccountSalt", "Foo"), new KeyValuePair<string, string>("AppSecrets:SessionPrefix", "Bar") }!).Build();
     }
 
     public void Dispose()

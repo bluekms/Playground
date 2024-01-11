@@ -1,4 +1,3 @@
-using System;
 using AuthDb;
 using AuthServer.Controllers;
 using AuthServer.Handlers.Server;

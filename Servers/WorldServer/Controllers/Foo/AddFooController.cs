@@ -1,3 +1,4 @@
+using System.Globalization;
 using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Extensions.Authorizations;
 using AuthLibrary.Feature.Session;
@@ -34,8 +35,8 @@ public sealed class AddFooController : ControllerBase
     {
         await addFoo.ExecuteAsync(new(args.Data));
 
-        var id = int.Parse(args.Data);
-        var record = await staticData.TypeTestTable.SingleAsync(x => x.Id == id);
+        var id = int.Parse(args.Data, CultureInfo.InvariantCulture);
+        var record = await staticData.TypeTestTable.SingleAsync(x => x.Id == id, cancellationToken);
 
         return $"Ok";
     }

@@ -10,18 +10,18 @@ public sealed class ForeignTestRecord
     [Key]
     [Order]
     public int Id { get; set; }
-    
+
     [ForeignKey(nameof(TargetTestRecord), nameof(TargetTestRecord.Id))]
     [Order]
     public int TargetTestId { get; set; }
 
     [Order]
     public string Value { get; set; } = null!;
-    
+
     [ForeignKey(nameof(ClassListTestRecord), nameof(ClassListTestRecord.StudentId))]
     [Order]
     public string? StudentId { get; set; }
-    
+
     [Order]
     [ColumnName("비고")]
     public string? Note { get; set; }

@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using ExcelDataReader;
+using StaticDataLibrary.ExcelLibrary.Exceptions;
 
 namespace StaticDataLibrary.ExcelLibrary;
 
 public sealed class ExcelLoader
 {
- public List<SheetLoader> SheetList { get; } = new();
+    public List<SheetLoader> SheetList { get; } = new();
 
     public ExcelLoader(string fileName, string? sheetName)
     {
@@ -13,23 +14,23 @@ public sealed class ExcelLoader
         if (loader.IsTemp)
         {
             var lastWriteTime = File.GetLastWriteTime(fileName);
-            
+
             Console.WriteLine($"{Path.GetFileName(fileName)} 이미 열려있어 사본을 읽습니다. 마지막으로 저장된 시간: {lastWriteTime}");
         }
-        
+
         var excelFileName = Path.GetFileName(fileName);
-        
+
         using var reader = ExcelReaderFactory.CreateReader(loader.Stream);
         do
         {
             if (!string.IsNullOrWhiteSpace(sheetName))
             {
-                if (!reader.Name.Equals(sheetName))
+                if (!reader.Name.Equals(sheetName, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
-                }    
+                }
             }
-            
+
             SheetLoader sheet;
 
             var sw = new Stopwatch();
@@ -45,28 +46,28 @@ public sealed class ExcelLoader
                 Console.WriteLine($"Load Failure:\t{excelFileName}.{reader.Name}. {e.Message}");
                 continue;
             }
-            
+
             sw.Stop();
             Console.WriteLine($"Load Complete:\t{excelFileName}.{sheet.Name} ({sw.Elapsed.TotalMilliseconds} ms)");
-            
+
             SheetList.Add(sheet);
-            
-        } while (reader.NextResult());
+        }
+        while (reader.NextResult());
     }
-    
-    private int MoveToFirstCell(IExcelDataReader reader)
+
+    private static int MoveToFirstCell(IExcelDataReader reader)
     {
         reader.Read();
         var a1 = reader.GetString(0);
         if (string.IsNullOrWhiteSpace(a1))
         {
-            throw new FormatException("각 시트의 a1에는 반드시 데이터 해더의 셀 이름이 있어야 합니다. (ex. B5)");
+            throw new A1CellException(a1);
         }
 
         try
         {
             var cellLocation = new CellLocationParser(a1);
-            
+
             for (var i = 0; i < cellLocation.RowNumber - 2; ++i)
             {
                 reader.Read();
@@ -77,7 +78,7 @@ public sealed class ExcelLoader
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception($"{reader.Name}:A1의 값은 반드시 시작 Cell의 이름이어야 합니다. (ex. B10 / 현재: {a1})", e);
+            throw new A1CellException(a1, e);
         }
-    }   
+    }
 }

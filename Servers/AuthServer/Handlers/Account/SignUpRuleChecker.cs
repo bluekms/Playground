@@ -23,12 +23,12 @@ public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
     {
         if (rule.AccountId.Length is < MinLength or > MaxLength)
         {
-            throw new ArgumentOutOfRangeException(nameof(rule.AccountId));
+            throw new ArgumentOutOfRangeException(rule.AccountId);
         }
 
         if (rule.Password.Length is < MinLength or > MaxLength)
         {
-            throw new ArgumentOutOfRangeException(nameof(rule.Password));
+            throw new ArgumentOutOfRangeException(rule.Password);
         }
 
         var exists = await dbContext.Accounts.AnyAsync(row => row.AccountId == rule.AccountId, cancellationToken);

@@ -5,7 +5,7 @@ namespace StaticDataLibrary;
 
 public class StaticDataContext : DbContext
 {
-    public StaticDataContext(DbContextOptions<StaticDataContext> options, string dbFileName = "StaticData.db") 
+    public StaticDataContext(DbContextOptions<StaticDataContext> options, string dbFileName = "StaticData.db")
         : base(options)
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;

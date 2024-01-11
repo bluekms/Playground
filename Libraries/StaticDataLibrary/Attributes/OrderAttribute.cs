@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace StaticDataLibrary.Attributes;
 
+[AttributeUsage(AttributeTargets.Property)]
 public sealed class OrderAttribute : Attribute
 {
     public int Order { get; }

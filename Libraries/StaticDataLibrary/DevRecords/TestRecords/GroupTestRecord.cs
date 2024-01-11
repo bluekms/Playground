@@ -8,7 +8,7 @@ public sealed class GroupTestRecord
     [Key]
     [Order]
     public int Id { get; set; }
-    
+
     [Order]
     public string GroupId { get; set; } = null!;
 }

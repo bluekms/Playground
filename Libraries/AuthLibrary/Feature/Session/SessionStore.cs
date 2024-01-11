@@ -31,7 +31,7 @@ public sealed class SessionStore
         var session = JsonSerializer.Deserialize<SessionInfo>(data!);
         if (session is null)
         {
-            throw new NullReferenceException($"{nameof(sessionId)}: {sessionId}, {data}");
+            throw new InvalidCastException($"{nameof(sessionId)}: {sessionId}, {data}");
         }
 
         return session;

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -15,7 +16,7 @@ public sealed class CellLocationParser
 
     public int ColumnNumber { get; }
     public int RowNumber { get; }
-    
+
     public CellLocationParser(string cellName)
     {
         var reg = new Regex(CellNamePattern);
@@ -24,16 +25,16 @@ public sealed class CellLocationParser
         {
             throw new ArgumentOutOfRangeException($"{cellName} is not cell name.");
         }
-        
+
         var matchCollection = reg.Matches(cellName);
         var match = matchCollection[0];
-        
-        var col = match.Groups[1].Value.ToUpper();
+
+        var col = match.Groups[1].Value.ToUpper(CultureInfo.InvariantCulture);
         if (string.CompareOrdinal(col, MinColumnName) < 0)
         {
             throw new ColumnNameOutOfRangeException($"{cellName} must be {col} >= {MinColumnName}.");
         }
-        
+
         if (string.CompareOrdinal(col, MaxColumnName) > 0)
         {
             throw new ColumnNameOutOfRangeException($"{cellName} must be {col} <= {MaxColumnName}.");
@@ -48,7 +49,7 @@ public sealed class CellLocationParser
                 throw new ColumnNameOutOfRangeException($"{cellName} must be {ColumnNumber} <= {MaxColumnNumber}");
         }
 
-        RowNumber = int.Parse(match.Groups[2].Value);
+        RowNumber = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
         switch (RowNumber)
         {
             case < MinRowNumber:
@@ -57,7 +58,7 @@ public sealed class CellLocationParser
                 throw new RowNameOutOfRangeException($"{cellName} must be {RowNumber} <= {MaxRowNumber}");
         }
     }
-    
+
     private static int GetColumnNumber(string name)
     {
         var number = 0;
@@ -78,23 +79,28 @@ public class ColumnNameOutOfRangeException : ArgumentOutOfRangeException
     {
     }
 
-    protected ColumnNameOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected ColumnNameOutOfRangeException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
     {
     }
 
-    public ColumnNameOutOfRangeException(string? paramName) : base(paramName)
+    public ColumnNameOutOfRangeException(string? paramName)
+        : base(paramName)
     {
     }
 
-    public ColumnNameOutOfRangeException(string? message, Exception? innerException) : base(message, innerException)
+    public ColumnNameOutOfRangeException(string? message, Exception? innerException)
+        : base(message, innerException)
     {
     }
 
-    public ColumnNameOutOfRangeException(string? paramName, object? actualValue, string? message) : base(paramName, actualValue, message)
+    public ColumnNameOutOfRangeException(string? paramName, object? actualValue, string? message)
+        : base(paramName, actualValue, message)
     {
     }
 
-    public ColumnNameOutOfRangeException(string? paramName, string? message) : base(paramName, message)
+    public ColumnNameOutOfRangeException(string? paramName, string? message)
+        : base(paramName, message)
     {
     }
 }
@@ -105,23 +111,28 @@ public class RowNameOutOfRangeException : ArgumentOutOfRangeException
     {
     }
 
-    protected RowNameOutOfRangeException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected RowNameOutOfRangeException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
     {
     }
 
-    public RowNameOutOfRangeException(string? paramName) : base(paramName)
+    public RowNameOutOfRangeException(string? paramName)
+        : base(paramName)
     {
     }
 
-    public RowNameOutOfRangeException(string? message, Exception? innerException) : base(message, innerException)
+    public RowNameOutOfRangeException(string? message, Exception? innerException)
+        : base(message, innerException)
     {
     }
 
-    public RowNameOutOfRangeException(string? paramName, object? actualValue, string? message) : base(paramName, actualValue, message)
+    public RowNameOutOfRangeException(string? paramName, object? actualValue, string? message)
+        : base(paramName, actualValue, message)
     {
     }
 
-    public RowNameOutOfRangeException(string? paramName, string? message) : base(paramName, message)
+    public RowNameOutOfRangeException(string? paramName, string? message)
+        : base(paramName, message)
     {
     }
 }

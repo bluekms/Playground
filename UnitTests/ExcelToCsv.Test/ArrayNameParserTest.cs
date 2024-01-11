@@ -16,7 +16,7 @@ public class ArrayNameParserTest
     public void SuccessTest(string columnName, bool isArrayName, string? name, int? index)
     {
         var parser = new ContainerNameParser(columnName);
-        
+
         Assert.Equal(parser.IsContainerItem, isArrayName);
         Assert.Equal(parser.PureName, name);
         Assert.Equal(parser.ContainerIndex, index);

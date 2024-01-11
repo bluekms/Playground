@@ -15,23 +15,23 @@ public class TarFileProvider : IProviderBase
         {
             throw new FileNotFoundException(fileFullName);
         }
-        
+
         var tarFileFullName = Path.Combine(staticDataRoot, tarFileName);
         fileInfo.CopyTo(tarFileFullName);
-        
+
         UnpackStaticDataFile(tarFileFullName, targetVersionPath);
-        
+
         return Task.CompletedTask;
     }
-    
+
     private static void UnpackStaticDataFile(string tarFileFullName, string targetVersionPath)
     {
         var stream = File.OpenRead(tarFileFullName);
         var gzStream = new GZipInputStream(stream);
         var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
-        
+
         tarArchive.ExtractContents(targetVersionPath);
-        
+
         tarArchive.Close();
         gzStream.Close();
         stream.Close();

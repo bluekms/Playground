@@ -5,9 +5,11 @@ namespace StaticDataLibrary.ValidationLibrary;
 
 public static class RangeChecker
 {
-    public static async Task CheckAsync<T>(string staticDataPath, List<string>? errors = null) where T : DbContext
+    public static async Task CheckAsync<T>(string staticDataPath, List<string>? errors = null)
+        where T : DbContext
     {
-        await ValidationAttributeChecker<T, RangeAttribute>.CheckAsync(
+        var checker = new ValidationAttributeChecker<T, RangeAttribute>();
+        await checker.CheckAsync(
             staticDataPath,
             (attribute, value, location) =>
             {

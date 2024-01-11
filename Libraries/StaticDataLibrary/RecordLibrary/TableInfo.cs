@@ -13,7 +13,7 @@ public sealed class TableInfo
         string CurrentColumnName,
         string ForeignTableName,
         string ForeignColumnName);
-    
+
     public Type RecordType { get; }
     public string SheetName { get; }
     public string DbSetName { get; }
@@ -25,12 +25,12 @@ public sealed class TableInfo
         RecordType = pi.PropertyType.GetGenericArguments().First();
         SheetName = RecordType.Name.Replace(RecordTypeNameSuffix, string.Empty);
         DbSetName = $"{SheetName}{DbSetNameSuffix}";
-        
+
         var sheetNameAttribute = RecordType
             .GetCustomAttributes()
             .SingleOrDefault(x => x is SheetNameAttribute);
-            
-        if(sheetNameAttribute != null)
+
+        if (sheetNameAttribute != null)
         {
             SheetName = (sheetNameAttribute as SheetNameAttribute)!.Name;
         }
@@ -43,12 +43,12 @@ public sealed class TableInfo
         var propertyList = OrderedPropertySelector.GetList(RecordType).ToList();
         var columnNameList = new List<string>(propertyList.Count);
         var foreignDbSetNameList = new List<ForeignInfo>(propertyList.Count);
-        
+
         foreach (var property in propertyList)
         {
             if (TryExtractColumnName(property, out var columnName))
             {
-                columnNameList.Add(columnName);    
+                columnNameList.Add(columnName);
             }
 
             if (TryExtractForeignDbSetName(property, out var foreignDbSetName, out var foreignColumnName))
@@ -62,7 +62,7 @@ public sealed class TableInfo
         }
 
         ColumnNameList = columnNameList.AsReadOnly();
-        
+
         ForeignInfoList = foreignDbSetNameList.Count == 0
             ? null
             : foreignDbSetNameList.AsReadOnly();
@@ -71,7 +71,7 @@ public sealed class TableInfo
     private static bool TryExtractColumnName(PropertyInfo property, out string columnName)
     {
         columnName = string.Empty;
-        
+
         var columnNameAttribute = property
             .GetCustomAttributes()
             .SingleOrDefault(x => x is ColumnNameAttribute);
@@ -79,7 +79,7 @@ public sealed class TableInfo
         columnName = columnNameAttribute == null
             ? property.Name
             : (columnNameAttribute as ColumnNameAttribute)!.Name;
-        
+
         return true;
     }
 
@@ -87,16 +87,16 @@ public sealed class TableInfo
     {
         foreignDbSetName = string.Empty;
         foreignColumnName = string.Empty;
-        
+
         var foreignKeyAttribute = property
             .GetCustomAttributes()
             .SingleOrDefault(x => x is ForeignKeyAttribute);
-        
+
         if (foreignKeyAttribute == null)
         {
             return false;
         }
-        
+
         var foreignKey = (ForeignKeyAttribute)foreignKeyAttribute!;
 
         foreignDbSetName = foreignKey.DbSetName;

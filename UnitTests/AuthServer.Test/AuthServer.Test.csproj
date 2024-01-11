@@ -1,21 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-
-    <IsPackable>false</IsPackable>
-
-    <LangVersion>preview</LangVersion>
+    <SkipCheckAnalyzersImported>true</SkipCheckAnalyzersImported>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="RequiredPackageReference">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23525.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Analyzers\Analyzers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
