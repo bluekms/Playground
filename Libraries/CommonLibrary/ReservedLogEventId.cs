@@ -10,17 +10,25 @@ public enum ReservedLogEventId
 {
     QueryHandlerTrace = 1010,
     QueryHandlerDebug = 1011,
+    QueryHandlerInformation = 1012,
     QueryHandlerWarning = 1013,
     QueryHandlerError = 1014,
 
     CommandHandlerTrace = 1020,
+    CommandHandlerDebug = 1021,
     CommandHandlerInformation = 1022,
     CommandHandlerWarning = 1023,
     CommandHandlerError = 1024,
 
-    WorkerStart = 1030,
-    WorkerFinished = 1032,
-    WorkServiceError = 1034,
+    RuleCheckerTrace = 1030,
+    RuleCheckerDebug = 1031,
+    RuleCheckerInformation = 1032,
+    RuleCheckerWarning = 1033,
+    RuleCheckerError = 1034,
+
+    WorkerStart = 1040,
+    WorkerFinished = 1041,
+    WorkServiceError = 1042,
 }
 
 public static class EventIdFactory
