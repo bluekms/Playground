@@ -1,26 +1,32 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Exception = System.Exception;
 
 namespace CommonLibrary.Handlers.Decorators;
 
 public sealed class CommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
+    private static readonly TimeSpan Threshold = TimeSpan.FromMilliseconds(100);
+
+    private readonly ActivitySource activitySource;
     private readonly ICommandHandler<TCommand> handler;
     private readonly ILogger<CommandHandlerDecorator<TCommand>> logger;
-    private readonly ActivitySource activitySource;
+    private readonly IHostEnvironment hostEnvironment;
 
     public CommandHandlerDecorator(
+        ActivitySource activitySource,
         ICommandHandler<TCommand> handler,
         ILogger<CommandHandlerDecorator<TCommand>> logger,
-        ActivitySource activitySource)
+        IHostEnvironment hostEnvironment)
     {
+        this.activitySource = activitySource;
         this.handler = handler;
         this.logger = logger;
-        this.activitySource = activitySource;
+        this.hostEnvironment = hostEnvironment;
     }
 
-    // TODO cancellationToken 사용하지 않도록 (데드락 검토 필요)
     public async Task ExecuteAsync(TCommand command)
     {
         using var activity = activitySource.StartActivity($"Command {typeof(TCommand).Name}");
@@ -34,37 +40,62 @@ public sealed class CommandHandlerDecorator<TCommand> : ICommandHandler<TCommand
 
             if (sw.Elapsed < Threshold)
             {
-                LogInformation(logger, typeof(TCommand), command, null);
+                LogInformation(logger, command, sw.Elapsed.TotalMilliseconds, null);
             }
             else
             {
-                LogWarning(logger, typeof(TCommand), command, null);
+                if (hostEnvironment.IsProduction())
+                {
+                    LogWarning(logger, typeof(TCommand), sw.Elapsed.TotalMilliseconds, null);
+                }
+                else
+                {
+                    LogWarningForDev(logger, command, sw.Elapsed.TotalMilliseconds, null);
+                }
             }
         }
         catch (Exception e)
         {
-            LogError(logger, typeof(TCommand), command, e);
+            if (hostEnvironment.IsProduction())
+            {
+                LogError(logger, typeof(TCommand), sw.Elapsed.TotalMilliseconds, e);
+            }
+            else
+            {
+                LogErrorForDev(logger, command, sw.Elapsed.TotalMilliseconds, e);
+            }
+
             throw;
         }
     }
 
-    private static readonly TimeSpan Threshold = TimeSpan.FromMilliseconds(200);
-
-    private static readonly Action<ILogger, Type, TCommand, Exception?> LogInformation =
-        LoggerMessage.Define<Type, TCommand>(
+    private static readonly Action<ILogger, TCommand, double, Exception?> LogInformation =
+        LoggerMessage.Define<TCommand, double>(
             LogLevel.Information,
             EventIdFactory.Create(ReservedLogEventId.CommandHandlerInformation),
-            "Command {CommandType} {@Command}");
+            "Command: {@Command}, Elapsed: {Elapsed:0.0000}ms");
 
-    private static readonly Action<ILogger, Type, TCommand, Exception?> LogWarning =
-        LoggerMessage.Define<Type, TCommand>(
+    private static readonly Action<ILogger, Type, double, Exception?> LogWarning =
+        LoggerMessage.Define<Type, double>(
             LogLevel.Warning,
             EventIdFactory.Create(ReservedLogEventId.CommandHandlerWarning),
-            "Command {CommandType} {@Command}");
+            "Command Too Slow. {@CommandType} Elapsed: {Elapsed:0.0000}ms");
 
-    private static readonly Action<ILogger, Type, TCommand, Exception?> LogError =
-        LoggerMessage.Define<Type, TCommand>(
+    private static readonly Action<ILogger, TCommand, double, Exception?> LogWarningForDev =
+        LoggerMessage.Define<TCommand, double>(
+            LogLevel.Warning,
+            EventIdFactory.Create(ReservedLogEventId.CommandHandlerWarning),
+            "Command Too Slow. Command: {@Command}, Elapsed: {Elapsed:0.0000}ms");
+
+    private static readonly Action<ILogger, Type, double, Exception?> LogError =
+        LoggerMessage.Define<Type, double>(
             LogLevel.Error,
             EventIdFactory.Create(ReservedLogEventId.CommandHandlerError),
-            "Command failed {CommandType} {@Command}");
+            "Command Failed! {@CommandType} Elapsed: {Elapsed:0.0000}ms");
+
+    private static readonly Action<ILogger, TCommand, double, Exception?> LogErrorForDev =
+        LoggerMessage.Define<TCommand, double>(
+            LogLevel.Error,
+            EventIdFactory.Create(ReservedLogEventId.CommandHandlerError),
+            "Command Failed! Command: {@Command}, Elapsed: {Elapsed:0.0000}ms");
 }

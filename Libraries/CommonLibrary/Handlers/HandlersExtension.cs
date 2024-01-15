@@ -30,8 +30,14 @@ public static class HandlersExtension
             services.AddTransient(serviceType, type);
         }
 
-        // TODO
+        services.Decorate(typeof(IRuleChecker<>), typeof(RuleCheckerDecorator<>));
         foreach (var (type, serviceType) in typeSelector.GetGenericInheritedTypes(typeof(IRuleChecker<>)))
+        {
+            services.AddTransient(serviceType, type);
+        }
+
+        services.Decorate(typeof(IRuleChecker<,>), typeof(RuleCheckerDecorator<,>));
+        foreach (var (type, serviceType) in typeSelector.GetGenericInheritedTypes(typeof(IRuleChecker<,>)))
         {
             services.AddTransient(serviceType, type);
         }
