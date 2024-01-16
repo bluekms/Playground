@@ -5,7 +5,7 @@ namespace AuthDb;
 
 public sealed class AuthDbContext : DbContext, IAuthDbContext
 {
-    public const string ConfigurationSection = "AuthDb";
+    public const string Name = "AuthDb";
 
     public AuthDbContext(DbContextOptions<AuthDbContext> options)
         : base(options)
@@ -22,7 +22,7 @@ public sealed class AuthDbContext : DbContext, IAuthDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        modelBuilder.HasDefaultSchema(ConfigurationSection);
+        modelBuilder.HasDefaultSchema(Name);
 
         // modelBuilder.HasPostgresExtension("pg_bigm");
     }

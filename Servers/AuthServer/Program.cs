@@ -15,9 +15,13 @@ builder.Host.UseLogger();
 builder.Host.UseStashbox();
 builder.Services.UseNginx();
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
+
+// TODO applicationName 좀 더 자신을 명확히 할 수 있는 방법 찾을 것
 builder.Services.UsePostgreSql<AuthDbContext, ReadOnlyAuthDbContext>(
-    builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection),
-    "AuthServer");
+    builder.Configuration.GetConnectionString(AuthDbContext.Name),
+    "AuthServer",
+    AuthDbContext.Name);
+
 builder.Services.UseMapster();
 builder.Services.UseSessionAuthentication();
 builder.Services.UseCredentialAuthentication();
