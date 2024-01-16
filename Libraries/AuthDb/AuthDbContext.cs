@@ -14,7 +14,8 @@ public sealed class AuthDbContext : DbContext, IAuthDbContext
 
     public DbSet<Foo> Foos => Set<Foo>();
     public DbSet<Account> Accounts => Set<Account>();
-    public DbSet<Maintenance> Maintenance => Set<Maintenance>();
+    public DbSet<Password> Passwords => Set<Password>();
+    public DbSet<Maintenance> Maintenances => Set<Maintenance>();
     public DbSet<ServerRole> ServerRoles => Set<ServerRole>();
     public DbSet<Server> Servers => Set<Server>();
 
