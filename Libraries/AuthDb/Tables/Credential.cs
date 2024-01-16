@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using CommonLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,7 +10,6 @@ namespace AuthDb;
 /// </summary>
 public class Credential
 {
-    [Key]
     public string Name { get; set; } = null!;
 
     public string Token { get; set; } = null!;
@@ -25,6 +23,6 @@ internal sealed class CredentialConfiguration : IEntityTypeConfiguration<Credent
 {
     public void Configure(EntityTypeBuilder<Credential> builder)
     {
-        builder.ToTable("Credential");
+        builder.HasKey(e => e.Name);
     }
 }

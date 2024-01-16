@@ -20,7 +20,7 @@ public class IsMaintenanceTimeHandler : IQueryHandler<IsMaintenanceTimeQuery, bo
 
     public async Task<bool> QueryAsync(IsMaintenanceTimeQuery query, CancellationToken cancellationToken)
     {
-        return await authDbContext.Maintenance
+        return await authDbContext.Maintenances
             .Where(x => x.Start <= timeService.Now)
             .Where(x => timeService.Now <= x.End)
             .AnyAsync(cancellationToken);

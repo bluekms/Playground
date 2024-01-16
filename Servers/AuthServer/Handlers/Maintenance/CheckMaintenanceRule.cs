@@ -17,7 +17,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
 
     public async Task CheckAsync(AddMaintenanceRule rule, CancellationToken cancellationToken)
     {
-        var row = await dbContext.Maintenance
+        var row = await dbContext.Maintenances
             .Where(x => x.Start <= rule.Start)
             .Where(x => rule.Start <= x.End)
             .SingleOrDefaultAsync(cancellationToken);
@@ -27,7 +27,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
             throw new InvalidOperationException($"Duplicate Start. {row}");
         }
 
-        row = await dbContext.Maintenance
+        row = await dbContext.Maintenances
             .Where(x => x.Start <= rule.End)
             .Where(x => rule.End <= x.End)
             .SingleOrDefaultAsync(cancellationToken);
@@ -37,7 +37,7 @@ public sealed class CheckMaintenanceRule : IRuleChecker<AddMaintenanceRule>
             throw new InvalidOperationException($"Duplicate End. {row}");
         }
 
-        var exist = await dbContext.Maintenance
+        var exist = await dbContext.Maintenances
             .Where(x => rule.Start <= x.Start)
             .Where(x => x.End <= rule.End)
             .AnyAsync(cancellationToken);

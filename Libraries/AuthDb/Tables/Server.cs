@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using CommonLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,7 +9,6 @@ namespace AuthDb;
 /// </summary>
 public sealed class Server
 {
-    [Key]
     public string Name { get; init; } = null!;
 
     public ServerRoles Role { get; set; }
@@ -26,6 +24,6 @@ internal sealed class ServerConfiguration : IEntityTypeConfiguration<Server>
 {
     public void Configure(EntityTypeBuilder<Server> builder)
     {
-        builder.ToTable("Server");
+        builder.HasKey(e => e.Name);
     }
 }

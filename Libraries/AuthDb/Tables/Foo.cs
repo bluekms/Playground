@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,7 +20,6 @@ public sealed class Foo
     }
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key]
     public long Seq { get; set; }
 
     public string AccountId { get; set; } = null!;
@@ -35,6 +33,6 @@ internal sealed class FooConfiguration : IEntityTypeConfiguration<Foo>
 {
     public void Configure(EntityTypeBuilder<Foo> builder)
     {
-        builder.ToTable("Foo");
+        builder.HasKey(e => e.Seq);
     }
 }
