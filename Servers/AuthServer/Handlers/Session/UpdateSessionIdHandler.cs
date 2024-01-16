@@ -7,7 +7,7 @@ using StackExchange.Redis;
 
 namespace AuthServer.Handlers.Session
 {
-    public sealed record UpdateSessionCommand(string AccountId, string SessionPrefix) : ICommand;
+    public sealed record UpdateSessionCommand(string AccountId) : ICommand;
 
     public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, AccountData>
     {
@@ -31,7 +31,7 @@ namespace AuthServer.Handlers.Session
                 .Where(x => x.AccountId == command.AccountId)
                 .SingleAsync();
 
-            await redis.KeyDeleteAsync(command.SessionPrefix + account.Token);
+            await redis.KeyDeleteAsync(account.Token);
             account.Token = Guid.NewGuid().ToString();
             await dbContext.SaveChangesAsync();
 

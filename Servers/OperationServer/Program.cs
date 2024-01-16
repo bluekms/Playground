@@ -16,8 +16,9 @@ builder.Host.UseStashbox();
 builder.Services.UseNginx();
 builder.Services.UseRedisCache(builder.Configuration.GetConnectionString(RedisCacheExtension.ConfigurationSection)!);
 builder.Services.UsePostgreSql<AuthDbContext, ReadOnlyAuthDbContext>(
-    builder.Configuration.GetConnectionString(AuthDbContext.ConfigurationSection),
-    "AuthServer");
+    builder.Configuration.GetConnectionString(AuthDbContext.Name),
+    "OperationServer",
+    AuthDbContext.Name);
 builder.Services.UseMapster();
 
 // builder.Services.UseSessionAuthentication();

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 namespace AuthServer.Handlers.Account;
 
 public sealed record SignUpCommand(
-    string Salt,
     string AccountId,
     string Password,
     ResSignUp.Types.AccountRoles AccountRole) : ICommand;
@@ -35,10 +34,16 @@ public sealed class SignUpHandler : ICommandHandler<SignUpCommand>
         };
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        var password = command.Salt + command.Password;
-        newAccount.Password = passwordHasher.HashPassword(newAccount, password);
+        var newPassword = new Password
+        {
+            AccountId = command.AccountId,
+            UpdatedAt = timeService.Now,
+            AccountPassword = passwordHasher.HashPassword(newAccount, command.Password),
+        };
 
         await dbContext.Accounts.AddAsync(newAccount);
+        await dbContext.Passwords.AddAsync(newPassword);
+
         await dbContext.SaveChangesAsync();
     }
 }

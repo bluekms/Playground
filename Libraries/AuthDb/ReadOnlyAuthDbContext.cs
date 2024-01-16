@@ -13,7 +13,8 @@ public sealed class ReadOnlyAuthDbContext : IAuthDbContext
 
     public DbSet<Foo> Foos => dbContext.Foos;
     public DbSet<Account> Accounts => dbContext.Accounts;
-    public DbSet<Maintenance> Maintenance => dbContext.Maintenance;
+    public DbSet<Password> Passwords => dbContext.Passwords;
+    public DbSet<Maintenance> Maintenances => dbContext.Maintenances;
     public DbSet<ServerRole> ServerRoles => dbContext.ServerRoles;
     public DbSet<Server> Servers => dbContext.Servers;
 }

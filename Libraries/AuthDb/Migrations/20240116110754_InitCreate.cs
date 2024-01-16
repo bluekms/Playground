@@ -16,38 +16,7 @@ namespace AuthDb.Migrations
                 name: "AuthDb");
 
             migrationBuilder.CreateTable(
-                name: "Account",
-                schema: "AuthDb",
-                columns: table => new
-                {
-                    AccountId = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Token = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Account", x => x.AccountId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Credential",
-                schema: "AuthDb",
-                columns: table => new
-                {
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Token = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Credential", x => x.Name);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Foo",
+                name: "Foos",
                 schema: "AuthDb",
                 columns: table => new
                 {
@@ -59,11 +28,11 @@ namespace AuthDb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Foo", x => x.Seq);
+                    table.PrimaryKey("PK_Foos", x => x.Seq);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Maintenance",
+                name: "Maintenances",
                 schema: "AuthDb",
                 columns: table => new
                 {
@@ -75,11 +44,39 @@ namespace AuthDb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Maintenance", x => x.Id);
+                    table.PrimaryKey("PK_Maintenances", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Server",
+                name: "Passwords",
+                schema: "AuthDb",
+                columns: table => new
+                {
+                    AccountId = table.Column<string>(type: "text", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AccountPassword = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Passwords", x => x.AccountId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerRoles",
+                schema: "AuthDb",
+                columns: table => new
+                {
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerRoles", x => x.Token);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Servers",
                 schema: "AuthDb",
                 columns: table => new
                 {
@@ -91,21 +88,29 @@ namespace AuthDb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Server", x => x.Name);
+                    table.PrimaryKey("PK_Servers", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServerRole",
+                name: "Accounts",
                 schema: "AuthDb",
                 columns: table => new
                 {
+                    AccountId = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Token = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
+                    Role = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServerRole", x => x.Token);
+                    table.PrimaryKey("PK_Accounts", x => x.AccountId);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Passwords_AccountId",
+                        column: x => x.AccountId,
+                        principalSchema: "AuthDb",
+                        principalTable: "Passwords",
+                        principalColumn: "AccountId",
+                        onDelete: ReferentialAction.Cascade);
                 });
         }
 
@@ -113,27 +118,27 @@ namespace AuthDb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Account",
+                name: "Accounts",
                 schema: "AuthDb");
 
             migrationBuilder.DropTable(
-                name: "Credential",
+                name: "Foos",
                 schema: "AuthDb");
 
             migrationBuilder.DropTable(
-                name: "Foo",
+                name: "Maintenances",
                 schema: "AuthDb");
 
             migrationBuilder.DropTable(
-                name: "Maintenance",
+                name: "ServerRoles",
                 schema: "AuthDb");
 
             migrationBuilder.DropTable(
-                name: "Server",
+                name: "Servers",
                 schema: "AuthDb");
 
             migrationBuilder.DropTable(
-                name: "ServerRole",
+                name: "Passwords",
                 schema: "AuthDb");
         }
     }

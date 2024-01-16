@@ -1,34 +1,61 @@
 using AuthDb;
+using CommonLibrary;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthServer.Handlers.Account
+namespace AuthServer.Handlers.Account;
+
+public sealed record LoginRule(string AccountId, string Password) : IRule;
+
+public sealed record LoginRuleResult(bool RehashNeeded);
+
+public sealed class LoginRuleChecker : IRuleChecker<LoginRule, LoginRuleResult>
 {
-    public sealed record LoginRule(string AccountId, string Password, string Salt) : IRule;
+    private readonly ITimeService timeService;
+    private readonly ReadOnlyAuthDbContext dbContext;
 
-    public sealed class LoginRuleChecker : IRuleChecker<LoginRule>
+    public LoginRuleChecker(
+        ITimeService timeService,
+        ReadOnlyAuthDbContext dbContext)
     {
-        private readonly ReadOnlyAuthDbContext dbContext;
+        this.timeService = timeService;
+        this.dbContext = dbContext;
+    }
 
-        public LoginRuleChecker(ReadOnlyAuthDbContext dbContext)
+    public async Task<LoginRuleResult> CheckAsync(LoginRule rule, CancellationToken cancellationToken)
+    {
+        var accountRow = await dbContext.Accounts
+            .Where(x => x.AccountId == rule.AccountId)
+            .SingleAsync(cancellationToken);
+
+        var passwordRow = await dbContext.Passwords
+            .Where(x => x.AccountId == rule.AccountId)
+            .SingleAsync(cancellationToken);
+
+        var passwordHasher = new PasswordHasher<AuthDb.Account>();
+        var result = passwordHasher.VerifyHashedPassword(accountRow, passwordRow.AccountPassword, rule.Password);
+
+        switch (result)
         {
-            this.dbContext = dbContext;
-        }
+            case PasswordVerificationResult.SuccessRehashNeeded:
+                return new(true);
 
-        public async Task CheckAsync(LoginRule rule, CancellationToken cancellationToken)
-        {
-            var row = await dbContext.Accounts
-                .Where(x => x.AccountId == rule.AccountId)
-                .SingleAsync(cancellationToken);
+            case PasswordVerificationResult.Success:
+                {
+                    if (passwordRow.UpdatedAt < timeService.Now.AddDays(-30))
+                    {
+                        return new(true);
+                    }
+                    else
+                    {
+                        return new(false);
+                    }
+                }
 
-            var passwordHasher = new PasswordHasher<AuthDb.Account>();
-            var result = passwordHasher.VerifyHashedPassword(row, row.Password, rule.Salt + rule.Password);
-
-            if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
-            {
+            default:
+            case PasswordVerificationResult.Failed:
                 throw new ArgumentException(rule.Password);
-            }
         }
     }
 }

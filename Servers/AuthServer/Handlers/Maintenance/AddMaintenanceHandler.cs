@@ -33,7 +33,7 @@ namespace AuthServer.Handlers.Maintenance
                 End = command.End,
                 Reason = command.Reason,
             };
-            await dbContext.Maintenance.AddAsync(newRow);
+            await dbContext.Maintenances.AddAsync(newRow);
             await dbContext.SaveChangesAsync();
             return mapper.Map<MaintenanceData>(newRow);
         }

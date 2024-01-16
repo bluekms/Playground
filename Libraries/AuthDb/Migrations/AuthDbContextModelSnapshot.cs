@@ -31,10 +31,6 @@ namespace AuthDb.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -44,28 +40,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("Account", "AuthDb");
-                });
-
-            modelBuilder.Entity("AuthDb.Credential", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Credential", "AuthDb");
+                    b.ToTable("Accounts", "AuthDb");
                 });
 
             modelBuilder.Entity("AuthDb.Foo", b =>
@@ -89,7 +64,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Seq");
 
-                    b.ToTable("Foo", "AuthDb");
+                    b.ToTable("Foos", "AuthDb");
                 });
 
             modelBuilder.Entity("AuthDb.Maintenance", b =>
@@ -112,7 +87,24 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Maintenance", "AuthDb");
+                    b.ToTable("Maintenances", "AuthDb");
+                });
+
+            modelBuilder.Entity("AuthDb.Password", b =>
+                {
+                    b.Property<string>("AccountId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AccountPassword")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("AccountId");
+
+                    b.ToTable("Passwords", "AuthDb");
                 });
 
             modelBuilder.Entity("AuthDb.Server", b =>
@@ -136,7 +128,7 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Server", "AuthDb");
+                    b.ToTable("Servers", "AuthDb");
                 });
 
             modelBuilder.Entity("AuthDb.ServerRole", b =>
@@ -153,7 +145,16 @@ namespace AuthDb.Migrations
 
                     b.HasKey("Token");
 
-                    b.ToTable("ServerRole", "AuthDb");
+                    b.ToTable("ServerRoles", "AuthDb");
+                });
+
+            modelBuilder.Entity("AuthDb.Account", b =>
+                {
+                    b.HasOne("AuthDb.Password", null)
+                        .WithOne()
+                        .HasForeignKey("AuthDb.Account", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

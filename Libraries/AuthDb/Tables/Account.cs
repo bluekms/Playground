@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,10 +8,7 @@ namespace AuthDb;
 /// </summary>
 public sealed class Account
 {
-    [Key]
     public string AccountId { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
@@ -25,6 +21,6 @@ internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 {
     public void Configure(EntityTypeBuilder<Account> builder)
     {
-        builder.ToTable("Account");
+        builder.HasKey(e => e.AccountId);
     }
 }

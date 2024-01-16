@@ -4,35 +4,33 @@ using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace OperationServer.Handlers.Account;
+namespace AuthServer.Handlers.Account;
 
-public sealed record UpdateAccountPasswordCommand(string AccountId, string Password) : ICommand;
+public sealed record UpdatePasswordCommand(string AccountId, string Password) : ICommand;
 
-public class UpdateAccountPasswordHandler : ICommandHandler<UpdateAccountPasswordCommand>
+public sealed class UpdatePasswordHandler : ICommandHandler<UpdatePasswordCommand>
 {
     private readonly ITimeService timeService;
     private readonly AuthDbContext dbContext;
 
-    public UpdateAccountPasswordHandler(
-        ITimeService timeService,
-        AuthDbContext dbContext)
+    public UpdatePasswordHandler(ITimeService timeService, AuthDbContext dbContext)
     {
         this.timeService = timeService;
         this.dbContext = dbContext;
     }
 
-    public async Task ExecuteAsync(UpdateAccountPasswordCommand command)
+    public async Task ExecuteAsync(UpdatePasswordCommand command)
     {
         var accountRow = await dbContext.Accounts
-            .SingleAsync(row => row.AccountId == command.AccountId);
+            .Where(x => x.AccountId == command.AccountId)
+            .SingleAsync();
 
         var passwordRow = await dbContext.Passwords
-            .SingleAsync(row => row.AccountId == command.AccountId);
+            .Where(x => x.AccountId == command.AccountId)
+            .SingleAsync();
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
         passwordRow.UpdatedAt = timeService.Now;
         passwordRow.AccountPassword = passwordHasher.HashPassword(accountRow, command.Password);
-
-        await dbContext.SaveChangesAsync();
     }
 }

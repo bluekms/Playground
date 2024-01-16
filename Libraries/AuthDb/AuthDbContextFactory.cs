@@ -30,10 +30,10 @@ public class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
 
     public AuthDbContext CreateDbContext(string[] args)
     {
-        var conn = config.GetConnectionString(AuthDbContext.ConfigurationSection);
+        var conn = config.GetConnectionString(AuthDbContext.Name);
 
         var optionsBuilder = new DbContextOptionsBuilder<AuthDbContext>();
-        optionsBuilder.UseNpgsql(conn);
+        optionsBuilder.UseNpgsql(conn, x => x.MigrationsHistoryTable("__EFMigrationsHistory", AuthDbContext.Name));
 
         return new AuthDbContext(optionsBuilder.Options);
     }

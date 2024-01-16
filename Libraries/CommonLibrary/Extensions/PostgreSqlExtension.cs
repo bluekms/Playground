@@ -8,12 +8,12 @@ namespace CommonLibrary.Extensions;
 public static class PostgreSqlExtension
 {
     private const string MigrationsHistoryTableName = "__EFMigrationsHistory";
-    private const string MigrationsHistoryTableSchema = "main";
 
     public static void UsePostgreSql<TContext, TReadOnlyContext>(
         this IServiceCollection services,
         string? connectionString,
-        string applicationName)
+        string applicationName,
+        string schemaName)
         where TContext : DbContext
         where TReadOnlyContext : class
     {
@@ -35,7 +35,7 @@ public static class PostgreSqlExtension
             options.UseNpgsql(conn.ToString(), builder =>
             {
                 builder.EnableRetryOnFailure();
-                builder.MigrationsHistoryTable(MigrationsHistoryTableName, MigrationsHistoryTableSchema);
+                builder.MigrationsHistoryTable(MigrationsHistoryTableName, schemaName);
             });
         });
 
