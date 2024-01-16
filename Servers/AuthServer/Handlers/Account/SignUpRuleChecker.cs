@@ -9,7 +9,7 @@ public sealed record SignUpRule(string AccountId, string Password) : IRule;
 
 public sealed class SignUpRuleChecker : IRuleChecker<SignUpRule>
 {
-    private const int MinLength = 3;
+    private const int MinLength = 4;
     private const int MaxLength = 20;
 
     private readonly ReadOnlyAuthDbContext dbContext;
