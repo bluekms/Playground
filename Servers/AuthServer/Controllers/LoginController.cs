@@ -15,21 +15,21 @@ namespace AuthServer.Controllers;
 [ApiController]
 public sealed class LoginController : ControllerBase
 {
-    private readonly IConfiguration appConfig;
-    private readonly IRuleChecker<LoginRule> rule;
+    private readonly IRuleChecker<LoginRule, LoginRuleResult> rule;
+    private readonly ICommandHandler<UpdatePasswordCommand> updatePassword;
     private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
     private readonly SessionStore sessionStore;
     private readonly IQueryHandler<GetServerListQuery, List<ServerData>> getServerList;
 
     public LoginController(
-        IConfiguration appConfig,
-        IRuleChecker<LoginRule> rule,
+        IRuleChecker<LoginRule, LoginRuleResult> rule,
+        ICommandHandler<UpdatePasswordCommand> updatePassword,
         ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
         SessionStore sessionStore,
         IQueryHandler<GetServerListQuery, List<ServerData>> getServerList)
     {
-        this.appConfig = appConfig;
         this.rule = rule;
+        this.updatePassword = updatePassword;
         this.updateSession = updateSession;
         this.sessionStore = sessionStore;
         this.getServerList = getServerList;
@@ -42,9 +42,13 @@ public sealed class LoginController : ControllerBase
         [FromBody] Arguments args,
         CancellationToken cancellationToken)
     {
-        await rule.CheckAsync(new(args.AccountId, args.Password, appConfig["AppSecrets:AccountSalt"]!), cancellationToken);
+        var checkResult = await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
+        if (checkResult.RehashNeeded)
+        {
+            await updatePassword.ExecuteAsync(new(args.AccountId, args.Password));
+        }
 
-        var account = await updateSession.ExecuteAsync(new(args.AccountId, appConfig["AppSecrets:SessionPrefix"]!));
+        var account = await updateSession.ExecuteAsync(new(args.AccountId));
 
         var session = new SessionInfo(account.Token, account.Role);
         await sessionStore.SetAsync(session, cancellationToken);

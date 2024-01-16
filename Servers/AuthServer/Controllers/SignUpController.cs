@@ -9,17 +9,13 @@ namespace AuthServer.Controllers;
 [ApiController]
 public sealed class SignUpController : ControllerBase
 {
-    // TODO 유효성 검사 가능하고 nullable 체크하도록 수정하자
-    private readonly IConfiguration appConfig;
     private readonly IRuleChecker<SignUpRule> rule;
     private readonly ICommandHandler<SignUpCommand> signUp;
 
     public SignUpController(
-        IConfiguration appConfig,
         IRuleChecker<SignUpRule> rule,
         ICommandHandler<SignUpCommand> signUp)
     {
-        this.appConfig = appConfig;
         this.rule = rule;
         this.signUp = signUp;
     }
@@ -33,11 +29,7 @@ public sealed class SignUpController : ControllerBase
     {
         await rule.CheckAsync(new(args.AccountId, args.Password), cancellationToken);
 
-        await signUp.ExecuteAsync(new(
-            appConfig["AppSecrets:AccountSalt"]!,
-            args.AccountId,
-            args.Password,
-            ResSignUp.Types.AccountRoles.User));
+        await signUp.ExecuteAsync(new(args.AccountId, args.Password, ResSignUp.Types.AccountRoles.User));
 
         return new(args.AccountId, ResSignUp.Types.AccountRoles.User);
     }

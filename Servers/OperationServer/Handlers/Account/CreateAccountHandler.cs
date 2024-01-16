@@ -8,19 +8,19 @@ namespace OperationServer.Handlers.Account;
 public sealed record CreateAccountCommand(
     string AccountId,
     string Password,
-    ResSignUp.Types.AccountRoles Role) : ICommand;
+    ResSignUp.Types.AccountRoles AccountRole) : ICommand;
 
-public sealed class CreateAccountHandler : ICommandHandler<CreateAccountCommand>
+public class CreateAccountHandler : ICommandHandler<CreateAccountCommand>
 {
-    private readonly AuthDbContext dbContext;
     private readonly ITimeService timeService;
-    private readonly string salt;
+    private readonly AuthDbContext dbContext;
 
-    public CreateAccountHandler(ITimeService timeService, AuthDbContext dbContext, string salt)
+    public CreateAccountHandler(
+        ITimeService timeService,
+        AuthDbContext dbContext)
     {
         this.timeService = timeService;
         this.dbContext = dbContext;
-        this.salt = salt;
     }
 
     public async Task ExecuteAsync(CreateAccountCommand command)
@@ -28,15 +28,22 @@ public sealed class CreateAccountHandler : ICommandHandler<CreateAccountCommand>
         var newAccount = new AuthDb.Account
         {
             AccountId = command.AccountId,
-            CreatedAt = timeService.Now,
             Token = string.Empty,
-            Role = command.Role,
+            CreatedAt = timeService.Now,
+            Role = command.AccountRole,
         };
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        newAccount.Password = passwordHasher.HashPassword(newAccount, salt + command.Password);
+        var newPassword = new Password
+        {
+            AccountId = command.AccountId,
+            UpdatedAt = timeService.Now,
+            AccountPassword = passwordHasher.HashPassword(newAccount, command.Password),
+        };
 
         await dbContext.Accounts.AddAsync(newAccount);
+        await dbContext.Passwords.AddAsync(newPassword);
+
         await dbContext.SaveChangesAsync();
     }
 }

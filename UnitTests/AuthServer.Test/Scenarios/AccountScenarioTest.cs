@@ -23,7 +23,6 @@ public sealed class AccountScenarioTest : IDisposable
     private readonly ConnectionMultiplexer redisMultiplexer;
     private readonly IMapper mapper;
     private readonly ITimeService timeService;
-    private readonly IConfigurationRoot appConfig;
 
     public AccountScenarioTest()
     {
@@ -35,8 +34,6 @@ public sealed class AccountScenarioTest : IDisposable
 
         mapper = InitMapper.Use();
         timeService = new ScopedTimeService();
-
-        appConfig = new ConfigurationBuilder().AddInMemoryCollection(new[] { new KeyValuePair<string, string>("AppSecrets:AccountSalt", "Foo"), new KeyValuePair<string, string>("AppSecrets:SessionPrefix", "Bar") }!).Build();
     }
 
     public void Dispose()
@@ -55,7 +52,6 @@ public sealed class AccountScenarioTest : IDisposable
         var password = "1234";
 
         var signUpController = new SignUpController(
-            appConfig,
             new SignUpRuleChecker(new(dbContext)),
             new SignUpHandler(timeService, dbContext));
 
@@ -65,8 +61,8 @@ public sealed class AccountScenarioTest : IDisposable
         resultSignUp.Role.ShouldBe(ResSignUp.Types.AccountRoles.User);
 
         var loginController = new LoginController(
-            appConfig,
-            new LoginRuleChecker(new(dbContext)),
+            new LoginRuleChecker(timeService, new(dbContext)),
+            new UpdatePasswordHandler(timeService, dbContext),
             new UpdateSessionHandler(redisMultiplexer, dbContext, mapper),
             new SessionStore(redisMultiplexer),
             new GetServerListHandler(new(dbContext), timeService, mapper));

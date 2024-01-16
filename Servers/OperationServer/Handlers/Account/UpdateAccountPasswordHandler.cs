@@ -1,4 +1,5 @@
 using AuthDb;
+using CommonLibrary;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,22 +10,28 @@ public sealed record UpdateAccountPasswordCommand(string AccountId, string Passw
 
 public class UpdateAccountPasswordHandler : ICommandHandler<UpdateAccountPasswordCommand>
 {
+    private readonly ITimeService timeService;
     private readonly AuthDbContext dbContext;
-    private readonly string salt;
 
-    public UpdateAccountPasswordHandler(AuthDbContext dbContext, string salt)
+    public UpdateAccountPasswordHandler(
+        ITimeService timeService,
+        AuthDbContext dbContext)
     {
+        this.timeService = timeService;
         this.dbContext = dbContext;
-        this.salt = salt;
     }
 
     public async Task ExecuteAsync(UpdateAccountPasswordCommand command)
     {
-        var dbAccount = await dbContext.Accounts
+        var accountRow = await dbContext.Accounts
+            .SingleAsync(row => row.AccountId == command.AccountId);
+
+        var passwordRow = await dbContext.Passwords
             .SingleAsync(row => row.AccountId == command.AccountId);
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        dbAccount.Password = passwordHasher.HashPassword(dbAccount, salt + command.Password);
+        passwordRow.UpdatedAt = timeService.Now;
+        passwordRow.AccountPassword = passwordHasher.HashPassword(accountRow, command.Password);
 
         await dbContext.SaveChangesAsync();
     }
