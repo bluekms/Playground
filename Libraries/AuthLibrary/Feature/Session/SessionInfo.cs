@@ -1,4 +1,3 @@
-using CommonLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthLibrary.Feature.Session;

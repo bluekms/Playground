@@ -1,4 +1,7 @@
+using AuthLibrary.Extensions.Authentication;
+using AuthLibrary.Extensions.Authorizations;
 using CommonLibrary.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,6 +10,7 @@ using OperationServer.Pages.Accounts.ViewModels;
 
 namespace OperationServer.Pages.Accounts;
 
+[Authorize(AuthenticationSchemes = SessionAuthenticationSchemeOptions.Name, Policy = ApiPolicies.OperationApi)]
 public class EditRoleModel : PageModel
 {
     private readonly IQueryHandler<GetAccountQuery, AccountUpdateRoleVM> getAccount;

@@ -53,8 +53,8 @@ public sealed class LoginRuleChecker : IRuleChecker<LoginRule, LoginRuleResult>
                     }
                 }
 
-            default:
             case PasswordVerificationResult.Failed:
+            default:
                 throw new ArgumentException(rule.Password);
         }
     }

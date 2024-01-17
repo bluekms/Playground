@@ -10,7 +10,7 @@ public static class SessionAuthenticationExtension
         services
             .AddAuthentication(SessionAuthenticationSchemeOptions.Name)
             .AddScheme<SessionAuthenticationSchemeOptions, SessionAuthenticationHandler>(
-                SessionAuthenticationSchemeOptions.Name, configureOptions => { });
+                SessionAuthenticationSchemeOptions.Name, _ => { });
 
         services.AddScoped<SessionStore>();
     }

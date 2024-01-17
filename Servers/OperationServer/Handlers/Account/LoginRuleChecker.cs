@@ -1,33 +1,61 @@
 using AuthDb;
+using CommonLibrary;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace OperationServer.Handlers.Account;
 
-public sealed record LoginRule(string AccountId, string Password, string Salt) : IRule;
+public sealed record LoginRule(string AccountId, string Password) : IRule;
 
-public class LoginRuleChecker : IRuleChecker<LoginRule>
+public sealed record LoginRuleResult(bool RehashNeeded);
+
+public class LoginRuleChecker : IRuleChecker<LoginRule, LoginRuleResult>
 {
+    private readonly ITimeService timeService;
     private ReadOnlyAuthDbContext dbContext;
 
-    public LoginRuleChecker(ReadOnlyAuthDbContext dbContext)
+    public LoginRuleChecker(
+        ITimeService timeService,
+        ReadOnlyAuthDbContext dbContext)
     {
+        this.timeService = timeService;
         this.dbContext = dbContext;
     }
 
-    public async Task CheckAsync(LoginRule rule, CancellationToken cancellationToken)
+    public async Task<LoginRuleResult> CheckAsync(LoginRule rule, CancellationToken cancellationToken)
     {
-        var account = await dbContext.Accounts
+        var accountRow = await dbContext.Accounts
+            .Where(row => row.AccountId == rule.AccountId)
+            .SingleAsync(cancellationToken);
+
+        var passwordRow = await dbContext.Passwords
             .Where(row => row.AccountId == rule.AccountId)
             .SingleAsync(cancellationToken);
 
         var passwordHasher = new PasswordHasher<AuthDb.Account>();
-        var result = passwordHasher.VerifyHashedPassword(account, account.Password, rule.Salt + rule.Password);
+        var result = passwordHasher.VerifyHashedPassword(accountRow, passwordRow.AccountPassword, rule.Password);
 
-        if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
+        switch (result)
         {
-            throw new ArgumentException(rule.Password);
+            case PasswordVerificationResult.SuccessRehashNeeded:
+                return new(true);
+
+            case PasswordVerificationResult.Success:
+                {
+                    if (passwordRow.UpdatedAt < timeService.Now.AddDays(-30))
+                    {
+                        return new(true);
+                    }
+                    else
+                    {
+                        return new(false);
+                    }
+                }
+
+            case PasswordVerificationResult.Failed:
+            default:
+                throw new ArgumentException(rule.Password);
         }
     }
 }
