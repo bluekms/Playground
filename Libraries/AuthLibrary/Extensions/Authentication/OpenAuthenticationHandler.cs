@@ -19,7 +19,12 @@ public class OpenAuthenticationHandler : AuthenticationHandler<OpenAuthenticatio
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claimsIdentity = new ClaimsIdentity(OpenAuthenticationSchemeOptions.Name);
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, Context.User.Identity?.Name ?? string.Empty),
+        };
+        var claimsIdentity = new ClaimsIdentity(claims, OpenAuthenticationSchemeOptions.Name);
+
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         var authTicket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
         var result = AuthenticateResult.Success(authTicket);

@@ -1,31 +1,28 @@
 using AuthDb;
-using AuthLibrary.Models;
 using CommonLibrary.Handlers;
-using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
-namespace AuthServer.Handlers.Session;
+namespace OperationServer.Handlers.Account;
 
 public sealed record UpdateSessionCommand(string AccountId) : ICommand;
 
-public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, AccountData>
+public sealed record UpdateSessionCommandResult(string Token, ResSignUp.Types.AccountRoles Role);
+
+public class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand, UpdateSessionCommandResult>
 {
     private readonly IConnectionMultiplexer multiplexer;
     private readonly AuthDbContext dbContext;
-    private readonly IMapper mapper;
 
     public UpdateSessionHandler(
         IConnectionMultiplexer multiplexer,
-        AuthDbContext dbContext,
-        IMapper mapper)
+        AuthDbContext dbContext)
     {
         this.multiplexer = multiplexer;
         this.dbContext = dbContext;
-        this.mapper = mapper;
     }
 
-    public async Task<AccountData> ExecuteAsync(UpdateSessionCommand command)
+    public async Task<UpdateSessionCommandResult> ExecuteAsync(UpdateSessionCommand command)
     {
         var account = await dbContext.Accounts
             .Where(x => x.AccountId == command.AccountId)
@@ -37,6 +34,6 @@ public sealed class UpdateSessionHandler : ICommandHandler<UpdateSessionCommand,
         account.Token = Guid.NewGuid().ToString();
         await dbContext.SaveChangesAsync();
 
-        return mapper.Map<AccountData>(account);
+        return new(account.Token, account.Role);
     }
 }

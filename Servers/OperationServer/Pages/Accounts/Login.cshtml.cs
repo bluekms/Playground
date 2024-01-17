@@ -1,14 +1,10 @@
 using AuthLibrary.Extensions.Authentication;
 using AuthLibrary.Feature.Session;
-using AuthLibrary.Models;
-using AuthServer.Handlers.Account;
-using AuthServer.Handlers.Session;
 using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using LoginRule = OperationServer.Handlers.Account.LoginRule;
-using LoginRuleResult = OperationServer.Handlers.Account.LoginRuleResult;
+using OperationServer.Handlers.Account;
 
 namespace OperationServer.Pages.Accounts;
 
@@ -23,13 +19,13 @@ public class LoginModel : PageModel
 
     private readonly IRuleChecker<LoginRule, LoginRuleResult> loginRuleChecker;
     private readonly ICommandHandler<UpdatePasswordCommand> updatePassword;
-    private readonly ICommandHandler<UpdateSessionCommand, AccountData> updateSession;
+    private readonly ICommandHandler<UpdateSessionCommand, UpdateSessionCommandResult> updateSession;
     private readonly SessionStore sessionStore;
 
     public LoginModel(
         IRuleChecker<LoginRule, LoginRuleResult> loginRuleChecker,
         ICommandHandler<UpdatePasswordCommand> updatePassword,
-        ICommandHandler<UpdateSessionCommand, AccountData> updateSession,
+        ICommandHandler<UpdateSessionCommand, UpdateSessionCommandResult> updateSession,
         SessionStore sessionStore)
     {
         this.loginRuleChecker = loginRuleChecker;
@@ -56,10 +52,10 @@ public class LoginModel : PageModel
             await updatePassword.ExecuteAsync(new(AccountId, Password));
         }
 
-        var account = await updateSession.ExecuteAsync(new(AccountId));
+        //var result = await updateSession.ExecuteAsync(new(AccountId));
 
-        var session = new SessionInfo(account.Token, account.Role);
-        await sessionStore.SetAsync(session, CancellationToken.None);
+        //var session = new SessionInfo(result.Token, result.Role);
+        //await sessionStore.SetAsync(session, CancellationToken.None);
 
         return RedirectToPage("./Index");
     }

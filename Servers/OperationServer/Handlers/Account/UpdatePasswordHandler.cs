@@ -4,11 +4,11 @@ using CommonLibrary.Handlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthServer.Handlers.Account;
+namespace OperationServer.Handlers.Account;
 
 public sealed record UpdatePasswordCommand(string AccountId, string Password) : ICommand;
 
-public sealed class UpdatePasswordHandler : ICommandHandler<UpdatePasswordCommand>
+public class UpdatePasswordHandler : ICommandHandler<UpdatePasswordCommand>
 {
     private readonly ITimeService timeService;
     private readonly AuthDbContext dbContext;
